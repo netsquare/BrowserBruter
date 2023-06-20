@@ -1,0 +1,110 @@
+Request Time,Element,Payload,Method,URL,Request Headers,Request Body,Response Time,Response Status Code,Response Reason,Response Headers,Response Body
+02-11-10,yes,*))%00,GET,http://localhost:3000/,"Host: localhost:3000
+Proxy-Connection: keep-alive
+sec-ch-ua: ""Not.A/Brand"";v=""8"", ""Chromium"";v=""114""
+sec-ch-ua-mobile: ?0
+sec-ch-ua-platform: ""Linux""
+Upgrade-Insecure-Requests: 1
+User-Agent: Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.0.0 Safari/537.36
+Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7
+Sec-Fetch-Site: none
+Sec-Fetch-Mode: navigate
+Sec-Fetch-User: ?1
+Sec-Fetch-Dest: document
+Accept-Encoding: gzip, deflate, br
+Accept-Language: en-US,en;q=0.9
+Cookie: _csrf=w9SnZs10MFZncJdXVBZqIjaq; cookie_name1=cookie_value1; cookie_name2=cookie_value2
+If-None-Match: W/""3e2-jp1/CpIwqtG9fa1wuGftNP+2c0k""
+
+",b'',02-11-10,200,OK,"X-Powered-By: Express
+Content-Type: text/html; charset=utf-8
+Content-Length: 994
+ETag: W/""3e2-dRjcDi6IRjWLRlowJwPwAFZjQ1c""
+Date: Tue, 20 Jun 2023 20:41:09 GMT
+Connection: keep-alive
+Keep-Alive: timeout=5
+
+","<h1>
+ Form Page
+</h1>
+<form action=""/submit"" method=""POST"">
+ <input name=""_csrf"" type=""hidden"" value=""RDlYNLsQ-mVYsSfdPYX_Dv7oNClr6SM-V5GA""/>
+ <label for=""data"">
+  Data:
+ </label>
+ <input name=""data"" placeholder=""Enter data"" required="""" type=""text"">
+  <br/>
+  <label for=""yes"">
+   Yes:
+  </label>
+  <input id=""yes"" name=""yesno"" required="""" type=""radio"" value=""yes""/>
+  <label for=""no"">
+   No:
+  </label>
+  <input id=""no"" name=""yesno"" required="""" type=""radio"" value=""no""/>
+  <label for=""hobbies"">
+   Hobbies:
+  </label>
+  <input name=""hobbies"" type=""checkbox"" value=""reading""/>
+  Reading
+  <input name=""hobbies"" type=""checkbox"" value=""writing""/>
+  Writing
+  <input name=""hobbies"" type=""checkbox"" value=""painting""/>
+  Painting
+  <br/>
+  <label for=""phone"">
+   Phone Number:
+  </label>
+  <input name=""phone"" pattern=""[0-9]{10}"" placeholder=""Enter phone number"" required="""" type=""tel""/>
+  <br/>
+  <button id=""submit"" type=""submit"">
+   Submit
+  </button>
+ </input>
+</form>
+"
+02-11-10,yes,*))%00,POST,http://localhost:3000/submit,"Host: localhost:3000
+Proxy-Connection: keep-alive
+Content-Length: 146
+Cache-Control: max-age=0
+sec-ch-ua: ""Not.A/Brand"";v=""8"", ""Chromium"";v=""114""
+sec-ch-ua-mobile: ?0
+sec-ch-ua-platform: ""Linux""
+Upgrade-Insecure-Requests: 1
+Origin: http://localhost:3000
+Content-Type: application/x-www-form-urlencoded
+User-Agent: Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.0.0 Safari/537.36
+Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7
+Sec-Fetch-Site: same-origin
+Sec-Fetch-Mode: navigate
+Sec-Fetch-User: ?1
+Sec-Fetch-Dest: document
+Referer: http://localhost:3000/
+Accept-Encoding: gzip, deflate, br
+Accept-Language: en-US,en;q=0.9
+Cookie: _csrf=w9SnZs10MFZncJdXVBZqIjaq; cookie_name1=cookie_value1; cookie_name2=cookie_value2
+
+",b'_csrf=RDlYNLsQ-mVYsSfdPYX_Dv7oNClr6SM-V5GA&data=text&yesno=*%29%29%2500&yesno=no&hobbies=reading&hobbies=writing&hobbies=painting&phone=0123456789',02-11-10,200,OK,"X-Powered-By: Express
+Content-Type: text/html; charset=utf-8
+Content-Length: 164
+ETag: W/""a4-WNYtk3Ha2AfZu8k7ejo3qNSNWE0""
+Date: Tue, 20 Jun 2023 20:41:10 GMT
+Connection: keep-alive
+Keep-Alive: timeout=5
+
+","<h1>
+ Received Data
+</h1>
+<p>
+ Data: text
+</p>
+<p>
+ Yes/No: *))%00,no
+</p>
+<p>
+ Hobbies: reading, writing, painting
+</p>
+<p>
+ Phone Number: 0123456789
+</p>
+"
