@@ -78,6 +78,8 @@ Usage Examples:
 	 > python3 BrowserBruter.py -e yesno -p payloads.txt -t http://dvwa.com/register -b register 
 	 OR
 	 > python3 BrowserBruter.py -e no -p payloads.txt -t http://dvwa.com/register -b register
+   11. Fuzz CSRF token plus don't overwrite while fuzzing other fields
+     > python3 BrowserBruter.py -e csrfToken,username,password -p payloads.txt -t http://dvwa.com/login -b login --csrf csrfToken
 	'''
 argParser.description += '\n' + usage_examples
 argsRequired = argParser.add_argument_group("required")
