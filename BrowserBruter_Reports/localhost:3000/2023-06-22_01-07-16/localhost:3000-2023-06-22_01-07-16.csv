@@ -1,0 +1,789 @@
+Request Time,Selected,Payload,Web Page Before,Method,URL,Request Headers,Request Body,Response Time,Cycle Time MilliSeconds,Response Status Code,Response Reason,Response Headers,Response Body,Web Page After
+01-07-18,yes,payload1,"<html><head></head><body><h1>Form Page</h1>
+    <form action=""/submit"" method=""POST"">
+      <input type=""hidden"" name=""_csrf"" value=""uDaxG1AQ-tWhuuSzd-Wigsz0B3VYL8BoJQDg"">
+      
+      <label for=""data"">Data:</label>
+      <input type=""text"" name=""data"" placeholder=""Enter data"" required=""""><br>
+
+      <label for=""yes"">Yes:</label>
+      <input type=""radio"" name=""yesno"" id=""yes"" value=""yes"" required="""">
+  
+      <label for=""no"">No:</label>
+      <input type=""radio"" name=""yesno"" id=""no"" value=""no"" required="""">
+      
+      <label for=""hobbies"">Hobbies:</label>
+      <input type=""checkbox"" name=""hobbies"" value=""reading""> Reading
+      <input type=""checkbox"" name=""hobbies"" value=""writing""> Writing
+      <input type=""checkbox"" name=""hobbies"" value=""painting""> Painting<br>
+      
+      <label for=""phone"">Phone Number:</label>
+      <input type=""tel"" name=""phone"" placeholder=""Enter phone number"" pattern=""[0-9]{10}"" required=""""><br>
+      
+      <button id=""submit"" type=""submit"">Submit</button>
+    </form>
+  </body></html>",POST,http://localhost:3000/submit,"Host: localhost:3000
+Proxy-Connection: keep-alive
+Content-Length: 142
+Cache-Control: max-age=0
+sec-ch-ua: ""Not.A/Brand"";v=""8"", ""Chromium"";v=""114"", ""HeadlessChrome"";v=""114""
+sec-ch-ua-mobile: ?0
+sec-ch-ua-platform: ""Linux""
+Upgrade-Insecure-Requests: 1
+Origin: http://localhost:3000
+Content-Type: application/x-www-form-urlencoded
+User-Agent: Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/114.0.5735.90 Safari/537.36
+Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7
+Sec-Fetch-Site: same-origin
+Sec-Fetch-Mode: navigate
+Sec-Fetch-User: ?1
+Sec-Fetch-Dest: document
+Referer: http://localhost:3000/
+Accept-Encoding: gzip, deflate, br
+Cookie: _csrf=Cf4-qLR6M3wW_M_CdOg5puna; cookie_name1=cookie_value1; cookie_name2=cookie_value2
+
+",b'_csrf=uDaxG1AQ-tWhuuSzd-Wigsz0B3VYL8BoJQDg&data=text&yesno=payload1&yesno=no&hobbies=reading&hobbies=writing&hobbies=painting&phone=9123456780',01-07-18,13,200,OK,"X-Powered-By: Express
+Content-Type: text/html; charset=utf-8
+Content-Length: 166
+ETag: W/""a6-PgrtnV9UU7BkEJxOFFntcv5eH7g""
+Date: Wed, 21 Jun 2023 19:37:18 GMT
+Connection: keep-alive
+Keep-Alive: timeout=5
+
+","<h1>
+ Received Data
+</h1>
+<p>
+ Data: text
+</p>
+<p>
+ Yes/No: payload1,no
+</p>
+<p>
+ Hobbies: reading, writing, painting
+</p>
+<p>
+ Phone Number: 9123456780
+</p>
+","<html><head></head><body><h1>Received Data</h1>
+    <p>Data: text</p>
+    <p>Yes/No: payload1,no</p>
+    <p>Hobbies: reading, writing, painting</p>
+    <p>Phone Number: 9123456780</p>
+  </body></html>"
+01-07-19,yes,payload2,"<html><head></head><body><h1>Form Page</h1>
+    <form action=""/submit"" method=""POST"">
+      <input type=""hidden"" name=""_csrf"" value=""xchCQ93v-EVl6hcsaalnWkrEfbFIqiTTRias"">
+      
+      <label for=""data"">Data:</label>
+      <input type=""text"" name=""data"" placeholder=""Enter data"" required=""""><br>
+
+      <label for=""yes"">Yes:</label>
+      <input type=""radio"" name=""yesno"" id=""yes"" value=""yes"" required="""">
+  
+      <label for=""no"">No:</label>
+      <input type=""radio"" name=""yesno"" id=""no"" value=""no"" required="""">
+      
+      <label for=""hobbies"">Hobbies:</label>
+      <input type=""checkbox"" name=""hobbies"" value=""reading""> Reading
+      <input type=""checkbox"" name=""hobbies"" value=""writing""> Writing
+      <input type=""checkbox"" name=""hobbies"" value=""painting""> Painting<br>
+      
+      <label for=""phone"">Phone Number:</label>
+      <input type=""tel"" name=""phone"" placeholder=""Enter phone number"" pattern=""[0-9]{10}"" required=""""><br>
+      
+      <button id=""submit"" type=""submit"">Submit</button>
+    </form>
+  </body></html>",POST,http://localhost:3000/submit,"Host: localhost:3000
+Proxy-Connection: keep-alive
+Content-Length: 142
+Cache-Control: max-age=0
+sec-ch-ua: ""Not.A/Brand"";v=""8"", ""Chromium"";v=""114"", ""HeadlessChrome"";v=""114""
+sec-ch-ua-mobile: ?0
+sec-ch-ua-platform: ""Linux""
+Upgrade-Insecure-Requests: 1
+Origin: http://localhost:3000
+Content-Type: application/x-www-form-urlencoded
+User-Agent: Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/114.0.5735.90 Safari/537.36
+Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7
+Sec-Fetch-Site: same-origin
+Sec-Fetch-Mode: navigate
+Sec-Fetch-User: ?1
+Sec-Fetch-Dest: document
+Referer: http://localhost:3000/
+Accept-Encoding: gzip, deflate, br
+Cookie: _csrf=Cf4-qLR6M3wW_M_CdOg5puna; cookie_name1=cookie_value1; cookie_name2=cookie_value2
+
+",b'_csrf=xchCQ93v-EVl6hcsaalnWkrEfbFIqiTTRias&data=text&yesno=payload2&yesno=no&hobbies=reading&hobbies=writing&hobbies=painting&phone=9123456780',01-07-19,14,200,OK,"X-Powered-By: Express
+Content-Type: text/html; charset=utf-8
+Content-Length: 166
+ETag: W/""a6-bTNjQJCMFRRF836G1zXMlljwOGA""
+Date: Wed, 21 Jun 2023 19:37:19 GMT
+Connection: keep-alive
+Keep-Alive: timeout=5
+
+","<h1>
+ Received Data
+</h1>
+<p>
+ Data: text
+</p>
+<p>
+ Yes/No: payload2,no
+</p>
+<p>
+ Hobbies: reading, writing, painting
+</p>
+<p>
+ Phone Number: 9123456780
+</p>
+","<html><head></head><body><h1>Received Data</h1>
+    <p>Data: text</p>
+    <p>Yes/No: payload2,no</p>
+    <p>Hobbies: reading, writing, painting</p>
+    <p>Phone Number: 9123456780</p>
+  </body></html>"
+01-07-21,hobbies,payload1,"<html><head></head><body><h1>Form Page</h1>
+    <form action=""/submit"" method=""POST"">
+      <input type=""hidden"" name=""_csrf"" value=""8XP4uJ8d-zCXbHGvhGGFrS4Xe4cbX5y2stqI"">
+      
+      <label for=""data"">Data:</label>
+      <input type=""text"" name=""data"" placeholder=""Enter data"" required=""""><br>
+
+      <label for=""yes"">Yes:</label>
+      <input type=""radio"" name=""yesno"" id=""yes"" value=""yes"" required="""">
+  
+      <label for=""no"">No:</label>
+      <input type=""radio"" name=""yesno"" id=""no"" value=""no"" required="""">
+      
+      <label for=""hobbies"">Hobbies:</label>
+      <input type=""checkbox"" name=""hobbies"" value=""reading""> Reading
+      <input type=""checkbox"" name=""hobbies"" value=""writing""> Writing
+      <input type=""checkbox"" name=""hobbies"" value=""painting""> Painting<br>
+      
+      <label for=""phone"">Phone Number:</label>
+      <input type=""tel"" name=""phone"" placeholder=""Enter phone number"" pattern=""[0-9]{10}"" required=""""><br>
+      
+      <button id=""submit"" type=""submit"">Submit</button>
+    </form>
+  </body></html>",POST,http://localhost:3000/submit,"Host: localhost:3000
+Proxy-Connection: keep-alive
+Content-Length: 128
+Cache-Control: max-age=0
+sec-ch-ua: ""Not.A/Brand"";v=""8"", ""Chromium"";v=""114"", ""HeadlessChrome"";v=""114""
+sec-ch-ua-mobile: ?0
+sec-ch-ua-platform: ""Linux""
+Upgrade-Insecure-Requests: 1
+Origin: http://localhost:3000
+Content-Type: application/x-www-form-urlencoded
+User-Agent: Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/114.0.5735.90 Safari/537.36
+Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7
+Sec-Fetch-Site: same-origin
+Sec-Fetch-Mode: navigate
+Sec-Fetch-User: ?1
+Sec-Fetch-Dest: document
+Referer: http://localhost:3000/
+Accept-Encoding: gzip, deflate, br
+Cookie: _csrf=Cf4-qLR6M3wW_M_CdOg5puna; cookie_name1=cookie_value1; cookie_name2=cookie_value2
+
+",b'_csrf=8XP4uJ8d-zCXbHGvhGGFrS4Xe4cbX5y2stqI&data=text&yesno=no&hobbies=payload1&hobbies=writing&hobbies=painting&phone=9123456780',01-07-21,13,200,OK,"X-Powered-By: Express
+Content-Type: text/html; charset=utf-8
+Content-Length: 158
+ETag: W/""9e-T3xt0eGP/9Iv1PAm6QBtxpyvw3c""
+Date: Wed, 21 Jun 2023 19:37:21 GMT
+Connection: keep-alive
+Keep-Alive: timeout=5
+
+","<h1>
+ Received Data
+</h1>
+<p>
+ Data: text
+</p>
+<p>
+ Yes/No: no
+</p>
+<p>
+ Hobbies: payload1, writing, painting
+</p>
+<p>
+ Phone Number: 9123456780
+</p>
+","<html><head></head><body><h1>Received Data</h1>
+    <p>Data: text</p>
+    <p>Yes/No: no</p>
+    <p>Hobbies: payload1, writing, painting</p>
+    <p>Phone Number: 9123456780</p>
+  </body></html>"
+01-07-22,hobbies,payload2,"<html><head></head><body><h1>Form Page</h1>
+    <form action=""/submit"" method=""POST"">
+      <input type=""hidden"" name=""_csrf"" value=""IT5neH11-wnAi3E0k7CkNNaxA13sYlzNIfCA"">
+      
+      <label for=""data"">Data:</label>
+      <input type=""text"" name=""data"" placeholder=""Enter data"" required=""""><br>
+
+      <label for=""yes"">Yes:</label>
+      <input type=""radio"" name=""yesno"" id=""yes"" value=""yes"" required="""">
+  
+      <label for=""no"">No:</label>
+      <input type=""radio"" name=""yesno"" id=""no"" value=""no"" required="""">
+      
+      <label for=""hobbies"">Hobbies:</label>
+      <input type=""checkbox"" name=""hobbies"" value=""reading""> Reading
+      <input type=""checkbox"" name=""hobbies"" value=""writing""> Writing
+      <input type=""checkbox"" name=""hobbies"" value=""painting""> Painting<br>
+      
+      <label for=""phone"">Phone Number:</label>
+      <input type=""tel"" name=""phone"" placeholder=""Enter phone number"" pattern=""[0-9]{10}"" required=""""><br>
+      
+      <button id=""submit"" type=""submit"">Submit</button>
+    </form>
+  </body></html>",POST,http://localhost:3000/submit,"Host: localhost:3000
+Proxy-Connection: keep-alive
+Content-Length: 128
+Cache-Control: max-age=0
+sec-ch-ua: ""Not.A/Brand"";v=""8"", ""Chromium"";v=""114"", ""HeadlessChrome"";v=""114""
+sec-ch-ua-mobile: ?0
+sec-ch-ua-platform: ""Linux""
+Upgrade-Insecure-Requests: 1
+Origin: http://localhost:3000
+Content-Type: application/x-www-form-urlencoded
+User-Agent: Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/114.0.5735.90 Safari/537.36
+Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7
+Sec-Fetch-Site: same-origin
+Sec-Fetch-Mode: navigate
+Sec-Fetch-User: ?1
+Sec-Fetch-Dest: document
+Referer: http://localhost:3000/
+Accept-Encoding: gzip, deflate, br
+Cookie: _csrf=Cf4-qLR6M3wW_M_CdOg5puna; cookie_name1=cookie_value1; cookie_name2=cookie_value2
+
+",b'_csrf=IT5neH11-wnAi3E0k7CkNNaxA13sYlzNIfCA&data=text&yesno=no&hobbies=payload2&hobbies=writing&hobbies=painting&phone=9123456780',01-07-22,14,200,OK,"X-Powered-By: Express
+Content-Type: text/html; charset=utf-8
+Content-Length: 158
+ETag: W/""9e-ACJhNI3IA0ki5rx6XNpu5E5L+8k""
+Date: Wed, 21 Jun 2023 19:37:22 GMT
+Connection: keep-alive
+Keep-Alive: timeout=5
+
+","<h1>
+ Received Data
+</h1>
+<p>
+ Data: text
+</p>
+<p>
+ Yes/No: no
+</p>
+<p>
+ Hobbies: payload2, writing, painting
+</p>
+<p>
+ Phone Number: 9123456780
+</p>
+","<html><head></head><body><h1>Received Data</h1>
+    <p>Data: text</p>
+    <p>Yes/No: no</p>
+    <p>Hobbies: payload2, writing, painting</p>
+    <p>Phone Number: 9123456780</p>
+  </body></html>"
+01-07-23,phone,payload1,"<html><head></head><body><h1>Form Page</h1>
+    <form action=""/submit"" method=""POST"">
+      <input type=""hidden"" name=""_csrf"" value=""KwrNhtkT-X6XWlE67CKqbNqen9-8gTHWbU2o"">
+      
+      <label for=""data"">Data:</label>
+      <input type=""text"" name=""data"" placeholder=""Enter data"" required=""""><br>
+
+      <label for=""yes"">Yes:</label>
+      <input type=""radio"" name=""yesno"" id=""yes"" value=""yes"" required="""">
+  
+      <label for=""no"">No:</label>
+      <input type=""radio"" name=""yesno"" id=""no"" value=""no"" required="""">
+      
+      <label for=""hobbies"">Hobbies:</label>
+      <input type=""checkbox"" name=""hobbies"" value=""reading""> Reading
+      <input type=""checkbox"" name=""hobbies"" value=""writing""> Writing
+      <input type=""checkbox"" name=""hobbies"" value=""painting""> Painting<br>
+      
+      <label for=""phone"">Phone Number:</label>
+      <input type=""tel"" name=""phone"" placeholder=""Enter phone number"" pattern=""[0-9]{10}"" required=""""><br>
+      
+      <button id=""submit"" type=""submit"">Submit</button>
+    </form>
+  </body></html>",POST,http://localhost:3000/submit,"Host: localhost:3000
+Proxy-Connection: keep-alive
+Content-Length: 125
+Cache-Control: max-age=0
+sec-ch-ua: ""Not.A/Brand"";v=""8"", ""Chromium"";v=""114"", ""HeadlessChrome"";v=""114""
+sec-ch-ua-mobile: ?0
+sec-ch-ua-platform: ""Linux""
+Upgrade-Insecure-Requests: 1
+Origin: http://localhost:3000
+Content-Type: application/x-www-form-urlencoded
+User-Agent: Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/114.0.5735.90 Safari/537.36
+Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7
+Sec-Fetch-Site: same-origin
+Sec-Fetch-Mode: navigate
+Sec-Fetch-User: ?1
+Sec-Fetch-Dest: document
+Referer: http://localhost:3000/
+Accept-Encoding: gzip, deflate, br
+Cookie: _csrf=Cf4-qLR6M3wW_M_CdOg5puna; cookie_name1=cookie_value1; cookie_name2=cookie_value2
+
+",b'_csrf=KwrNhtkT-X6XWlE67CKqbNqen9-8gTHWbU2o&data=text&yesno=no&hobbies=reading&hobbies=writing&hobbies=painting&phone=payload1',01-07-23,23,400,Bad Request,"X-Powered-By: Express
+Content-Type: application/json; charset=utf-8
+Content-Length: 42
+ETag: W/""2a-mpIsH/2ySFeKwlAgN0+ELKwizuE""
+Date: Wed, 21 Jun 2023 19:37:23 GMT
+Connection: keep-alive
+Keep-Alive: timeout=5
+
+","[""Phone number must be a 10-digit number""]
+","<html><head><meta name=""color-scheme"" content=""light dark""></head><body><pre style=""word-wrap: break-word; white-space: pre-wrap;"">[""Phone number must be a 10-digit number""]</pre></body></html>"
+01-07-24,phone,payload2,"<html><head></head><body><h1>Form Page</h1>
+    <form action=""/submit"" method=""POST"">
+      <input type=""hidden"" name=""_csrf"" value=""VE76jwBZ-heiupE2ylYlKxaerNTFHgBITowU"">
+      
+      <label for=""data"">Data:</label>
+      <input type=""text"" name=""data"" placeholder=""Enter data"" required=""""><br>
+
+      <label for=""yes"">Yes:</label>
+      <input type=""radio"" name=""yesno"" id=""yes"" value=""yes"" required="""">
+  
+      <label for=""no"">No:</label>
+      <input type=""radio"" name=""yesno"" id=""no"" value=""no"" required="""">
+      
+      <label for=""hobbies"">Hobbies:</label>
+      <input type=""checkbox"" name=""hobbies"" value=""reading""> Reading
+      <input type=""checkbox"" name=""hobbies"" value=""writing""> Writing
+      <input type=""checkbox"" name=""hobbies"" value=""painting""> Painting<br>
+      
+      <label for=""phone"">Phone Number:</label>
+      <input type=""tel"" name=""phone"" placeholder=""Enter phone number"" pattern=""[0-9]{10}"" required=""""><br>
+      
+      <button id=""submit"" type=""submit"">Submit</button>
+    </form>
+  </body></html>",POST,http://localhost:3000/submit,"Host: localhost:3000
+Proxy-Connection: keep-alive
+Content-Length: 125
+Cache-Control: max-age=0
+sec-ch-ua: ""Not.A/Brand"";v=""8"", ""Chromium"";v=""114"", ""HeadlessChrome"";v=""114""
+sec-ch-ua-mobile: ?0
+sec-ch-ua-platform: ""Linux""
+Upgrade-Insecure-Requests: 1
+Origin: http://localhost:3000
+Content-Type: application/x-www-form-urlencoded
+User-Agent: Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/114.0.5735.90 Safari/537.36
+Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7
+Sec-Fetch-Site: same-origin
+Sec-Fetch-Mode: navigate
+Sec-Fetch-User: ?1
+Sec-Fetch-Dest: document
+Referer: http://localhost:3000/
+Accept-Encoding: gzip, deflate, br
+Cookie: _csrf=Cf4-qLR6M3wW_M_CdOg5puna; cookie_name1=cookie_value1; cookie_name2=cookie_value2
+
+",b'_csrf=VE76jwBZ-heiupE2ylYlKxaerNTFHgBITowU&data=text&yesno=no&hobbies=reading&hobbies=writing&hobbies=painting&phone=payload2',01-07-24,13,400,Bad Request,"X-Powered-By: Express
+Content-Type: application/json; charset=utf-8
+Content-Length: 42
+ETag: W/""2a-mpIsH/2ySFeKwlAgN0+ELKwizuE""
+Date: Wed, 21 Jun 2023 19:37:24 GMT
+Connection: keep-alive
+Keep-Alive: timeout=5
+
+","[""Phone number must be a 10-digit number""]
+","<html><head><meta name=""color-scheme"" content=""light dark""></head><body><pre style=""word-wrap: break-word; white-space: pre-wrap;"">[""Phone number must be a 10-digit number""]</pre></body></html>"
+01-07-26,yes,payload2,"<html><head></head><body><h1>Form Page</h1>
+    <form action=""/submit"" method=""POST"">
+      <input type=""hidden"" name=""_csrf"" value=""7N2UURdl-hxcrYpeuCMjJF2pm6IbqE6VwcuU"">
+      
+      <label for=""data"">Data:</label>
+      <input type=""text"" name=""data"" placeholder=""Enter data"" required=""""><br>
+
+      <label for=""yes"">Yes:</label>
+      <input type=""radio"" name=""yesno"" id=""yes"" value=""yes"" required="""">
+  
+      <label for=""no"">No:</label>
+      <input type=""radio"" name=""yesno"" id=""no"" value=""no"" required="""">
+      
+      <label for=""hobbies"">Hobbies:</label>
+      <input type=""checkbox"" name=""hobbies"" value=""reading""> Reading
+      <input type=""checkbox"" name=""hobbies"" value=""writing""> Writing
+      <input type=""checkbox"" name=""hobbies"" value=""painting""> Painting<br>
+      
+      <label for=""phone"">Phone Number:</label>
+      <input type=""tel"" name=""phone"" placeholder=""Enter phone number"" pattern=""[0-9]{10}"" required=""""><br>
+      
+      <button id=""submit"" type=""submit"">Submit</button>
+    </form>
+  </body></html>",POST,http://localhost:3000/submit,"Host: localhost:3000
+Proxy-Connection: keep-alive
+Content-Length: 142
+Cache-Control: max-age=0
+sec-ch-ua: ""Not.A/Brand"";v=""8"", ""Chromium"";v=""114"", ""HeadlessChrome"";v=""114""
+sec-ch-ua-mobile: ?0
+sec-ch-ua-platform: ""Linux""
+Upgrade-Insecure-Requests: 1
+Origin: http://localhost:3000
+Content-Type: application/x-www-form-urlencoded
+User-Agent: Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/114.0.5735.90 Safari/537.36
+Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7
+Sec-Fetch-Site: same-origin
+Sec-Fetch-Mode: navigate
+Sec-Fetch-User: ?1
+Sec-Fetch-Dest: document
+Referer: http://localhost:3000/
+Accept-Encoding: gzip, deflate, br
+Cookie: _csrf=_qqZLv5B6PBu8VZ3kQdxnHkJ; cookie_name1=cookie_value1; cookie_name2=cookie_value2
+
+",b'_csrf=7N2UURdl-hxcrYpeuCMjJF2pm6IbqE6VwcuU&data=text&yesno=payload2&yesno=no&hobbies=reading&hobbies=writing&hobbies=painting&phone=9123456780',01-07-26,18,200,OK,"X-Powered-By: Express
+Content-Type: text/html; charset=utf-8
+Content-Length: 166
+ETag: W/""a6-bTNjQJCMFRRF836G1zXMlljwOGA""
+Date: Wed, 21 Jun 2023 19:37:26 GMT
+Connection: keep-alive
+Keep-Alive: timeout=5
+
+","<h1>
+ Received Data
+</h1>
+<p>
+ Data: text
+</p>
+<p>
+ Yes/No: payload2,no
+</p>
+<p>
+ Hobbies: reading, writing, painting
+</p>
+<p>
+ Phone Number: 9123456780
+</p>
+","<html><head></head><body><h1>Received Data</h1>
+    <p>Data: text</p>
+    <p>Yes/No: payload2,no</p>
+    <p>Hobbies: reading, writing, painting</p>
+    <p>Phone Number: 9123456780</p>
+  </body></html>"
+01-07-27,hobbies,payload2,"<html><head></head><body><h1>Form Page</h1>
+    <form action=""/submit"" method=""POST"">
+      <input type=""hidden"" name=""_csrf"" value=""ZasPxMxk-5s2X3CNrkGklCUZWAFPgexOSL0o"">
+      
+      <label for=""data"">Data:</label>
+      <input type=""text"" name=""data"" placeholder=""Enter data"" required=""""><br>
+
+      <label for=""yes"">Yes:</label>
+      <input type=""radio"" name=""yesno"" id=""yes"" value=""yes"" required="""">
+  
+      <label for=""no"">No:</label>
+      <input type=""radio"" name=""yesno"" id=""no"" value=""no"" required="""">
+      
+      <label for=""hobbies"">Hobbies:</label>
+      <input type=""checkbox"" name=""hobbies"" value=""reading""> Reading
+      <input type=""checkbox"" name=""hobbies"" value=""writing""> Writing
+      <input type=""checkbox"" name=""hobbies"" value=""painting""> Painting<br>
+      
+      <label for=""phone"">Phone Number:</label>
+      <input type=""tel"" name=""phone"" placeholder=""Enter phone number"" pattern=""[0-9]{10}"" required=""""><br>
+      
+      <button id=""submit"" type=""submit"">Submit</button>
+    </form>
+  </body></html>",POST,http://localhost:3000/submit,"Host: localhost:3000
+Proxy-Connection: keep-alive
+Content-Length: 128
+Cache-Control: max-age=0
+sec-ch-ua: ""Not.A/Brand"";v=""8"", ""Chromium"";v=""114"", ""HeadlessChrome"";v=""114""
+sec-ch-ua-mobile: ?0
+sec-ch-ua-platform: ""Linux""
+Upgrade-Insecure-Requests: 1
+Origin: http://localhost:3000
+Content-Type: application/x-www-form-urlencoded
+User-Agent: Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/114.0.5735.90 Safari/537.36
+Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7
+Sec-Fetch-Site: same-origin
+Sec-Fetch-Mode: navigate
+Sec-Fetch-User: ?1
+Sec-Fetch-Dest: document
+Referer: http://localhost:3000/
+Accept-Encoding: gzip, deflate, br
+Cookie: _csrf=_qqZLv5B6PBu8VZ3kQdxnHkJ; cookie_name1=cookie_value1; cookie_name2=cookie_value2
+
+",b'_csrf=ZasPxMxk-5s2X3CNrkGklCUZWAFPgexOSL0o&data=text&yesno=no&hobbies=payload2&hobbies=writing&hobbies=painting&phone=9123456780',01-07-27,15,200,OK,"X-Powered-By: Express
+Content-Type: text/html; charset=utf-8
+Content-Length: 158
+ETag: W/""9e-ACJhNI3IA0ki5rx6XNpu5E5L+8k""
+Date: Wed, 21 Jun 2023 19:37:27 GMT
+Connection: keep-alive
+Keep-Alive: timeout=5
+
+","<h1>
+ Received Data
+</h1>
+<p>
+ Data: text
+</p>
+<p>
+ Yes/No: no
+</p>
+<p>
+ Hobbies: payload2, writing, painting
+</p>
+<p>
+ Phone Number: 9123456780
+</p>
+","<html><head></head><body><h1>Received Data</h1>
+    <p>Data: text</p>
+    <p>Yes/No: no</p>
+    <p>Hobbies: payload2, writing, painting</p>
+    <p>Phone Number: 9123456780</p>
+  </body></html>"
+01-07-28,phone,payload2,"<html><head></head><body><h1>Form Page</h1>
+    <form action=""/submit"" method=""POST"">
+      <input type=""hidden"" name=""_csrf"" value=""jYpJ9J23-Hlyl8rB1hxQXo9WJ1PK4AMELM7I"">
+      
+      <label for=""data"">Data:</label>
+      <input type=""text"" name=""data"" placeholder=""Enter data"" required=""""><br>
+
+      <label for=""yes"">Yes:</label>
+      <input type=""radio"" name=""yesno"" id=""yes"" value=""yes"" required="""">
+  
+      <label for=""no"">No:</label>
+      <input type=""radio"" name=""yesno"" id=""no"" value=""no"" required="""">
+      
+      <label for=""hobbies"">Hobbies:</label>
+      <input type=""checkbox"" name=""hobbies"" value=""reading""> Reading
+      <input type=""checkbox"" name=""hobbies"" value=""writing""> Writing
+      <input type=""checkbox"" name=""hobbies"" value=""painting""> Painting<br>
+      
+      <label for=""phone"">Phone Number:</label>
+      <input type=""tel"" name=""phone"" placeholder=""Enter phone number"" pattern=""[0-9]{10}"" required=""""><br>
+      
+      <button id=""submit"" type=""submit"">Submit</button>
+    </form>
+  </body></html>",POST,http://localhost:3000/submit,"Host: localhost:3000
+Proxy-Connection: keep-alive
+Content-Length: 125
+Cache-Control: max-age=0
+sec-ch-ua: ""Not.A/Brand"";v=""8"", ""Chromium"";v=""114"", ""HeadlessChrome"";v=""114""
+sec-ch-ua-mobile: ?0
+sec-ch-ua-platform: ""Linux""
+Upgrade-Insecure-Requests: 1
+Origin: http://localhost:3000
+Content-Type: application/x-www-form-urlencoded
+User-Agent: Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/114.0.5735.90 Safari/537.36
+Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7
+Sec-Fetch-Site: same-origin
+Sec-Fetch-Mode: navigate
+Sec-Fetch-User: ?1
+Sec-Fetch-Dest: document
+Referer: http://localhost:3000/
+Accept-Encoding: gzip, deflate, br
+Cookie: _csrf=_qqZLv5B6PBu8VZ3kQdxnHkJ; cookie_name1=cookie_value1; cookie_name2=cookie_value2
+
+",b'_csrf=jYpJ9J23-Hlyl8rB1hxQXo9WJ1PK4AMELM7I&data=text&yesno=no&hobbies=reading&hobbies=writing&hobbies=painting&phone=payload2',01-07-28,21,400,Bad Request,"X-Powered-By: Express
+Content-Type: application/json; charset=utf-8
+Content-Length: 42
+ETag: W/""2a-mpIsH/2ySFeKwlAgN0+ELKwizuE""
+Date: Wed, 21 Jun 2023 19:37:28 GMT
+Connection: keep-alive
+Keep-Alive: timeout=5
+
+","[""Phone number must be a 10-digit number""]
+","<html><head><meta name=""color-scheme"" content=""light dark""></head><body><pre style=""word-wrap: break-word; white-space: pre-wrap;"">[""Phone number must be a 10-digit number""]</pre></body></html>"
+01-07-22,yes,payload1,"<html><head></head><body><h1>Form Page</h1>
+    <form action=""/submit"" method=""POST"">
+      <input type=""hidden"" name=""_csrf"" value=""6myEf9LM-AeTy8tcBM39kfmOIVU55K1qfV1M"">
+      
+      <label for=""data"">Data:</label>
+      <input type=""text"" name=""data"" placeholder=""Enter data"" required=""""><br>
+
+      <label for=""yes"">Yes:</label>
+      <input type=""radio"" name=""yesno"" id=""yes"" value=""yes"" required="""">
+  
+      <label for=""no"">No:</label>
+      <input type=""radio"" name=""yesno"" id=""no"" value=""no"" required="""">
+      
+      <label for=""hobbies"">Hobbies:</label>
+      <input type=""checkbox"" name=""hobbies"" value=""reading""> Reading
+      <input type=""checkbox"" name=""hobbies"" value=""writing""> Writing
+      <input type=""checkbox"" name=""hobbies"" value=""painting""> Painting<br>
+      
+      <label for=""phone"">Phone Number:</label>
+      <input type=""tel"" name=""phone"" placeholder=""Enter phone number"" pattern=""[0-9]{10}"" required=""""><br>
+      
+      <button id=""submit"" type=""submit"">Submit</button>
+    </form>
+  </body></html>",POST,http://localhost:3000/submit,"Host: localhost:3000
+Proxy-Connection: keep-alive
+Content-Length: 142
+Cache-Control: max-age=0
+sec-ch-ua: ""Not.A/Brand"";v=""8"", ""Chromium"";v=""114"", ""HeadlessChrome"";v=""114""
+sec-ch-ua-mobile: ?0
+sec-ch-ua-platform: ""Linux""
+Upgrade-Insecure-Requests: 1
+Origin: http://localhost:3000
+Content-Type: application/x-www-form-urlencoded
+User-Agent: Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/114.0.5735.90 Safari/537.36
+Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7
+Sec-Fetch-Site: same-origin
+Sec-Fetch-Mode: navigate
+Sec-Fetch-User: ?1
+Sec-Fetch-Dest: document
+Referer: http://localhost:3000/
+Accept-Encoding: gzip, deflate, br
+Cookie: _csrf=UMn2CILc3Ga8LdeMDk62Llme; cookie_name1=cookie_value1; cookie_name2=cookie_value2
+
+",b'_csrf=6myEf9LM-AeTy8tcBM39kfmOIVU55K1qfV1M&data=text&yesno=payload1&yesno=no&hobbies=reading&hobbies=writing&hobbies=painting&phone=9123456780',01-07-22,13,200,OK,"X-Powered-By: Express
+Content-Type: text/html; charset=utf-8
+Content-Length: 166
+ETag: W/""a6-PgrtnV9UU7BkEJxOFFntcv5eH7g""
+Date: Wed, 21 Jun 2023 19:37:22 GMT
+Connection: keep-alive
+Keep-Alive: timeout=5
+
+","<h1>
+ Received Data
+</h1>
+<p>
+ Data: text
+</p>
+<p>
+ Yes/No: payload1,no
+</p>
+<p>
+ Hobbies: reading, writing, painting
+</p>
+<p>
+ Phone Number: 9123456780
+</p>
+","<html><head></head><body><h1>Received Data</h1>
+    <p>Data: text</p>
+    <p>Yes/No: payload1,no</p>
+    <p>Hobbies: reading, writing, painting</p>
+    <p>Phone Number: 9123456780</p>
+  </body></html>"
+01-07-23,hobbies,payload1,"<html><head></head><body><h1>Form Page</h1>
+    <form action=""/submit"" method=""POST"">
+      <input type=""hidden"" name=""_csrf"" value=""BgPU08iX-He0T-47ckNcwZ55t0cThe-xle_Y"">
+      
+      <label for=""data"">Data:</label>
+      <input type=""text"" name=""data"" placeholder=""Enter data"" required=""""><br>
+
+      <label for=""yes"">Yes:</label>
+      <input type=""radio"" name=""yesno"" id=""yes"" value=""yes"" required="""">
+  
+      <label for=""no"">No:</label>
+      <input type=""radio"" name=""yesno"" id=""no"" value=""no"" required="""">
+      
+      <label for=""hobbies"">Hobbies:</label>
+      <input type=""checkbox"" name=""hobbies"" value=""reading""> Reading
+      <input type=""checkbox"" name=""hobbies"" value=""writing""> Writing
+      <input type=""checkbox"" name=""hobbies"" value=""painting""> Painting<br>
+      
+      <label for=""phone"">Phone Number:</label>
+      <input type=""tel"" name=""phone"" placeholder=""Enter phone number"" pattern=""[0-9]{10}"" required=""""><br>
+      
+      <button id=""submit"" type=""submit"">Submit</button>
+    </form>
+  </body></html>",POST,http://localhost:3000/submit,"Host: localhost:3000
+Proxy-Connection: keep-alive
+Content-Length: 128
+Cache-Control: max-age=0
+sec-ch-ua: ""Not.A/Brand"";v=""8"", ""Chromium"";v=""114"", ""HeadlessChrome"";v=""114""
+sec-ch-ua-mobile: ?0
+sec-ch-ua-platform: ""Linux""
+Upgrade-Insecure-Requests: 1
+Origin: http://localhost:3000
+Content-Type: application/x-www-form-urlencoded
+User-Agent: Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/114.0.5735.90 Safari/537.36
+Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7
+Sec-Fetch-Site: same-origin
+Sec-Fetch-Mode: navigate
+Sec-Fetch-User: ?1
+Sec-Fetch-Dest: document
+Referer: http://localhost:3000/
+Accept-Encoding: gzip, deflate, br
+Cookie: _csrf=UMn2CILc3Ga8LdeMDk62Llme; cookie_name1=cookie_value1; cookie_name2=cookie_value2
+
+",b'_csrf=BgPU08iX-He0T-47ckNcwZ55t0cThe-xle_Y&data=text&yesno=no&hobbies=payload1&hobbies=writing&hobbies=painting&phone=9123456780',01-07-23,13,200,OK,"X-Powered-By: Express
+Content-Type: text/html; charset=utf-8
+Content-Length: 158
+ETag: W/""9e-T3xt0eGP/9Iv1PAm6QBtxpyvw3c""
+Date: Wed, 21 Jun 2023 19:37:23 GMT
+Connection: keep-alive
+Keep-Alive: timeout=5
+
+","<h1>
+ Received Data
+</h1>
+<p>
+ Data: text
+</p>
+<p>
+ Yes/No: no
+</p>
+<p>
+ Hobbies: payload1, writing, painting
+</p>
+<p>
+ Phone Number: 9123456780
+</p>
+","<html><head></head><body><h1>Received Data</h1>
+    <p>Data: text</p>
+    <p>Yes/No: no</p>
+    <p>Hobbies: payload1, writing, painting</p>
+    <p>Phone Number: 9123456780</p>
+  </body></html>"
+01-07-24,phone,payload1,"<html><head></head><body><h1>Form Page</h1>
+    <form action=""/submit"" method=""POST"">
+      <input type=""hidden"" name=""_csrf"" value=""DQ46nYxh-vDZu_kGXebFjwyC103P9BgB_4yA"">
+      
+      <label for=""data"">Data:</label>
+      <input type=""text"" name=""data"" placeholder=""Enter data"" required=""""><br>
+
+      <label for=""yes"">Yes:</label>
+      <input type=""radio"" name=""yesno"" id=""yes"" value=""yes"" required="""">
+  
+      <label for=""no"">No:</label>
+      <input type=""radio"" name=""yesno"" id=""no"" value=""no"" required="""">
+      
+      <label for=""hobbies"">Hobbies:</label>
+      <input type=""checkbox"" name=""hobbies"" value=""reading""> Reading
+      <input type=""checkbox"" name=""hobbies"" value=""writing""> Writing
+      <input type=""checkbox"" name=""hobbies"" value=""painting""> Painting<br>
+      
+      <label for=""phone"">Phone Number:</label>
+      <input type=""tel"" name=""phone"" placeholder=""Enter phone number"" pattern=""[0-9]{10}"" required=""""><br>
+      
+      <button id=""submit"" type=""submit"">Submit</button>
+    </form>
+  </body></html>",POST,http://localhost:3000/submit,"Host: localhost:3000
+Proxy-Connection: keep-alive
+Content-Length: 125
+Cache-Control: max-age=0
+sec-ch-ua: ""Not.A/Brand"";v=""8"", ""Chromium"";v=""114"", ""HeadlessChrome"";v=""114""
+sec-ch-ua-mobile: ?0
+sec-ch-ua-platform: ""Linux""
+Upgrade-Insecure-Requests: 1
+Origin: http://localhost:3000
+Content-Type: application/x-www-form-urlencoded
+User-Agent: Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/114.0.5735.90 Safari/537.36
+Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7
+Sec-Fetch-Site: same-origin
+Sec-Fetch-Mode: navigate
+Sec-Fetch-User: ?1
+Sec-Fetch-Dest: document
+Referer: http://localhost:3000/
+Accept-Encoding: gzip, deflate, br
+Cookie: _csrf=UMn2CILc3Ga8LdeMDk62Llme; cookie_name1=cookie_value1; cookie_name2=cookie_value2
+
+",b'_csrf=DQ46nYxh-vDZu_kGXebFjwyC103P9BgB_4yA&data=text&yesno=no&hobbies=reading&hobbies=writing&hobbies=painting&phone=payload1',01-07-24,25,400,Bad Request,"X-Powered-By: Express
+Content-Type: application/json; charset=utf-8
+Content-Length: 42
+ETag: W/""2a-mpIsH/2ySFeKwlAgN0+ELKwizuE""
+Date: Wed, 21 Jun 2023 19:37:24 GMT
+Connection: keep-alive
+Keep-Alive: timeout=5
+
+","[""Phone number must be a 10-digit number""]
+","<html><head><meta name=""color-scheme"" content=""light dark""></head><body><pre style=""word-wrap: break-word; white-space: pre-wrap;"">[""Phone number must be a 10-digit number""]</pre></body></html>"

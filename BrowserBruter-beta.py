@@ -72,6 +72,12 @@ Usage Examples:
 	 > python3 BrowserBruter.py -e name,age,address,phone -p payloads.txt -t http://dvwa.com/register -b register --cookie difficulty:high:dvwa.com hint:no:dvwa.com --csrf _token --form 3 --forceCookie --remove --headless
 	8. Fuzz on 3rd form of registration page with csrf and two cookies difficulty and hint and sent them forcefully on each request and remove session data and cookie after each request-response cycle and run browser in headless mode and run 5 instances of browser parallely
 	 > python3 BrowserBruter.py -e name,age,address,phone -p payloads.txt -t http://dvwa.com/register -b register --cookie difficulty:high:dvwa.com hint:no:dvwa.com --csrf _token --form 3 --forceCookie --remove --headless --threads 5
+	9. Fuzz CheckBox for example '<input type="checkbox" name="hobbies" value="reading" /> <input type="checkbox" name="hobbies" value="writing" />', then
+	 > python3 BrowserBruter.py -e hobbies -p paylods.txt -t http://dvwa.com/register -b register
+	10. Fuzz Radio Button for example '<input type="radio" name="yesno" id="yes" value="yes" required/> <input type="radio" name="yesno" id="no" value="no" required/>', then
+	 > python3 BrowserBruter.py -e yesno -p payloads.txt -t http://dvwa.com/register -b register 
+	 OR
+	 > python3 BrowserBruter.py -e no -p payloads.txt -t http://dvwa.com/register -b register
 	'''
 argParser.description += '\n' + usage_examples
 argsRequired = argParser.add_argument_group("required")
@@ -96,12 +102,15 @@ args = argParser.parse_args()
 
 # Check if all required arguments are given and threads are not more than 5
 if args.payloads is None or args.target is None or args.elements is None or args.button is None:
-	argParser.print_help()
+	print("Please Enter all required arguments --target, --paylods, --elements, --button")
 	sys.exit(0)
 elif args.threads > 5 or args.threads < 0:
-	argParser.print_help()
+	print("Value of threads must less than 6 and more than 0")
 	sys.exit(0)
-
+elif args.forceCookie:
+	if args.cookie is None:
+		print("You can not use --forceCookie without --cookie option")
+		sys.exit(0)
 ### DEFINING AND PARSING COMMAND LINE ARGUMENTS ENDS ###
 
 ### DEFINING AND ASSIGNING GLOBAL VARIABLES STARTS ###

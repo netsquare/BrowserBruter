@@ -1,0 +1,3 @@
+selenium
+selenium-wire
+webdriver_manager
