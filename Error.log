@@ -3819,3 +3819,525 @@ Traceback (most recent call last):
   File "/home/zinjacoder/softwares/tools/built/BrowserBruter/brute.py", line 505, in <module>
     time.sleep(4)
 KeyboardInterrupt
+
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+Error Time - 2023-06-22_23-23-35
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+Traceback (most recent call last):
+  File "/home/zinjacoder/softwares/tools/built/BrowserBruter/BrowserBruter.py", line 270, in run_browser_instance
+    attempt(elements[i],payloads[j], driver, this_threads_file)
+  File "/home/zinjacoder/softwares/tools/built/BrowserBruter/BrowserBruter.py", line 399, in attempt
+    driver.execute_script("arguments[0].setAttribute('type','text');",inputField)
+NameError: name 'inputField' is not defined
+
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+Error Time - 2023-06-22_23-23-39
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+Traceback (most recent call last):
+  File "/home/zinjacoder/softwares/tools/built/BrowserBruter/BrowserBruter.py", line 270, in run_browser_instance
+    attempt(elements[i],payloads[j], driver, this_threads_file)
+  File "/home/zinjacoder/softwares/tools/built/BrowserBruter/BrowserBruter.py", line 399, in attempt
+    driver.execute_script("arguments[0].setAttribute('type','text');",inputField)
+NameError: name 'inputField' is not defined
+
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+Error Time - 2023-06-22_23-23-42
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+Traceback (most recent call last):
+  File "/home/zinjacoder/softwares/tools/built/BrowserBruter/BrowserBruter.py", line 270, in run_browser_instance
+    attempt(elements[i],payloads[j], driver, this_threads_file)
+  File "/home/zinjacoder/softwares/tools/built/BrowserBruter/BrowserBruter.py", line 399, in attempt
+    driver.execute_script("arguments[0].setAttribute('type','text');",inputField)
+NameError: name 'inputField' is not defined
+
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+Error Time - 2023-06-22_23-34-34
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+Traceback (most recent call last):
+  File "/home/zinjacoder/.pyenv/versions/3.9.16/lib/python3.9/site-packages/urllib3/connectionpool.py", line 790, in urlopen
+    response = self._make_request(
+  File "/home/zinjacoder/.pyenv/versions/3.9.16/lib/python3.9/site-packages/urllib3/connectionpool.py", line 536, in _make_request
+    response = conn.getresponse()
+  File "/home/zinjacoder/.pyenv/versions/3.9.16/lib/python3.9/site-packages/urllib3/connection.py", line 454, in getresponse
+    httplib_response = super().getresponse()
+  File "/home/zinjacoder/.pyenv/versions/3.9.16/lib/python3.9/http/client.py", line 1377, in getresponse
+    response.begin()
+  File "/home/zinjacoder/.pyenv/versions/3.9.16/lib/python3.9/http/client.py", line 320, in begin
+    version, status, reason = self._read_status()
+  File "/home/zinjacoder/.pyenv/versions/3.9.16/lib/python3.9/http/client.py", line 289, in _read_status
+    raise RemoteDisconnected("Remote end closed connection without"
+http.client.RemoteDisconnected: Remote end closed connection without response
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/zinjacoder/softwares/tools/built/BrowserBruter/BrowserBruter.py", line 270, in run_browser_instance
+    attempt(elements[i],payloads[j], driver, this_threads_file)
+  File "/home/zinjacoder/softwares/tools/built/BrowserBruter/BrowserBruter.py", line 356, in attempt
+    input_fields = [field for field in input_fields if field.get_attribute("name") != args.csrf and field.get_attribute("id") != args.csrf and field.get_attribute("type") != "button" and field.get_attribute("type") != "submit"]
+  File "/home/zinjacoder/softwares/tools/built/BrowserBruter/BrowserBruter.py", line 356, in <listcomp>
+    input_fields = [field for field in input_fields if field.get_attribute("name") != args.csrf and field.get_attribute("id") != args.csrf and field.get_attribute("type") != "button" and field.get_attribute("type") != "submit"]
+  File "/home/zinjacoder/.pyenv/versions/3.9.16/lib/python3.9/site-packages/selenium/webdriver/remote/webelement.py", line 178, in get_attribute
+    attribute_value = self.parent.execute_script(
+  File "/home/zinjacoder/.pyenv/versions/3.9.16/lib/python3.9/site-packages/selenium/webdriver/remote/webdriver.py", line 406, in execute_script
+    return self.execute(command, {"script": script, "args": converted_args})["value"]
+  File "/home/zinjacoder/.pyenv/versions/3.9.16/lib/python3.9/site-packages/selenium/webdriver/remote/webdriver.py", line 344, in execute
+    response = self.command_executor.execute(driver_command, params)
+  File "/home/zinjacoder/.pyenv/versions/3.9.16/lib/python3.9/site-packages/selenium/webdriver/remote/remote_connection.py", line 290, in execute
+    return self._request(command_info[0], url, body=data)
+  File "/home/zinjacoder/.pyenv/versions/3.9.16/lib/python3.9/site-packages/selenium/webdriver/remote/remote_connection.py", line 311, in _request
+    response = self._conn.request(method, url, body=body, headers=headers)
+  File "/home/zinjacoder/.pyenv/versions/3.9.16/lib/python3.9/site-packages/urllib3/_request_methods.py", line 118, in request
+    return self.request_encode_body(
+  File "/home/zinjacoder/.pyenv/versions/3.9.16/lib/python3.9/site-packages/urllib3/_request_methods.py", line 217, in request_encode_body
+    return self.urlopen(method, url, **extra_kw)
+  File "/home/zinjacoder/.pyenv/versions/3.9.16/lib/python3.9/site-packages/urllib3/poolmanager.py", line 443, in urlopen
+    response = conn.urlopen(method, u.request_uri, **kw)
+  File "/home/zinjacoder/.pyenv/versions/3.9.16/lib/python3.9/site-packages/urllib3/connectionpool.py", line 844, in urlopen
+    retries = retries.increment(
+  File "/home/zinjacoder/.pyenv/versions/3.9.16/lib/python3.9/site-packages/urllib3/util/retry.py", line 470, in increment
+    raise reraise(type(error), error, _stacktrace)
+  File "/home/zinjacoder/.pyenv/versions/3.9.16/lib/python3.9/site-packages/urllib3/util/util.py", line 38, in reraise
+    raise value.with_traceback(tb)
+  File "/home/zinjacoder/.pyenv/versions/3.9.16/lib/python3.9/site-packages/urllib3/connectionpool.py", line 790, in urlopen
+    response = self._make_request(
+  File "/home/zinjacoder/.pyenv/versions/3.9.16/lib/python3.9/site-packages/urllib3/connectionpool.py", line 536, in _make_request
+    response = conn.getresponse()
+  File "/home/zinjacoder/.pyenv/versions/3.9.16/lib/python3.9/site-packages/urllib3/connection.py", line 454, in getresponse
+    httplib_response = super().getresponse()
+  File "/home/zinjacoder/.pyenv/versions/3.9.16/lib/python3.9/http/client.py", line 1377, in getresponse
+    response.begin()
+  File "/home/zinjacoder/.pyenv/versions/3.9.16/lib/python3.9/http/client.py", line 320, in begin
+    version, status, reason = self._read_status()
+  File "/home/zinjacoder/.pyenv/versions/3.9.16/lib/python3.9/http/client.py", line 289, in _read_status
+    raise RemoteDisconnected("Remote end closed connection without"
+urllib3.exceptions.ProtocolError: ('Connection aborted.', RemoteDisconnected('Remote end closed connection without response'))
+
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+Error Time - 2023-06-22_23-34-36
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+Traceback (most recent call last):
+  File "/home/zinjacoder/softwares/tools/built/BrowserBruter/BrowserBruter.py", line 548, in <module>
+    time.sleep(4)
+KeyboardInterrupt
+
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+Error Time - 2023-06-22_23-42-48
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+Traceback (most recent call last):
+  File "/home/zinjacoder/softwares/tools/built/BrowserBruter/BrowserBruter.py", line 270, in run_browser_instance
+    attempt(elements[i],payloads[j], driver, this_threads_file)
+  File "/home/zinjacoder/softwares/tools/built/BrowserBruter/BrowserBruter.py", line 372, in attempt
+    remove_attributes(driver.field)
+AttributeError: 'Chrome' object has no attribute 'field'
+
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+Error Time - 2023-06-22_23-42-52
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+Traceback (most recent call last):
+  File "/home/zinjacoder/softwares/tools/built/BrowserBruter/BrowserBruter.py", line 270, in run_browser_instance
+    attempt(elements[i],payloads[j], driver, this_threads_file)
+  File "/home/zinjacoder/softwares/tools/built/BrowserBruter/BrowserBruter.py", line 372, in attempt
+    remove_attributes(driver.field)
+AttributeError: 'Chrome' object has no attribute 'field'
+
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+Error Time - 2023-06-22_23-42-56
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+Traceback (most recent call last):
+  File "/home/zinjacoder/softwares/tools/built/BrowserBruter/BrowserBruter.py", line 270, in run_browser_instance
+    attempt(elements[i],payloads[j], driver, this_threads_file)
+  File "/home/zinjacoder/softwares/tools/built/BrowserBruter/BrowserBruter.py", line 372, in attempt
+    remove_attributes(driver.field)
+AttributeError: 'Chrome' object has no attribute 'field'
+
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+Error Time - 2023-06-23_01-37-24
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+Traceback (most recent call last):
+  File "/home/zinjacoder/.pyenv/versions/3.9.16/lib/python3.9/site-packages/urllib3/connectionpool.py", line 790, in urlopen
+    response = self._make_request(
+  File "/home/zinjacoder/.pyenv/versions/3.9.16/lib/python3.9/site-packages/urllib3/connectionpool.py", line 536, in _make_request
+    response = conn.getresponse()
+  File "/home/zinjacoder/.pyenv/versions/3.9.16/lib/python3.9/site-packages/urllib3/connection.py", line 454, in getresponse
+    httplib_response = super().getresponse()
+  File "/home/zinjacoder/.pyenv/versions/3.9.16/lib/python3.9/http/client.py", line 1377, in getresponse
+    response.begin()
+  File "/home/zinjacoder/.pyenv/versions/3.9.16/lib/python3.9/http/client.py", line 320, in begin
+    version, status, reason = self._read_status()
+  File "/home/zinjacoder/.pyenv/versions/3.9.16/lib/python3.9/http/client.py", line 281, in _read_status
+    line = str(self.fp.readline(_MAXLINE + 1), "iso-8859-1")
+  File "/home/zinjacoder/.pyenv/versions/3.9.16/lib/python3.9/socket.py", line 704, in readinto
+    return self._sock.recv_into(b)
+ConnectionResetError: [Errno 104] Connection reset by peer
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/zinjacoder/softwares/tools/built/BrowserBruter/BrowserBruter.py", line 270, in run_browser_instance
+    attempt(elements[i],payloads[j], driver, this_threads_file)
+  File "/home/zinjacoder/softwares/tools/built/BrowserBruter/BrowserBruter.py", line 356, in attempt
+    input_fields = [field for field in input_fields if field.get_attribute("name") != args.csrf and field.get_attribute("id") != args.csrf and field.get_attribute("type") != "button" and field.get_attribute("type") != "submit"]
+  File "/home/zinjacoder/softwares/tools/built/BrowserBruter/BrowserBruter.py", line 356, in <listcomp>
+    input_fields = [field for field in input_fields if field.get_attribute("name") != args.csrf and field.get_attribute("id") != args.csrf and field.get_attribute("type") != "button" and field.get_attribute("type") != "submit"]
+  File "/home/zinjacoder/.pyenv/versions/3.9.16/lib/python3.9/site-packages/selenium/webdriver/remote/webelement.py", line 178, in get_attribute
+    attribute_value = self.parent.execute_script(
+  File "/home/zinjacoder/.pyenv/versions/3.9.16/lib/python3.9/site-packages/selenium/webdriver/remote/webdriver.py", line 406, in execute_script
+    return self.execute(command, {"script": script, "args": converted_args})["value"]
+  File "/home/zinjacoder/.pyenv/versions/3.9.16/lib/python3.9/site-packages/selenium/webdriver/remote/webdriver.py", line 344, in execute
+    response = self.command_executor.execute(driver_command, params)
+  File "/home/zinjacoder/.pyenv/versions/3.9.16/lib/python3.9/site-packages/selenium/webdriver/remote/remote_connection.py", line 290, in execute
+    return self._request(command_info[0], url, body=data)
+  File "/home/zinjacoder/.pyenv/versions/3.9.16/lib/python3.9/site-packages/selenium/webdriver/remote/remote_connection.py", line 311, in _request
+    response = self._conn.request(method, url, body=body, headers=headers)
+  File "/home/zinjacoder/.pyenv/versions/3.9.16/lib/python3.9/site-packages/urllib3/_request_methods.py", line 118, in request
+    return self.request_encode_body(
+  File "/home/zinjacoder/.pyenv/versions/3.9.16/lib/python3.9/site-packages/urllib3/_request_methods.py", line 217, in request_encode_body
+    return self.urlopen(method, url, **extra_kw)
+  File "/home/zinjacoder/.pyenv/versions/3.9.16/lib/python3.9/site-packages/urllib3/poolmanager.py", line 443, in urlopen
+    response = conn.urlopen(method, u.request_uri, **kw)
+  File "/home/zinjacoder/.pyenv/versions/3.9.16/lib/python3.9/site-packages/urllib3/connectionpool.py", line 844, in urlopen
+    retries = retries.increment(
+  File "/home/zinjacoder/.pyenv/versions/3.9.16/lib/python3.9/site-packages/urllib3/util/retry.py", line 470, in increment
+    raise reraise(type(error), error, _stacktrace)
+  File "/home/zinjacoder/.pyenv/versions/3.9.16/lib/python3.9/site-packages/urllib3/util/util.py", line 38, in reraise
+    raise value.with_traceback(tb)
+  File "/home/zinjacoder/.pyenv/versions/3.9.16/lib/python3.9/site-packages/urllib3/connectionpool.py", line 790, in urlopen
+    response = self._make_request(
+  File "/home/zinjacoder/.pyenv/versions/3.9.16/lib/python3.9/site-packages/urllib3/connectionpool.py", line 536, in _make_request
+    response = conn.getresponse()
+  File "/home/zinjacoder/.pyenv/versions/3.9.16/lib/python3.9/site-packages/urllib3/connection.py", line 454, in getresponse
+    httplib_response = super().getresponse()
+  File "/home/zinjacoder/.pyenv/versions/3.9.16/lib/python3.9/http/client.py", line 1377, in getresponse
+    response.begin()
+  File "/home/zinjacoder/.pyenv/versions/3.9.16/lib/python3.9/http/client.py", line 320, in begin
+    version, status, reason = self._read_status()
+  File "/home/zinjacoder/.pyenv/versions/3.9.16/lib/python3.9/http/client.py", line 281, in _read_status
+    line = str(self.fp.readline(_MAXLINE + 1), "iso-8859-1")
+  File "/home/zinjacoder/.pyenv/versions/3.9.16/lib/python3.9/socket.py", line 704, in readinto
+    return self._sock.recv_into(b)
+urllib3.exceptions.ProtocolError: ('Connection aborted.', ConnectionResetError(104, 'Connection reset by peer'))
+
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+Error Time - 2023-06-23_01-37-26
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+Traceback (most recent call last):
+  File "/home/zinjacoder/softwares/tools/built/BrowserBruter/BrowserBruter.py", line 548, in <module>
+    time.sleep(4)
+KeyboardInterrupt
+
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+Error Time - 2023-06-23_01-44-27
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+Traceback (most recent call last):
+  File "/home/zinjacoder/.pyenv/versions/3.9.16/lib/python3.9/site-packages/urllib3/connection.py", line 200, in _new_conn
+    sock = connection.create_connection(
+  File "/home/zinjacoder/.pyenv/versions/3.9.16/lib/python3.9/site-packages/urllib3/util/connection.py", line 85, in create_connection
+    raise err
+  File "/home/zinjacoder/.pyenv/versions/3.9.16/lib/python3.9/site-packages/urllib3/util/connection.py", line 73, in create_connection
+    sock.connect(sa)
+ConnectionRefusedError: [Errno 111] Connection refused
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/home/zinjacoder/.pyenv/versions/3.9.16/lib/python3.9/site-packages/urllib3/connectionpool.py", line 790, in urlopen
+    response = self._make_request(
+  File "/home/zinjacoder/.pyenv/versions/3.9.16/lib/python3.9/site-packages/urllib3/connectionpool.py", line 496, in _make_request
+    conn.request(
+  File "/home/zinjacoder/.pyenv/versions/3.9.16/lib/python3.9/site-packages/urllib3/connection.py", line 388, in request
+    self.endheaders()
+  File "/home/zinjacoder/.pyenv/versions/3.9.16/lib/python3.9/http/client.py", line 1280, in endheaders
+    self._send_output(message_body, encode_chunked=encode_chunked)
+  File "/home/zinjacoder/.pyenv/versions/3.9.16/lib/python3.9/http/client.py", line 1040, in _send_output
+    self.send(msg)
+  File "/home/zinjacoder/.pyenv/versions/3.9.16/lib/python3.9/http/client.py", line 980, in send
+    self.connect()
+  File "/home/zinjacoder/.pyenv/versions/3.9.16/lib/python3.9/site-packages/urllib3/connection.py", line 236, in connect
+    self.sock = self._new_conn()
+  File "/home/zinjacoder/.pyenv/versions/3.9.16/lib/python3.9/site-packages/urllib3/connection.py", line 215, in _new_conn
+    raise NewConnectionError(
+urllib3.exceptions.NewConnectionError: <urllib3.connection.HTTPConnection object at 0x7fa9f813f8e0>: Failed to establish a new connection: [Errno 111] Connection refused
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/home/zinjacoder/softwares/tools/built/BrowserBruter/BrowserBruter.py", line 270, in run_browser_instance
+    attempt(elements[i],payloads[j], driver, this_threads_file)
+  File "/home/zinjacoder/softwares/tools/built/BrowserBruter/BrowserBruter.py", line 365, in attempt
+    elif field.tag_name == "select":
+  File "/home/zinjacoder/.pyenv/versions/3.9.16/lib/python3.9/site-packages/selenium/webdriver/remote/webelement.py", line 85, in tag_name
+    return self._execute(Command.GET_ELEMENT_TAG_NAME)["value"]
+  File "/home/zinjacoder/.pyenv/versions/3.9.16/lib/python3.9/site-packages/selenium/webdriver/remote/webelement.py", line 395, in _execute
+    return self._parent.execute(command, params)
+  File "/home/zinjacoder/.pyenv/versions/3.9.16/lib/python3.9/site-packages/selenium/webdriver/remote/webdriver.py", line 344, in execute
+    response = self.command_executor.execute(driver_command, params)
+  File "/home/zinjacoder/.pyenv/versions/3.9.16/lib/python3.9/site-packages/selenium/webdriver/remote/remote_connection.py", line 290, in execute
+    return self._request(command_info[0], url, body=data)
+  File "/home/zinjacoder/.pyenv/versions/3.9.16/lib/python3.9/site-packages/selenium/webdriver/remote/remote_connection.py", line 311, in _request
+    response = self._conn.request(method, url, body=body, headers=headers)
+  File "/home/zinjacoder/.pyenv/versions/3.9.16/lib/python3.9/site-packages/urllib3/_request_methods.py", line 110, in request
+    return self.request_encode_url(
+  File "/home/zinjacoder/.pyenv/versions/3.9.16/lib/python3.9/site-packages/urllib3/_request_methods.py", line 143, in request_encode_url
+    return self.urlopen(method, url, **extra_kw)
+  File "/home/zinjacoder/.pyenv/versions/3.9.16/lib/python3.9/site-packages/urllib3/poolmanager.py", line 443, in urlopen
+    response = conn.urlopen(method, u.request_uri, **kw)
+  File "/home/zinjacoder/.pyenv/versions/3.9.16/lib/python3.9/site-packages/urllib3/connectionpool.py", line 874, in urlopen
+    return self.urlopen(
+  File "/home/zinjacoder/.pyenv/versions/3.9.16/lib/python3.9/site-packages/urllib3/connectionpool.py", line 874, in urlopen
+    return self.urlopen(
+  File "/home/zinjacoder/.pyenv/versions/3.9.16/lib/python3.9/site-packages/urllib3/connectionpool.py", line 874, in urlopen
+    return self.urlopen(
+  File "/home/zinjacoder/.pyenv/versions/3.9.16/lib/python3.9/site-packages/urllib3/connectionpool.py", line 844, in urlopen
+    retries = retries.increment(
+  File "/home/zinjacoder/.pyenv/versions/3.9.16/lib/python3.9/site-packages/urllib3/util/retry.py", line 515, in increment
+    raise MaxRetryError(_pool, url, reason) from reason  # type: ignore[arg-type]
+urllib3.exceptions.MaxRetryError: HTTPConnectionPool(host='localhost', port=40439): Max retries exceeded with url: /session/6786dcb3da18b470056297e62729d716/element/B8FF3776C147907E18D4CE10FD325752_element_3701/name (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x7fa9f813f8e0>: Failed to establish a new connection: [Errno 111] Connection refused'))
+
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+Error Time - 2023-06-23_01-44-27
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+Traceback (most recent call last):
+  File "/home/zinjacoder/.pyenv/versions/3.9.16/lib/python3.9/site-packages/urllib3/connectionpool.py", line 790, in urlopen
+    response = self._make_request(
+  File "/home/zinjacoder/.pyenv/versions/3.9.16/lib/python3.9/site-packages/urllib3/connectionpool.py", line 496, in _make_request
+    conn.request(
+  File "/home/zinjacoder/.pyenv/versions/3.9.16/lib/python3.9/site-packages/urllib3/connection.py", line 402, in request
+    self.send(chunk)
+  File "/home/zinjacoder/.pyenv/versions/3.9.16/lib/python3.9/http/client.py", line 1001, in send
+    self.sock.sendall(data)
+ConnectionResetError: [Errno 104] Connection reset by peer
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/zinjacoder/softwares/tools/built/BrowserBruter/BrowserBruter.py", line 270, in run_browser_instance
+    attempt(elements[i],payloads[j], driver, this_threads_file)
+  File "/home/zinjacoder/softwares/tools/built/BrowserBruter/BrowserBruter.py", line 420, in attempt
+    remove_attributes(driver,element_being_fuzzed)
+  File "/home/zinjacoder/.pyenv/versions/3.9.16/lib/python3.9/site-packages/selenium/webdriver/remote/webelement.py", line 94, in click
+    self._execute(Command.CLICK_ELEMENT)
+  File "/home/zinjacoder/.pyenv/versions/3.9.16/lib/python3.9/site-packages/selenium/webdriver/remote/webelement.py", line 395, in _execute
+    return self._parent.execute(command, params)
+  File "/home/zinjacoder/.pyenv/versions/3.9.16/lib/python3.9/site-packages/selenium/webdriver/remote/webdriver.py", line 344, in execute
+    response = self.command_executor.execute(driver_command, params)
+  File "/home/zinjacoder/.pyenv/versions/3.9.16/lib/python3.9/site-packages/selenium/webdriver/remote/remote_connection.py", line 290, in execute
+    return self._request(command_info[0], url, body=data)
+  File "/home/zinjacoder/.pyenv/versions/3.9.16/lib/python3.9/site-packages/selenium/webdriver/remote/remote_connection.py", line 311, in _request
+    response = self._conn.request(method, url, body=body, headers=headers)
+  File "/home/zinjacoder/.pyenv/versions/3.9.16/lib/python3.9/site-packages/urllib3/_request_methods.py", line 118, in request
+    return self.request_encode_body(
+  File "/home/zinjacoder/.pyenv/versions/3.9.16/lib/python3.9/site-packages/urllib3/_request_methods.py", line 217, in request_encode_body
+    return self.urlopen(method, url, **extra_kw)
+  File "/home/zinjacoder/.pyenv/versions/3.9.16/lib/python3.9/site-packages/urllib3/poolmanager.py", line 443, in urlopen
+    response = conn.urlopen(method, u.request_uri, **kw)
+  File "/home/zinjacoder/.pyenv/versions/3.9.16/lib/python3.9/site-packages/urllib3/connectionpool.py", line 844, in urlopen
+    retries = retries.increment(
+  File "/home/zinjacoder/.pyenv/versions/3.9.16/lib/python3.9/site-packages/urllib3/util/retry.py", line 470, in increment
+    raise reraise(type(error), error, _stacktrace)
+  File "/home/zinjacoder/.pyenv/versions/3.9.16/lib/python3.9/site-packages/urllib3/util/util.py", line 38, in reraise
+    raise value.with_traceback(tb)
+  File "/home/zinjacoder/.pyenv/versions/3.9.16/lib/python3.9/site-packages/urllib3/connectionpool.py", line 790, in urlopen
+    response = self._make_request(
+  File "/home/zinjacoder/.pyenv/versions/3.9.16/lib/python3.9/site-packages/urllib3/connectionpool.py", line 496, in _make_request
+    conn.request(
+  File "/home/zinjacoder/.pyenv/versions/3.9.16/lib/python3.9/site-packages/urllib3/connection.py", line 402, in request
+    self.send(chunk)
+  File "/home/zinjacoder/.pyenv/versions/3.9.16/lib/python3.9/http/client.py", line 1001, in send
+    self.sock.sendall(data)
+urllib3.exceptions.ProtocolError: ('Connection aborted.', ConnectionResetError(104, 'Connection reset by peer'))
+
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+Error Time - 2023-06-23_01-44-27
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+Traceback (most recent call last):
+  File "/home/zinjacoder/.pyenv/versions/3.9.16/lib/python3.9/site-packages/urllib3/connectionpool.py", line 790, in urlopen
+    response = self._make_request(
+  File "/home/zinjacoder/.pyenv/versions/3.9.16/lib/python3.9/site-packages/urllib3/connectionpool.py", line 536, in _make_request
+    response = conn.getresponse()
+  File "/home/zinjacoder/.pyenv/versions/3.9.16/lib/python3.9/site-packages/urllib3/connection.py", line 454, in getresponse
+    httplib_response = super().getresponse()
+  File "/home/zinjacoder/.pyenv/versions/3.9.16/lib/python3.9/http/client.py", line 1377, in getresponse
+    response.begin()
+  File "/home/zinjacoder/.pyenv/versions/3.9.16/lib/python3.9/http/client.py", line 320, in begin
+    version, status, reason = self._read_status()
+  File "/home/zinjacoder/.pyenv/versions/3.9.16/lib/python3.9/http/client.py", line 289, in _read_status
+    raise RemoteDisconnected("Remote end closed connection without"
+http.client.RemoteDisconnected: Remote end closed connection without response
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/zinjacoder/softwares/tools/built/BrowserBruter/BrowserBruter.py", line 270, in run_browser_instance
+    attempt(elements[i],payloads[j], driver, this_threads_file)
+  File "/home/zinjacoder/softwares/tools/built/BrowserBruter/BrowserBruter.py", line 420, in attempt
+    remove_attributes(driver,element_being_fuzzed)
+  File "/home/zinjacoder/.pyenv/versions/3.9.16/lib/python3.9/site-packages/selenium/webdriver/remote/webdriver.py", line 740, in find_element
+    return self.execute(Command.FIND_ELEMENT, {"using": by, "value": value})["value"]
+  File "/home/zinjacoder/.pyenv/versions/3.9.16/lib/python3.9/site-packages/selenium/webdriver/remote/webdriver.py", line 344, in execute
+    response = self.command_executor.execute(driver_command, params)
+  File "/home/zinjacoder/.pyenv/versions/3.9.16/lib/python3.9/site-packages/selenium/webdriver/remote/remote_connection.py", line 290, in execute
+    return self._request(command_info[0], url, body=data)
+  File "/home/zinjacoder/.pyenv/versions/3.9.16/lib/python3.9/site-packages/selenium/webdriver/remote/remote_connection.py", line 311, in _request
+    response = self._conn.request(method, url, body=body, headers=headers)
+  File "/home/zinjacoder/.pyenv/versions/3.9.16/lib/python3.9/site-packages/urllib3/_request_methods.py", line 118, in request
+    return self.request_encode_body(
+  File "/home/zinjacoder/.pyenv/versions/3.9.16/lib/python3.9/site-packages/urllib3/_request_methods.py", line 217, in request_encode_body
+    return self.urlopen(method, url, **extra_kw)
+  File "/home/zinjacoder/.pyenv/versions/3.9.16/lib/python3.9/site-packages/urllib3/poolmanager.py", line 443, in urlopen
+    response = conn.urlopen(method, u.request_uri, **kw)
+  File "/home/zinjacoder/.pyenv/versions/3.9.16/lib/python3.9/site-packages/urllib3/connectionpool.py", line 844, in urlopen
+    retries = retries.increment(
+  File "/home/zinjacoder/.pyenv/versions/3.9.16/lib/python3.9/site-packages/urllib3/util/retry.py", line 470, in increment
+    raise reraise(type(error), error, _stacktrace)
+  File "/home/zinjacoder/.pyenv/versions/3.9.16/lib/python3.9/site-packages/urllib3/util/util.py", line 38, in reraise
+    raise value.with_traceback(tb)
+  File "/home/zinjacoder/.pyenv/versions/3.9.16/lib/python3.9/site-packages/urllib3/connectionpool.py", line 790, in urlopen
+    response = self._make_request(
+  File "/home/zinjacoder/.pyenv/versions/3.9.16/lib/python3.9/site-packages/urllib3/connectionpool.py", line 536, in _make_request
+    response = conn.getresponse()
+  File "/home/zinjacoder/.pyenv/versions/3.9.16/lib/python3.9/site-packages/urllib3/connection.py", line 454, in getresponse
+    httplib_response = super().getresponse()
+  File "/home/zinjacoder/.pyenv/versions/3.9.16/lib/python3.9/http/client.py", line 1377, in getresponse
+    response.begin()
+  File "/home/zinjacoder/.pyenv/versions/3.9.16/lib/python3.9/http/client.py", line 320, in begin
+    version, status, reason = self._read_status()
+  File "/home/zinjacoder/.pyenv/versions/3.9.16/lib/python3.9/http/client.py", line 289, in _read_status
+    raise RemoteDisconnected("Remote end closed connection without"
+urllib3.exceptions.ProtocolError: ('Connection aborted.', RemoteDisconnected('Remote end closed connection without response'))
+
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+Error Time - 2023-06-23_01-44-27
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+Traceback (most recent call last):
+  File "/home/zinjacoder/.pyenv/versions/3.9.16/lib/python3.9/site-packages/urllib3/connectionpool.py", line 790, in urlopen
+    response = self._make_request(
+  File "/home/zinjacoder/.pyenv/versions/3.9.16/lib/python3.9/site-packages/urllib3/connectionpool.py", line 536, in _make_request
+    response = conn.getresponse()
+  File "/home/zinjacoder/.pyenv/versions/3.9.16/lib/python3.9/site-packages/urllib3/connection.py", line 454, in getresponse
+    httplib_response = super().getresponse()
+  File "/home/zinjacoder/.pyenv/versions/3.9.16/lib/python3.9/http/client.py", line 1377, in getresponse
+    response.begin()
+  File "/home/zinjacoder/.pyenv/versions/3.9.16/lib/python3.9/http/client.py", line 320, in begin
+    version, status, reason = self._read_status()
+  File "/home/zinjacoder/.pyenv/versions/3.9.16/lib/python3.9/http/client.py", line 289, in _read_status
+    raise RemoteDisconnected("Remote end closed connection without"
+http.client.RemoteDisconnected: Remote end closed connection without response
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/zinjacoder/softwares/tools/built/BrowserBruter/BrowserBruter.py", line 270, in run_browser_instance
+    attempt(elements[i],payloads[j], driver, this_threads_file)
+  File "/home/zinjacoder/softwares/tools/built/BrowserBruter/BrowserBruter.py", line 356, in attempt
+    input_fields = [field for field in input_fields if field.get_attribute("name") != args.csrf and field.get_attribute("id") != args.csrf and field.get_attribute("type") != "button" and field.get_attribute("type") != "submit"]
+  File "/home/zinjacoder/softwares/tools/built/BrowserBruter/BrowserBruter.py", line 356, in <listcomp>
+    input_fields = [field for field in input_fields if field.get_attribute("name") != args.csrf and field.get_attribute("id") != args.csrf and field.get_attribute("type") != "button" and field.get_attribute("type") != "submit"]
+  File "/home/zinjacoder/.pyenv/versions/3.9.16/lib/python3.9/site-packages/selenium/webdriver/remote/webelement.py", line 178, in get_attribute
+    attribute_value = self.parent.execute_script(
+  File "/home/zinjacoder/.pyenv/versions/3.9.16/lib/python3.9/site-packages/selenium/webdriver/remote/webdriver.py", line 406, in execute_script
+    return self.execute(command, {"script": script, "args": converted_args})["value"]
+  File "/home/zinjacoder/.pyenv/versions/3.9.16/lib/python3.9/site-packages/selenium/webdriver/remote/webdriver.py", line 344, in execute
+    response = self.command_executor.execute(driver_command, params)
+  File "/home/zinjacoder/.pyenv/versions/3.9.16/lib/python3.9/site-packages/selenium/webdriver/remote/remote_connection.py", line 290, in execute
+    return self._request(command_info[0], url, body=data)
+  File "/home/zinjacoder/.pyenv/versions/3.9.16/lib/python3.9/site-packages/selenium/webdriver/remote/remote_connection.py", line 311, in _request
+    response = self._conn.request(method, url, body=body, headers=headers)
+  File "/home/zinjacoder/.pyenv/versions/3.9.16/lib/python3.9/site-packages/urllib3/_request_methods.py", line 118, in request
+    return self.request_encode_body(
+  File "/home/zinjacoder/.pyenv/versions/3.9.16/lib/python3.9/site-packages/urllib3/_request_methods.py", line 217, in request_encode_body
+    return self.urlopen(method, url, **extra_kw)
+  File "/home/zinjacoder/.pyenv/versions/3.9.16/lib/python3.9/site-packages/urllib3/poolmanager.py", line 443, in urlopen
+    response = conn.urlopen(method, u.request_uri, **kw)
+  File "/home/zinjacoder/.pyenv/versions/3.9.16/lib/python3.9/site-packages/urllib3/connectionpool.py", line 844, in urlopen
+    retries = retries.increment(
+  File "/home/zinjacoder/.pyenv/versions/3.9.16/lib/python3.9/site-packages/urllib3/util/retry.py", line 470, in increment
+    raise reraise(type(error), error, _stacktrace)
+  File "/home/zinjacoder/.pyenv/versions/3.9.16/lib/python3.9/site-packages/urllib3/util/util.py", line 38, in reraise
+    raise value.with_traceback(tb)
+  File "/home/zinjacoder/.pyenv/versions/3.9.16/lib/python3.9/site-packages/urllib3/connectionpool.py", line 790, in urlopen
+    response = self._make_request(
+  File "/home/zinjacoder/.pyenv/versions/3.9.16/lib/python3.9/site-packages/urllib3/connectionpool.py", line 536, in _make_request
+    response = conn.getresponse()
+  File "/home/zinjacoder/.pyenv/versions/3.9.16/lib/python3.9/site-packages/urllib3/connection.py", line 454, in getresponse
+    httplib_response = super().getresponse()
+  File "/home/zinjacoder/.pyenv/versions/3.9.16/lib/python3.9/http/client.py", line 1377, in getresponse
+    response.begin()
+  File "/home/zinjacoder/.pyenv/versions/3.9.16/lib/python3.9/http/client.py", line 320, in begin
+    version, status, reason = self._read_status()
+  File "/home/zinjacoder/.pyenv/versions/3.9.16/lib/python3.9/http/client.py", line 289, in _read_status
+    raise RemoteDisconnected("Remote end closed connection without"
+urllib3.exceptions.ProtocolError: ('Connection aborted.', RemoteDisconnected('Remote end closed connection without response'))
+
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+Error Time - 2023-06-23_01-44-27
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+Traceback (most recent call last):
+  File "/home/zinjacoder/.pyenv/versions/3.9.16/lib/python3.9/site-packages/urllib3/connectionpool.py", line 790, in urlopen
+    response = self._make_request(
+  File "/home/zinjacoder/.pyenv/versions/3.9.16/lib/python3.9/site-packages/urllib3/connectionpool.py", line 536, in _make_request
+    response = conn.getresponse()
+  File "/home/zinjacoder/.pyenv/versions/3.9.16/lib/python3.9/site-packages/urllib3/connection.py", line 454, in getresponse
+    httplib_response = super().getresponse()
+  File "/home/zinjacoder/.pyenv/versions/3.9.16/lib/python3.9/http/client.py", line 1377, in getresponse
+    response.begin()
+  File "/home/zinjacoder/.pyenv/versions/3.9.16/lib/python3.9/http/client.py", line 320, in begin
+    version, status, reason = self._read_status()
+  File "/home/zinjacoder/.pyenv/versions/3.9.16/lib/python3.9/http/client.py", line 289, in _read_status
+    raise RemoteDisconnected("Remote end closed connection without"
+http.client.RemoteDisconnected: Remote end closed connection without response
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/zinjacoder/softwares/tools/built/BrowserBruter/BrowserBruter.py", line 270, in run_browser_instance
+    attempt(elements[i],payloads[j], driver, this_threads_file)
+  File "/home/zinjacoder/softwares/tools/built/BrowserBruter/BrowserBruter.py", line 376, in attempt
+    remove_attributes(driver,field)
+  File "/home/zinjacoder/softwares/tools/built/BrowserBruter/BrowserBruter.py", line 194, in remove_attributes
+    driver.execute_script("arguments[0].removeAttribute('minlength');",field)
+  File "/home/zinjacoder/.pyenv/versions/3.9.16/lib/python3.9/site-packages/selenium/webdriver/remote/webdriver.py", line 406, in execute_script
+    return self.execute(command, {"script": script, "args": converted_args})["value"]
+  File "/home/zinjacoder/.pyenv/versions/3.9.16/lib/python3.9/site-packages/selenium/webdriver/remote/webdriver.py", line 344, in execute
+    response = self.command_executor.execute(driver_command, params)
+  File "/home/zinjacoder/.pyenv/versions/3.9.16/lib/python3.9/site-packages/selenium/webdriver/remote/remote_connection.py", line 290, in execute
+    return self._request(command_info[0], url, body=data)
+  File "/home/zinjacoder/.pyenv/versions/3.9.16/lib/python3.9/site-packages/selenium/webdriver/remote/remote_connection.py", line 311, in _request
+    response = self._conn.request(method, url, body=body, headers=headers)
+  File "/home/zinjacoder/.pyenv/versions/3.9.16/lib/python3.9/site-packages/urllib3/_request_methods.py", line 118, in request
+    return self.request_encode_body(
+  File "/home/zinjacoder/.pyenv/versions/3.9.16/lib/python3.9/site-packages/urllib3/_request_methods.py", line 217, in request_encode_body
+    return self.urlopen(method, url, **extra_kw)
+  File "/home/zinjacoder/.pyenv/versions/3.9.16/lib/python3.9/site-packages/urllib3/poolmanager.py", line 443, in urlopen
+    response = conn.urlopen(method, u.request_uri, **kw)
+  File "/home/zinjacoder/.pyenv/versions/3.9.16/lib/python3.9/site-packages/urllib3/connectionpool.py", line 844, in urlopen
+    retries = retries.increment(
+  File "/home/zinjacoder/.pyenv/versions/3.9.16/lib/python3.9/site-packages/urllib3/util/retry.py", line 470, in increment
+    raise reraise(type(error), error, _stacktrace)
+  File "/home/zinjacoder/.pyenv/versions/3.9.16/lib/python3.9/site-packages/urllib3/util/util.py", line 38, in reraise
+    raise value.with_traceback(tb)
+  File "/home/zinjacoder/.pyenv/versions/3.9.16/lib/python3.9/site-packages/urllib3/connectionpool.py", line 790, in urlopen
+    response = self._make_request(
+  File "/home/zinjacoder/.pyenv/versions/3.9.16/lib/python3.9/site-packages/urllib3/connectionpool.py", line 536, in _make_request
+    response = conn.getresponse()
+  File "/home/zinjacoder/.pyenv/versions/3.9.16/lib/python3.9/site-packages/urllib3/connection.py", line 454, in getresponse
+    httplib_response = super().getresponse()
+  File "/home/zinjacoder/.pyenv/versions/3.9.16/lib/python3.9/http/client.py", line 1377, in getresponse
+    response.begin()
+  File "/home/zinjacoder/.pyenv/versions/3.9.16/lib/python3.9/http/client.py", line 320, in begin
+    version, status, reason = self._read_status()
+  File "/home/zinjacoder/.pyenv/versions/3.9.16/lib/python3.9/http/client.py", line 289, in _read_status
+    raise RemoteDisconnected("Remote end closed connection without"
+urllib3.exceptions.ProtocolError: ('Connection aborted.', RemoteDisconnected('Remote end closed connection without response'))
+
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+Error Time - 2023-06-23_01-44-30
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+Traceback (most recent call last):
+  File "/home/zinjacoder/softwares/tools/built/BrowserBruter/BrowserBruter.py", line 552, in <module>
+    # Update the starting index for the next thread
+  File "/home/zinjacoder/.pyenv/versions/3.9.16/lib/python3.9/threading.py", line 1060, in join
+    self._wait_for_tstate_lock()
+  File "/home/zinjacoder/.pyenv/versions/3.9.16/lib/python3.9/threading.py", line 1080, in _wait_for_tstate_lock
+    if lock.acquire(block, timeout):
+KeyboardInterrupt

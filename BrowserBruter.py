@@ -56,30 +56,50 @@ usage_examples = '''
 Usage Examples:
 	1. Fuzz on login page
 	 > python3 BrowserBruter.py -e username,password -p sqli.txt -t http://owasp.com/login -b loginButton
+	
 	2. Fuzz on login page with csrf enabled
 	 > python3 BrowserBruter.py -e username,password -p sqli.txt -t http://owasp.com/login -b loginButton --csrf csrfToken
+	
 	3. Fuzz on registration page with csrf enabled no output printed on console
 	 > python3 BrowserBruter.py -e name,age,address,phone -p payloads.txt -t http://dvwa.com/register -b register --csrf _token --silent
+	
 	4. Fuzz on 3rd form of registration page with csrf enabled no output printed on console
 	 > python3 BrowserBruter.py -e name,age,address,phone -p payloads.txt -t http://dvwa.com/register -b register --csrf _token --silent --form 3
+	
 	5. Fuzz on registration page with csrf and two cookies difficulty and hint
 	 > python3 BrowserBruter.py -e name,age,address,phone -p payloads.txt -t http://dvwa.com/register -b register --cookie difficulty:high:dvwa.com hint:no:dvwa.com --csrf _token
+	
 	6. Fuzz on registration page with csrf and two cookies difficulty and hint and sent them forcefully on each request
 	 > python3 BrowserBruter.py -e name,age,address,phone -p payloads.txt -t http://dvwa.com/register -b register --cookie difficulty:high:dvwa.com hint:no:dvwa.com --csrf _token --forceCookie
+	
 	7. Fuzz on 3rd form of registration page with csrf and two cookies difficulty and hint and sent them forcefully on each request and remove session data and cookie after each request-response cycle
 	 > python3 BrowserBruter.py -e name,age,address,phone -p payloads.txt -t http://dvwa.com/register -b register --cookie difficulty:high:dvwa.com hint:no:dvwa.com --csrf _token --form 3 --forceCookie --remove
+	
 	8. Fuzz on 3rd form of registration page with csrf and two cookies difficulty and hint and sent them forcefully on each request and remove session data and cookie after each request-response cycle and run browser in headless mode
 	 > python3 BrowserBruter.py -e name,age,address,phone -p payloads.txt -t http://dvwa.com/register -b register --cookie difficulty:high:dvwa.com hint:no:dvwa.com --csrf _token --form 3 --forceCookie --remove --headless
-	8. Fuzz on 3rd form of registration page with csrf and two cookies difficulty and hint and sent them forcefully on each request and remove session data and cookie after each request-response cycle and run browser in headless mode and run 5 instances of browser parallely
+	
+	9. Fuzz on 3rd form of registration page with csrf and two cookies difficulty and hint and sent them forcefully on each request and remove session data and cookie after each request-response cycle and run browser in headless mode and run 5 instances of browser parallely
 	 > python3 BrowserBruter.py -e name,age,address,phone -p payloads.txt -t http://dvwa.com/register -b register --cookie difficulty:high:dvwa.com hint:no:dvwa.com --csrf _token --form 3 --forceCookie --remove --headless --threads 5
-	9. Fuzz CheckBox for example '<input type="checkbox" name="hobbies" value="reading" /> <input type="checkbox" name="hobbies" value="writing" />', then
+   
+   10. Fuzz CheckBox for example '<input type="checkbox" name="hobbies" value="reading" /> <input type="checkbox" name="hobbies" value="writing" />', then
 	 > python3 BrowserBruter.py -e hobbies -p paylods.txt -t http://dvwa.com/register -b register
-   10. Fuzz Radio Button for example '<input type="radio" name="yesno" id="yes" value="yes" required/> <input type="radio" name="yesno" id="no" value="no" required/>', then
+   
+   11. Fuzz Radio Button for example '<input type="radio" name="yesno" id="yes" value="yes" required/> <input type="radio" name="yesno" id="no" value="no" required/>', then
 	 > python3 BrowserBruter.py -e yesno -p payloads.txt -t http://dvwa.com/register -b register 
 	 OR
 	 > python3 BrowserBruter.py -e no -p payloads.txt -t http://dvwa.com/register -b register
-   11. Fuzz CSRF token plus don't overwrite while fuzzing other fields
+   
+   12. Fuzz CSRF token + don't overwrite it while fuzzing other fields
      > python3 BrowserBruter.py -e csrfToken,username,password -p payloads.txt -t http://dvwa.com/login -b login --csrf csrfToken
+   
+   13. Fuzz <select> element - for example <select name="selectElement" required> <option value="">Select an option</option> <option value="option1">Option 1</option> </select>, then
+     > python3 BrowserBruter.py -e selectElement -p payloads.txt -t http://dvwa.com/selection -b submit
+   
+   14. Fuzz <textarea> element - for example <textarea name="textareaElement" placeholder="Enter text" required></textarea>, then
+     > python3 BrowserBruter.py -e textareaElement -p payloads.txt -t http://dvwa.com/registration -b submit
+   
+   15. Fuzz colorpicker, datepicker, timepicker - for example <input type="color" name="colorElement" required/> <input type="date" name="dateElement" required/> <input type="time" name="timeElement" required/>, then
+     > python3 BrowserBruter.py -e colorElement,dateElement,timeElement -p payloads.txt -t http://localhost/ -b submit
 	'''
 argParser.description += '\n' + usage_examples
 argsRequired = argParser.add_argument_group("required")
@@ -184,6 +204,15 @@ def add_cookies(driver):
 		print("\n\n++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\nError: You have entered arguments in invalid format, please read help message for valid formate of passing cookies. Closing the Fuzzing process\n++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++")
 		driver.quit()
 		sys.exit(0)
+
+# Function to Remove attributes
+def remove_attributes(driver, field):
+	driver.execute_script("arguments[0].removeAttribute('pattern');",field)
+	driver.execute_script("arguments[0].removeAttribute('min');",field)
+	driver.execute_script("arguments[0].removeAttribute('max');",field)
+	driver.execute_script("arguments[0].removeAttribute('maxlength');",field)
+	driver.execute_script("arguments[0].removeAttribute('minlength');",field)
+	driver.execute_script("arguments[0].removeAttribute('readonly');",field)
 
 # Function to log errors 
 def log_error(error):
@@ -324,9 +353,17 @@ def attempt(element, payload, driver, filename):
 	# Get the input field of form to be fill them
 	# If user has specified the form number 
 	if args.form:	
-		input_fields = driver.find_elements("xpath",f"//form[{args.form}]//input")
+		input_fields = driver.find_elements(By.XPATH,f"//form[{args.form}]//input")
+		select_fields = driver.find_elements(By.XPATH,f"//form[{args.form}]//select")
+		textarea_fields = driver.find_elements(By.XPATH,f"//form[{args.form}]//textarea")
+		input_fields.extend(select_fields)
+		input_fields.extend(textarea_fields)
 	else:
-		input_fields = driver.find_elements("xpath","//input")
+		input_fields = driver.find_elements(By.XPATH,"//input")
+		select_fields = driver.find_elements(By.XPATH,"//select")
+		textarea_fields = driver.find_elements(By.XPATH,"//textarea")
+		input_fields.extend(select_fields)
+		input_fields.extend(textarea_fields)
 
 	# Check if form with specified number exists or not
 	if not input_fields:
@@ -344,14 +381,23 @@ def attempt(element, payload, driver, filename):
 		fieldType = field.get_attribute("type")
 		if fieldType == "checkbox" or fieldType == "radio":
 			driver.execute_script("arguments[0].checked = true;",field)
+		# Adding support to handle <select> tags
+		elif field.tag_name == "select":
+        	# Select the second option
+			options = field.find_elements(By.TAG_NAME,"option")
+			# if there is two options in <select> choose second one as first option can be empty for example <option value="">choose country</option><option value="india">india</option>
+			if options[1]:
+				options[1].click()
+			elif options[0]:
+				options[0].click()
+		elif field.tag_name =="textarea":
+			remove_attributes(driver,field)
+			field.clear()  # Clear any existing value
+			field.send_keys("randomTextAreaValue")
 		else:
 			#Removing attribute that can conflict
-			driver.execute_script("arguments[0].removeAttribute('pattern');",field)
-			driver.execute_script("arguments[0].removeAttribute('min');",field)
-			driver.execute_script("arguments[0].removeAttribute('max');",field)
-			driver.execute_script("arguments[0].removeAttribute('maxlength');",field)
-			driver.execute_script("arguments[0].removeAttribute('minlength');",field)
-			driver.execute_script("arguments[0].removeAttribute('readonly');",field)
+			remove_attributes(driver,field)
+			# Filling the predefined values
 			fieldValue = attribute_values.get(fieldType,"defaultValue")
 			driver.execute_script("arguments[0].setAttribute('value',arguments[1]);",field,fieldValue)
 			
@@ -359,13 +405,13 @@ def attempt(element, payload, driver, filename):
 	# Fill target field which is being fuzzed with current payload	
 	# Finding the element either by id, name or class
 	try:
-		inputField = driver.find_element("id", element)
+		element_being_fuzzed = driver.find_element(By.ID, element)
 	except NoSuchElementException:
 		try:
-			inputField = driver.find_element("name", element)
+			element_being_fuzzed = driver.find_element(By.NAME, element)
 		except NoSuchElementException:
 			try:
-				inputField = driver.find_element(By.CLASS_NAME, element)
+				element_being_fuzzed = driver.find_element(By.CLASS_NAME, element)
 			except NoSuchElementException as e:
 				time.sleep(1.2)
 				log_error(traceback.format_exc())
@@ -373,23 +419,33 @@ def attempt(element, payload, driver, filename):
 				driver.quit()
 				sys.exit(0)
 
-	#Removing attribute that can conflict
-	driver.execute_script("arguments[0].removeAttribute('pattern');",inputField)
-	driver.execute_script("arguments[0].removeAttribute('min');",inputField)
-	driver.execute_script("arguments[0].removeAttribute('max');",inputField)
-	driver.execute_script("arguments[0].removeAttribute('maxlength');",inputField)
-	driver.execute_script("arguments[0].removeAttribute('minlength');",inputField)
-	driver.execute_script("arguments[0].removeAttribute('readonly');",inputField)
-	# Setting the payload
-	driver.execute_script("arguments[0].setAttribute('type','text');",inputField)
-	driver.execute_script("arguments[0].setAttribute('value',arguments[1]);", inputField, payload)
-
+	# Check if element that is being fuzzed is <select> or not, if it is <select> then set payload to its first <option> tag and mark it as selected option
+	if element_being_fuzzed.tag_name == "select":
+		options = element_being_fuzzed.find_elements(By.TAG_NAME,"option")
+		# if there is two options in <select> choose second one as first option can be empty for example <option value="">choose country</option><option value="india">india</option>
+		if options:
+			remove_attributes(driver,options[0])
+			# Set payload to first option
+			driver.execute_script("arguments[0].setAttribute('value',arguments[1]);", options[0], payload)
+			options[0].click()
+		
+	elif element_being_fuzzed.tag_name =="textarea":
+		remove_attributes(driver,element_being_fuzzed)
+		field.clear()  # Clear any existing value
+		field.send_keys(payload)
+	else:
+		#Removing attribute that can conflict
+		remove_attributes(driver,element_being_fuzzed)
+		# Setting the payload
+		driver.execute_script("arguments[0].setAttribute('type','text');",element_being_fuzzed)
+		driver.execute_script("arguments[0].setAttribute('value',arguments[1]);", element_being_fuzzed, payload)
+	
 	# Press the button
 	try:
-		driver.find_element("id",args.button).click()
+		driver.find_element(By.ID,args.button).click()
 	except NoSuchElementException:
 		try:
-			driver.find_element("name",args.button).click()
+			driver.find_element(By.NAME,args.button).click()
 		except NoSuchElementException:
 			try:
 				driver.find_element(By.CLASS_NAME,args.button).click()
