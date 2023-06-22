@@ -93,7 +93,7 @@ argParser.add_argument("-r","--remove",help="Use this switch to remove session d
 argParser.add_argument("-s","--silent",help="Use this switch to disable output being printed on console. for example python3 brute.py -t http://localhost/index.php -e username,password -b submit -p payloads.txt --silent", action="store_true")
 argParser.add_argument("-F","--form",help="Specify the form number to fuzz, for example if webpage contains two form and you want to fuzz second form use --form 2, example  python3 brute.py -t http://localhost:3000/ -e username,password -b submit -p payloads.txt --form 3", type=int)
 argParser.add_argument("-L","--headless",help="Use this switch to run browser in headless mode (No GUI), this is useful to save resources, though it is recommended to first run browser in GUI mode to verify the fuzzing is working properly, and in headless it is recommended to avoid --silent mode so logs can be printed on console", action="store_true")
-argParser.add_argument("-T","--threads",help="Specifies number of browsers instances to be run, note this will put high pressure on resources but increases the fuzzing speed, max value is 5, default is 1, lower the instances stable the fuzzing process, more instances - unstable but fast fuzzing, In other words --threads 1 slow,stable,reliable, --threads 5 fast,less-stable,less-reliable",default=1, type=int)
+argParser.add_argument("-T","--threads",help="Specifies number of browsers instances to be run, max value is 5, default is 1, lower the instances slower the fuzzing process, more instances - faster fuzzing process, In other words --threads 1 slow, --threads 3 fast, --threads 5 faster",default=1, type=int)
 
 # Getting the arguments in args variable
 args = argParser.parse_args()
