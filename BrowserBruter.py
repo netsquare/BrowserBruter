@@ -1,7 +1,6 @@
 
 ### VARIOUS IMPORTS STARTS ###
 
-import time
 import argparse
 import csv
 import datetime
@@ -10,10 +9,12 @@ import sys
 import traceback
 import threading
 import os
+from time import sleep
 from seleniumwire import webdriver
 from seleniumwire.utils import decode
-from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.chrome.service import Service
+from selenium.webdriver.chrome.options import Options as ChromeOptions
+from selenium.webdriver.firefox.options import Options as FirefoxOptions
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.support.ui import WebDriverWait
@@ -100,6 +101,9 @@ Usage Examples:
    
    15. Fuzz colorpicker, datepicker, timepicker - for example <input type="color" name="colorElement" required/> <input type="date" name="dateElement" required/> <input type="time" name="timeElement" required/>, then
      > python3 BrowserBruter.py -e colorElement,dateElement,timeElement -p payloads.txt -t http://localhost/ -b submit
+
+   16. Fuzz using Firefox instead of Chrome
+     > python3 BrowserBruter.py -e username,password -b button -t http://net-square.com/login -p payloads.txt --firefox
 	'''
 argParser.description += '\n' + usage_examples
 argsRequired = argParser.add_argument_group("required")
@@ -114,8 +118,9 @@ argParser.add_argument("-f","--forceCookie",help="Use this switch to force setti
 argParser.add_argument("-r","--remove",help="Use this switch to remove session data and cookies after each request-response cycle, this is useful against Authentication pages when you don't want redirection in case of successful login, example python3 BrowserBruter.py --cookie cookieName:Vlaue1:localhost --forceCookie", action="store_true")
 argParser.add_argument("-s","--silent",help="Use this switch to disable output being printed on console. for example python3 brute.py -t http://localhost/index.php -e username,password -b submit -p payloads.txt --silent", action="store_true")
 argParser.add_argument("-F","--form",help="Specify the form number to fuzz, for example if webpage contains two form and you want to fuzz second form use --form 2, example  python3 brute.py -t http://localhost:3000/ -e username,password -b submit -p payloads.txt --form 3", type=int)
-argParser.add_argument("-L","--headless",help="Use this switch to run browser in headless mode (No GUI), this is useful to save resources, though it is recommended to first run browser in GUI mode to verify the fuzzing is working properly, and in headless it is recommended to avoid --silent mode so logs can be printed on console", action="store_true")
+argParser.add_argument("-hl","--headless",help="Use this switch to run browser in headless mode (No GUI), this is useful to save resources, though it is recommended to first run browser in GUI mode to verify the fuzzing is working properly, and in headless it is recommended to avoid --silent mode so logs can be printed on console", action="store_true")
 argParser.add_argument("-T","--threads",help="Specifies number of browsers instances to be run, max value is 5, default is 1, lower the instances slower the fuzzing process, more instances - faster fuzzing process, In other words --threads 1 slow, --threads 3 fast, --threads 5 faster",default=1, type=int)
+argParser.add_argument("-ff","--firefox",help="Use FireFox instead of chrome for fuzzing process",action="store_true")
 
 # Getting the arguments in args variable
 args = argParser.parse_args()
@@ -135,6 +140,24 @@ elif args.forceCookie:
 ### DEFINING AND PARSING COMMAND LINE ARGUMENTS ENDS ###
 
 ### DEFINING AND ASSIGNING GLOBAL VARIABLES STARTS ###
+
+# Assigning browser options
+# Checking whether user has to run fuzzing on firefox or chrome
+if args.firefox:
+	options = FirefoxOptions()
+	options.add_argument('--disable-dev-shm-usage')
+	options.add_argument('--executable-path=res/Drivers/geckodriver')
+	# Check if browser has to be run headless mode
+	if args.headless:
+		options.add_argument('--headless')
+else:
+	options = ChromeOptions()
+	options.add_argument('--disable-dev-shm-usage')
+	options.add_argument('--executable-path=res/Drivers/chromedriver')
+	# Check if browser has to be run headless mode
+	if args.headless:
+		options.add_argument('--headless')
+	
 
 # Getting hostname from target for filtering the output this will work as one kind scope for filtering output to be stored in report
 hostname = args.target
@@ -199,7 +222,7 @@ def add_cookies(driver):
 			}
 			driver.add_cookie(cookie_dict)
 	except ValueError as e:
-		time.sleep(2)
+		sleep(2)
 		log_error(traceback.format_exc())
 		print("\n\n++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\nError: You have entered arguments in invalid format, please read help message for valid formate of passing cookies. Closing the Fuzzing process\n++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++")
 		driver.quit()
@@ -267,12 +290,11 @@ def generate_final_report():
 # Funtion to Run Single Browser instance
 def run_browser_instance(payloads, elements, instance_number):
 	try:
-		options = Options()
-		options.add_argument('--disable-dev-shm-usage')
-		# Check if browser has to be run headless mode
-		if args.headless:
-			options.add_argument('--headless')
-		driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()),options=options)
+		# Spawwing an instance of browser
+		if args.firefox:
+			driver = webdriver.Firefox(options=options)
+		else:
+			driver = webdriver.Chrome(options=options)
 	
 		# If cookies are provided assign them to session
 		if args.cookie:
@@ -288,47 +310,48 @@ def run_browser_instance(payloads, elements, instance_number):
 			for j in range(len(payloads)):
 					if not terminate:
 						attempt(elements[i],payloads[j], driver, this_threads_file)
-						time.sleep(args.delay)
+						sleep(args.delay)
 					j += 1
 			i+=i
 		print(f"\n\n++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\nINFO: Fuzzing completed for Browser Instance number - {instance_number}\n++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++")
 
 	# Handle the exceptions which specific to this thread and does not affects other threads
 	except NoSuchWindowException as e:
-		time.sleep(0.5)
+		sleep(0.5)
 		log_error(traceback.format_exc())
 		print("\n\n++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\nINFO: Browser's window has been closed, closing the BrowserBruter, check error log if this is unintentional\n++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++")
 	except RemoteDisconnected as e:
-		time.sleep(0.7)
+		sleep(0.7)
 		log_error(traceback.format_exc())
 		# This exception can be arrived whene user closes browser window
 		print("\n\n++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\nINFO: Browser's window has been closed or Remote connection lost, check error log if this is unintentional\n++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++")
 	except ProtocolError as e:
-		time.sleep(0.9)
+		sleep(0.9)
 		log_error(traceback.format_exc())
 		# This exception can be arrived whene user closes browser window
 		print("\n\n++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\nINFO: Browser's window has been closed or Remote connection lost, check error log if this is unintentional\n++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++")
 	except MaxRetryError as e:
-		time.sleep(0.3)
+		sleep(0.3)
 		error = traceback.format_exc()
 		log_error(error)
 		# This exception can be arrived whene user closes browser window
 		print("\n\n++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\nINFO: Browser's window has been closed or Browsers has reached maximum retries, if you have closed BrowserBruter ignore this else report the issue, check error log if this is unintentional\n++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++")
 	except WebDriverException as e:
-		time.sleep(1)
+		sleep(1)
 		log_error(traceback.format_exc())
 		# This exception can be arrived whene user closes browser window
 		print("\n\n++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\nINFO: Browser's window has been closed or Remote connection lost, check error log if this is unintentional\n++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++") 
 	except:
-		time.sleep(3.5)
+		sleep(3.5)
 		log_error(traceback.format_exc())
 		# Print Traceback
 		traceback.print_exc()
 		# Ask user to send this to github
 		print("\n\n++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\nError: An unkown error has been occured, Please open pull request at https://github.com/netsquare/BrowserBruter/issues and paste above message there, we are glad to help\n++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++")
 	finally:
-		# close the specific thread's driver
-		driver.quit()
+		#close the specific thread's driver
+		if driver is not None:
+			driver.quit()
 
 # Function to attempt a single request-response cycle with payload
 def attempt(element, payload, driver, filename):
@@ -413,7 +436,7 @@ def attempt(element, payload, driver, filename):
 			try:
 				element_being_fuzzed = driver.find_element(By.CLASS_NAME, element)
 			except NoSuchElementException as e:
-				time.sleep(1.2)
+				sleep(1.2)
 				log_error(traceback.format_exc())
 				print(f"\n\n++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\nError: Specified element {element} is not found. Please verify the name of element, for more information check Error.log\n++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++")
 				driver.quit()
@@ -450,7 +473,7 @@ def attempt(element, payload, driver, filename):
 			try:
 				driver.find_element(By.CLASS_NAME,args.button).click()
 			except NoSuchElementException as e:
-				time.sleep(1.7)
+				sleep(1.7)
 				log_error(traceback.format_exc())
 				print(f"\n\n++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\nError: Button element {args.button} is not found to press, please verify the id or name of the button element, for more information check Error.log\n++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++")
 				driver.quit()
@@ -570,7 +593,7 @@ if __name__ == "__main__":
     		# Update the starting index for the next thread
 			start = end
 			# Sleep for 4 seconds for proper resource management
-			time.sleep(4)
+			sleep(4)
 
 		# Wait for all threads to finish
 		for thread in threads: 
@@ -578,16 +601,16 @@ if __name__ == "__main__":
 
 	except KeyboardInterrupt:
 		signal_handler(signal.SIGINT, None)
-		time.sleep(3)
+		sleep(3)
 		log_error(traceback.format_exc())
 		print("CTRL+C")
 		sys.exit(0)
 	except SystemExit:
-		time.sleep(1.4)
+		sleep(1.4)
 		log_error(traceback.format_exc())
 		print("")
 	except:
-		time.sleep(3.3)
+		sleep(3.3)
 		log_error(traceback.format_exc())
 		# Print Traceback
 		traceback.print_exc()
