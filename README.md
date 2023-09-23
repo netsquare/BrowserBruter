@@ -64,7 +64,7 @@ Replace `[options]` with the appropriate command-line options, such as specifyin
 
 BrowserBruter will automate the web form fuzzing process and generate individual reports for each thread.
 
-Once all threads have finished, BrowserBruter will merge the reports into a final report for analysis. FInal report can be found in `BrowserBruter_Reports` directory.
+Once all threads have finished, BrowserBruter will merge the reports into a final report for analysis. Final report can be found in `BrowserBruter_Reports` directory.
 
 ### For detailed demo of Usage see this demo
 
