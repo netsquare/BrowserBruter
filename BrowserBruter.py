@@ -82,10 +82,10 @@ Usage Examples:
 	9. Fuzz on 3rd form of registration page with csrf and two cookies difficulty and hint and sent them forcefully on each request and remove session data and cookie after each request-response cycle and run browser in headless mode and run 5 instances of browser parallely
 	 > python3 BrowserBruter.py -e name,age,address,phone -p payloads.txt -t http://dvwa.com/register -b register --cookie difficulty:high:dvwa.com hint:no:dvwa.com --csrf _token --form 3 --forceCookie --remove --headless --threads 5
    
-   10. Fuzz CheckBox for example '<input type="checkbox" name="hobbies" value="reading" /> <input type="checkbox" name="hobbies" value="writing" />', then
+   10. Fuzz CheckBox for example '<input type="checkbox" name="hobbies" value="reading" /> <input type="checkbox" name="hobbies" value="writing" />'
 	 > python3 BrowserBruter.py -e hobbies -p paylods.txt -t http://dvwa.com/register -b register
    
-   11. Fuzz Radio Button for example '<input type="radio" name="yesno" id="yes" value="yes" required/> <input type="radio" name="yesno" id="no" value="no" required/>', then
+   11. Fuzz Radio Button for example '<input type="radio" name="yesno" id="yes" value="yes" required/> <input type="radio" name="yesno" id="no" value="no" required/>'
 	 > python3 BrowserBruter.py -e yesno -p payloads.txt -t http://dvwa.com/register -b register 
 	 OR
 	 > python3 BrowserBruter.py -e no -p payloads.txt -t http://dvwa.com/register -b register
@@ -93,13 +93,13 @@ Usage Examples:
    12. Fuzz CSRF token + don't overwrite it while fuzzing other fields
      > python3 BrowserBruter.py -e csrfToken,username,password -p payloads.txt -t http://dvwa.com/login -b login --csrf csrfToken
    
-   13. Fuzz <select> element - for example <select name="selectElement" required> <option value="">Select an option</option> <option value="option1">Option 1</option> </select>, then
+   13. Fuzz <select> element - for example <select name="selectElement" required> <option value="">Select an option</option> <option value="option1">Option 1</option> </select>
      > python3 BrowserBruter.py -e selectElement -p payloads.txt -t http://dvwa.com/selection -b submit
    
-   14. Fuzz <textarea> element - for example <textarea name="textareaElement" placeholder="Enter text" required></textarea>, then
+   14. Fuzz <textarea> element - for example <textarea name="textareaElement" placeholder="Enter text" required></textarea>
      > python3 BrowserBruter.py -e textareaElement -p payloads.txt -t http://dvwa.com/registration -b submit
    
-   15. Fuzz colorpicker, datepicker, timepicker - for example <input type="color" name="colorElement" required/> <input type="date" name="dateElement" required/> <input type="time" name="timeElement" required/>, then
+   15. Fuzz colorpicker, datepicker, timepicker - for example <input type="color" name="colorElement" required/> <input type="date" name="dateElement" required/> <input type="time" name="timeElement" required/>
      > python3 BrowserBruter.py -e colorElement,dateElement,timeElement -p payloads.txt -t http://localhost/ -b submit
 
    16. Fuzz using Firefox instead of Chrome
