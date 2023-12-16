@@ -59,66 +59,63 @@ argParser = argparse.ArgumentParser(description="BrowserBruter is a python3 scri
 argParser.epilog = f'''
 Usage Examples:
 	1. Fuzz on login page
-	   {YELLOW}python3 BrowserBruter.py -e username,password -p sqli.txt -t http://owasp.com/login -b loginButton{RESET}
+	   {YELLOW}python3 BurpBrowserBruter.py -e username,password -p sqli.txt -t http://owasp.com/login -b loginButton{RESET}
 	
 	2. Fuzz on login page with csrf enabled
-	   {YELLOW}python3 BrowserBruter.py -e username,password -p sqli.txt -t http://owasp.com/login -b loginButton --csrf csrfToken{RESET}
+	   {YELLOW}python3 BurpBrowserBruter.py -e username,password -p sqli.txt -t http://owasp.com/login -b loginButton --csrf csrfToken{RESET}
 	
 	3. Fuzz on registration page with csrf enabled no output printed on console
-	   {YELLOW}python3 BrowserBruter.py -e name,age,address,phone -p payloads.txt -t http://dvwa.com/register -b register --csrf _token --silent{RESET}
+	   {YELLOW}python3 BurpBrowserBruter.py -e name,age,address,phone -p payloads.txt -t http://dvwa.com/register -b register --csrf _token --silent{RESET}
 	
 	4. Fuzz on 3rd form of registration page with csrf enabled no output printed on console
-	   {YELLOW}python3 BrowserBruter.py -e name,age,address,phone -p payloads.txt -t http://dvwa.com/register -b register --csrf _token --silent --form 3{RESET}
+	   {YELLOW}python3 BurpBrowserBruter.py -e name,age,address,phone -p payloads.txt -t http://dvwa.com/register -b register --csrf _token --silent --form 3{RESET}
 	
 	5. Fuzz on registration page with csrf and two cookies 1)'difficulty' and 2)'hint'
-	   {YELLOW}python3 BrowserBruter.py -e name,age,address,phone -p payloads.txt -t http://dvwa.com/register -b register --cookie difficulty:high:dvwa.com hint:no:dvwa.com --csrf _token{RESET}
+	   {YELLOW}python3 BurpBrowserBruter.py -e name,age,address,phone -p payloads.txt -t http://dvwa.com/register -b register --cookie difficulty:high:dvwa.com hint:no:dvwa.com --csrf _token{RESET}
 	
 	6. Fuzz on registration page with csrf and two cookies 1)'difficulty' and 2)'hint' and sent them forcefully on each request becuase the initiali cookies might be overridden by new cookies values
-	   {YELLOW}python3 BrowserBruter.py -e name,age,address,phone -p payloads.txt -t http://dvwa.com/register -b register --cookie difficulty:high:dvwa.com hint:no:dvwa.com --csrf _token --forceCookie{RESET}
+	   {YELLOW}python3 BurpBrowserBruter.py -e name,age,address,phone -p payloads.txt -t http://dvwa.com/register -b register --cookie difficulty:high:dvwa.com hint:no:dvwa.com --csrf _token --forceCookie{RESET}
 	
 	7. Fuzz on 3rd form of registration page with csrf and two cookies 1)'difficulty' and 2)'hint' and sent them forcefully on each request and remove session data and cookie after each request-response cycle [this is useful against Authentication pages when you don't want redirection in case of successful login]
-	   {YELLOW}python3 BrowserBruter.py -e name,age,address,phone -p payloads.txt -t http://dvwa.com/register -b register --cookie difficulty:high:dvwa.com hint:no:dvwa.com --csrf _token --form 3 --forceCookie --removeSession{RESET}
+	   {YELLOW}python3 BurpBrowserBruter.py -e name,age,address,phone -p payloads.txt -t http://dvwa.com/register -b register --cookie difficulty:high:dvwa.com hint:no:dvwa.com --csrf _token --form 3 --forceCookie --removeSession{RESET}
 	
 	8. Fuzz on 3rd form of registration page with csrf and two cookies 1)'difficulty' and 2)'hint' and sent them forcefully on each request and remove session data and cookie after each request-response cycle and run browser in headless mode
-	   {YELLOW}python3 BrowserBruter.py -e name,age,address,phone -p payloads.txt -t http://dvwa.com/register -b register --cookie difficulty:high:dvwa.com hint:no:dvwa.com --csrf _token --form 3 --forceCookie --removeSession --headless{RESET}
+	   {YELLOW}python3 BurpBrowserBruter.py -e name,age,address,phone -p payloads.txt -t http://dvwa.com/register -b register --cookie difficulty:high:dvwa.com hint:no:dvwa.com --csrf _token --form 3 --forceCookie --removeSession --headless{RESET}
 	
 	9. Fuzz on 3rd form of registration page with csrf and two cookies 1)'difficulty' and 2)'hint' and sent them forcefully on each request and remove session data and cookie after each request-response cycle and run browser in headless mode and run 5 instances of browser parallely
-	   {YELLOW}python3 BrowserBruter.py -e name,age,address,phone -p payloads.txt -t http://dvwa.com/register -b register --cookie difficulty:high:dvwa.com hint:no:dvwa.com --csrf _token --form 3 --forceCookie --removeSession --headless --threads 5{RESET}
+	   {YELLOW}python3 BurpBrowserBruter.py -e name,age,address,phone -p payloads.txt -t http://dvwa.com/register -b register --cookie difficulty:high:dvwa.com hint:no:dvwa.com --csrf _token --form 3 --forceCookie --removeSession --headless --threads 5{RESET}
    
        10. Fuzz CheckBox for example '<input type="checkbox" name="hobbies" value="reading" /> <input type="checkbox" name="hobbies" value="writing" />'
-	   {YELLOW}python3 BrowserBruter.py -e hobbies -p paylods.txt -t http://dvwa.com/register -b register{RESET}
+	   {YELLOW}python3 BurpBrowserBruter.py -e hobbies -p paylods.txt -t http://dvwa.com/register -b register{RESET}
    
        11. Fuzz Radio Button for example '<input type="radio" name="yesno" id="yes" value="yes" required/> <input type="radio" name="yesno" id="no" value="no" required/>'
-	   {YELLOW}python3 BrowserBruter.py -e yesno -p payloads.txt -t http://dvwa.com/register -b register {RESET}
+	   {YELLOW}python3 BurpBrowserBruter.py -e yesno -p payloads.txt -t http://dvwa.com/register -b register {RESET}
 	 OR
-	   {YELLOW}python3 BrowserBruter.py -e no -p payloads.txt -t http://dvwa.com/register -b register{RESET}
+	   {YELLOW}python3 BurpBrowserBruter.py -e no -p payloads.txt -t http://dvwa.com/register -b register{RESET}
    
        12. Fuzz CSRF token + don't overwrite it while fuzzing other fields
-           {YELLOW}python3 BrowserBruter.py -e csrfToken,username,password -p payloads.txt -t http://dvwa.com/login -b login --csrf csrfToken{RESET}
+           {YELLOW}python3 BurpBrowserBruter.py -e csrfToken,username,password -p payloads.txt -t http://dvwa.com/login -b login --csrf csrfToken{RESET}
    
        13. Fuzz <select> element - for example <select name="selectElement" required> <option value="">Select an option</option> <option value="option1">Option 1</option> </select>
-           {YELLOW}python3 BrowserBruter.py -e selectElement -p payloads.txt -t http://dvwa.com/selection -b submit{RESET}
+           {YELLOW}python3 BurpBrowserBruter.py -e selectElement -p payloads.txt -t http://dvwa.com/selection -b submit{RESET}
    
        14. Fuzz <textarea> element - for example <textarea name="textareaElement" placeholder="Enter text" required></textarea>
-           {YELLOW}python3 BrowserBruter.py -e textareaElement -p payloads.txt -t http://dvwa.com/registration -b submit{RESET}
+           {YELLOW}python3 BurpBrowserBruter.py -e textareaElement -p payloads.txt -t http://dvwa.com/registration -b submit{RESET}
    
        15. Fuzz colorpicker, datepicker, timepicker - for example <input type="color" name="colorElement" required/> <input type="date" name="dateElement" required/> <input type="time" name="timeElement" required/>
-           {YELLOW}python3 BrowserBruter.py -e colorElement,dateElement,timeElement -p payloads.txt -t http://localhost/ -b submit{RESET}
+           {YELLOW}python3 BurpBrowserBruter.py -e colorElement,dateElement,timeElement -p payloads.txt -t http://localhost/ -b submit{RESET}
 
-       16. Add Authorization header with bearer token for valid authorization.
-           {YELLOW}python3 BrowserBruter.py -e username,password -b button -t http://net-square.com/login -p payloads.txt --headers "Auth: 123","Auth1: Bearer emluamFjb2Rlcgo=" {RESET}
-	   
-       17. Provide custom values for each form field types, content of the file should be in JSON format and it should contain all of the field types, see example values.json for better understandin.
-           {YELLOW}python3 BrowserBruter.py -e username,password -b button -t http://net-square.com/login -p payloads.txt --values fields.json" {RESET}
+       16. Provide custom values for each form field types, content of the file should be in JSON format and it should contain all of the field types, see example values.json for better understandin.
+           {YELLOW}python3 BurpBrowserBruter.py -e username,password -b button -t http://net-square.com/login -p payloads.txt --values fields.json" {RESET}
 	 
-       18. Provide various fields (elements) to avoid being fuzzed or overwritten by BrowserBruter, set two cookies, force reuse of these cookies, reset session data each time. 
-           {YELLOW}python3 BrowserBruter.py -e ip -b Submit -p payloads.txt -t http://example.com/vulnerabilities/exec/ --cookie PHPSESSID:jtq7r9fbgf90h2qm9915qk6551:example.com security:low:example.com  --forceCookie --removeSession --avoid help_button,source_button,user_token {RESET}
+       17. Provide various fields (elements) to avoid being fuzzed or overwritten by BrowserBruter, set two cookies, force reuse of these cookies, reset session data each time. 
+           {YELLOW}python3 BurpBrowserBruter.py -e ip -b Submit -p payloads.txt -t http://example.com/vulnerabilities/exec/ --cookie PHPSESSID:jtq7r9fbgf90h2qm9915qk6551:example.com security:low:example.com  --forceCookie --removeSession --avoid help_button,source_button,user_token {RESET}
       
-       19. Pause BrowserBruter on startup to manually login and manually set cookies, press ENTER two times to continue.
-           {YELLOW}python3 BrowserBruter.py -e ip -b Submit -p payloads.txt -t http://example.com/vulnerabilities/exec/ --avoid help_button,source_button,user_token --pause
+       18. Pause BrowserBruter on startup to manually login and manually set cookies, press ENTER two times to continue.
+           {YELLOW}python3 BurpBrowserBruter.py -e ip -b Submit -p payloads.txt -t http://example.com/vulnerabilities/exec/ --avoid help_button,source_button,user_token --pause
 		
-       20. Pause the BrowserBruter on each iteration of fuzzing, so user can manually perform any task, complete captcha before BrowserBruter fuzzes the form, this will happen for each attempt to fuzz, so it will take a lot of time and user has to press ENTER two times to continue.
-           {YELLOW}python3 BrowserBruter.py -e textarea,select,yesno,hobbies,phone,data,time,calendar,color --avoid _csrf -b submit -p payloads.txt -t http://localhost:3000/ --threads 5 --values values.json --iterative{RESET}
+       19. Pause the BrowserBruter on each iteration of fuzzing, so user can manually perform any task, complete captcha before BrowserBruter fuzzes the form, this will happen for each attempt to fuzz, so it will take a lot of time and user has to press ENTER two times to continue.
+           {YELLOW}python3 BurpBrowserBruter.py -e textarea,select,yesno,hobbies,phone,data,time,calendar,color --avoid _csrf -b submit -p payloads.txt -t http://localhost:3000/ --threads 5 --values values.json --iterative{RESET}
 
  
  '''
@@ -130,7 +127,6 @@ argsRequired.add_argument("-p","--payloads",help="/path/to/payload/file.")
 argsRequired.add_argument("-b","--button",help="Button element which will submit form data.")
 argParser.add_argument("-P","--proxy",help="IP and port of burpsuite",default="127.0.0.1:8080")
 argParser.add_argument("--avoid",help="Input fields and other elements to left untouched, BrowserBruter will avoid them, also useful to avoid csrf field.")
-argParser.add_argument("--headers", help=f"Comma-separated list of custom headers.")
 argParser.add_argument("--delay",help="Delay between each brute force attempt.",metavar="0.2", type=float, default=0.2)
 argParser.add_argument("-c","--cookie",help="Use it to define cookies to be used while sending initial request, cookies should be in name:value:domain format.", metavar="name:value:domain", nargs="+")
 argParser.add_argument("--forceCookie",help="Use this switch to force setting of cookies given as argument using --cookie flag regardless of cookies being sent by server.",action="store_true")
@@ -404,20 +400,20 @@ def run_browser_instance(payloads, elements, instance_number):
 			driver.get(args.target)
 			add_cookies(driver)
 
-		 # Set custom headers
-		if args.headers:
-			custom_headers = {}
-			try:
-            	# Split the raw string into headers and set each one
-				for header in args.headers.split(','):
-					key, value = map(str.strip, header.split(':'))
-					custom_headers[key] = value
+		 ## Set custom headers is not working for BurpBrowserBruter for now, It will be appreciated if you can help in this :)
+		#if args.headers:
+		#	custom_headers = {}
+		#	try:
+        #    	# Split the raw string into headers and set each one
+		#		for header in args.headers.split(','):
+		#			key, value = map(str.strip, header.split(':'))
+		#			custom_headers[key] = value
 				# Update header_overrides with all custom headers
-				driver.header_overrides = custom_headers
-			except ValueError:
-				print(f"\n\n{RED}++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\nERROR: Error setting headers. Please provide headers in valid format.\n++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++{RESET}")
-				driver.quit()
-				sys.exit(1)
+		#		driver.header_overrides = custom_headers
+		#	except ValueError:
+		#		print(f"\n\n{RED}++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\nERROR: Error setting headers. Please provide headers in valid format.\n++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++{RESET}")
+		#		driver.quit()
+		#		sys.exit(1)
 
 		# Initialize report file and processed payload file
 		this_threads_files = get_filename()
@@ -715,6 +711,6 @@ if __name__ == "__main__":
 		# Reset sys.stdout to the console at the end of your script
 		sys.stdout = sys.__stdout__ 
 else:          
-	print(f"\n\n{RED}++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\nError: Please run the script again using python3 BrowserBruter.py, closing the BrowserBruter\n++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++{RESET}")
+	print(f"\n\n{RED}++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\nError: Please run the script again using python3 BurpBrowserBruter.py, closing the BrowserBruter\n++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++{RESET}")
 
 ### MAIN EXECUTION BLOCK ENDS ###

@@ -4,3 +4,4 @@ webdriver_manager
 ttkthemes
 pytimedinput
 colorma
+beautifulsoup4
