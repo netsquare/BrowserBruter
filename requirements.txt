@@ -3,5 +3,5 @@ selenium-wire
 webdriver_manager
 ttkthemes
 pytimedinput
-colorma
+colorama
 beautifulsoup4
