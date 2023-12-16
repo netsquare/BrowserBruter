@@ -1,3 +1,6 @@
 selenium
 selenium-wire
 webdriver_manager
+ttkthemes
+pytimedinput
+colorma

@@ -1,168 +1,183 @@
-
 ### VARIOUS IMPORTS STARTS ###
 
 import argparse
 import csv
 import datetime
-import signal
+import signal 
 import sys
-import traceback
 import threading
 import os
+import json
+import platform
+from pytimedinput import timedKey
+from traceback import format_exc, print_exc
+from res.tee import Tee
 from time import sleep
 from seleniumwire import webdriver
 from seleniumwire.utils import decode
-from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.chrome.options import Options as ChromeOptions
 from selenium.webdriver.firefox.options import Options as FirefoxOptions
 from selenium.webdriver.common.by import By
-from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.common.exceptions import NoSuchElementException
 from selenium.common.exceptions import NoSuchWindowException
 from selenium.common.exceptions import WebDriverException
-from webdriver_manager.chrome import ChromeDriverManager
 from http.client import RemoteDisconnected
 from urllib3.exceptions import ProtocolError
 from urllib3.exceptions import MaxRetryError
 from bs4 import BeautifulSoup as bs
+from urllib.parse import urlparse
+from colorama import Fore
 
 ### VARIOUS IMPORTS ENDS ###
 
-### PRINTING BANNER STARTS ###
+# Defining color contants #
+GREEN = Fore.GREEN
+YELLOW = Fore.YELLOW
+RED = Fore.RED
+RESET = Fore.RESET
 
-print("""
+### PRINTING BANNER ###
+print(f"""{GREEN}
 ##################################################################################################################################################################################
 ##################################################################################################################################################################################
 ##                                                                                                                                                                             ###
-## ██████╗░██████╗░░█████╗░░██╗░░░░░░░██╗░██████╗███████╗██████╗░░░░░░░██████╗░██████╗░██╗░░░██╗████████╗███████╗██████╗░                                                       
-## ██╔══██╗██╔══██╗██╔══██╗░██║░░██╗░░██║██╔════╝██╔════╝██╔══██╗░░░░░░██╔══██╗██╔══██╗██║░░░██║╚══██╔══╝██╔════╝██╔══██╗⠀⠀⠀⠀⠿⠿⠿⠿⠿⢿⣿⣿⣿⣿⣿⣿⡇⢰⣶⣶⣶⣶⣶⣶⣾⣷⣾⣷⣶⠀. . . . . . . . . . . . . . . 
-## ██████╦╝██████╔╝██║░░██║░╚██╗████╗██╔╝╚█████╗░█████╗░░██████╔╝█████╗██████╦╝██████╔╝██║░░░██║░░░██║░░░█████╗░░██████╔╝⠀⣶⣶⣶⣶⣶⣶⣶⡆⢸⣿⣿⣿⣿⣿⣿⡇⠸⠿⠿⠿⠿⠿⠿⢿⡿⢿⡿⠿⠀. . . . .  . . . . . . . . . . 
-## ██╔══██╗██╔══██╗██║░░██║░░████╔═████║░░╚═══██╗██╔══╝░░██╔══██╗╚════╝██╔══██╗██╔══██╗██║░░░██║░░░██║░░░██╔══╝░░██╔══██╗⠀⣿⣿⣿⣿⣿⣿⣿⡇⠘⠛⢻⠟⠛⣿⠛⠃⠀⠀⠀⠀⠀⠀⠀⠈⠁⠀⠁⠀⠀                  
-## ██████╦╝██║░░██║╚█████╔╝░░╚██╔╝░╚██╔╝░██████╔╝███████╗██║░░██║░░░░░░██████╦╝██║░░██║╚██████╔╝░░░██║░░░███████╗██║░░██║⠀⠿⠿⠿⠿⠿⠿⠿⠇⠀⠀⣸⠀⢰⣿⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀                  
-## ╚═════╝░╚═╝░░╚═╝░╚════╝░░░░╚═╝░░░╚═╝░░╚═════╝░╚══════╝╚═╝░░╚═╝░░░░░░╚═════╝░╚═╝░░╚═╝░╚═════╝░░░░╚═╝░░░╚══════╝╚═╝░░╚═╝⠀⠀⠀⣆⠀⢶⡆⠀⠀⠀⢀⡟⠀⣼⡇                                 
-##                                                                                                                       ⠀⠀⠀⢹⣄⠘⣷⡀⠀⢀⡼⠁⣰⡟⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀                  
-##                                                                                                                       ⠀⠀⠀⠀⠙⠦⡈⠻⢶⣿⣥⡾⠋ by Jafar Pathan & NetSquare Team v1.0 
-##                                                                                                                           An Advance Browser Automated Web Form Fuzzing Tool### 
-##################################################################################################################################################################################
-##################################################################################################################################################################################""")
+## {YELLOW}██████╗░██████╗░░█████╗░░██╗░░░░░░░██╗░██████╗███████╗██████╗░░░░░░░██████╗░██████╗░██╗░░░██╗████████╗███████╗██████╗░                                                       
+{GREEN}## {YELLOW}██╔══██╗██╔══██╗██╔══██╗░██║░░██╗░░██║██╔════╝██╔════╝██╔══██╗░░░░░░██╔══██╗██╔══██╗██║░░░██║╚══██╔══╝██╔════╝██╔══██╗⠀⠀⠀⠀{RED}⠿⠿⠿⠿⠿⢿⣿⣿⣿⣿⣿⣿⡇⢰⣶⣶⣶⣶⣶⣶⣾⣷⣾⣷⣶⠀{YELLOW}. . . . . . . . . . . . . . . 
+{GREEN}## {YELLOW}██████╦╝██████╔╝██║░░██║░╚██╗████╗██╔╝╚█████╗░█████╗░░██████╔╝█████╗██████╦╝██████╔╝██║░░░██║░░░██║░░░█████╗░░██████╔╝⠀{RED}⣶⣶⣶⣶⣶⣶⣶⡆⢸⣿⣿⣿⣿⣿⣿⡇⠸⠿⠿⠿⠿⠿⠿⢿⡿⢿⡿⠿⠀{YELLOW}. . . . .  . . . . . . . . . . 
+{GREEN}## {YELLOW}██╔══██╗██╔══██╗██║░░██║░░████╔═████║░░╚═══██╗██╔══╝░░██╔══██╗╚════╝██╔══██╗██╔══██╗██║░░░██║░░░██║░░░██╔══╝░░██╔══██╗⠀{RED}⣿⣿⣿⣿⣿⣿⣿⡇⠘⠛⢻⠟⠛⣿⠛⠃⠀⠀⠀⠀⠀⠀⠀⠈⠁⠀⠁⠀⠀                  
+{GREEN}## {YELLOW}██████╦╝██║░░██║╚█████╔╝░░╚██╔╝░╚██╔╝░██████╔╝███████╗██║░░██║░░░░░░██████╦╝██║░░██║╚██████╔╝░░░██║░░░███████╗██║░░██║⠀{RED}⠿⠿⠿⠿⠿⠿⠿⠇⠀⠀⣸⠀⢰⣿⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀                  
+{GREEN}## {YELLOW}╚═════╝░╚═╝░░╚═╝░╚════╝░░░░╚═╝░░░╚═╝░░╚═════╝░╚══════╝╚═╝░░╚═╝░░░░░░╚═════╝░╚═╝░░╚═╝░╚═════╝░░░░╚═╝░░░╚══════╝╚═╝░░╚═╝⠀⠀⠀{RED}⣆⠀⢶⡆⠀⠀⠀⢀⡟⠀⣼⡇                                 
+{GREEN}##                                                                                                                       ⠀⠀⠀{RED}⢹⣄⠘⣷⡀⠀⢀⡼⠁⣰⡟⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀                  
+{GREEN}##                                                                                                                       ⠀⠀⠀⠀{RED}⠙⠦⡈⠻⢶⣿⣥⡾⠋ {YELLOW}by Jafar Pathan & NetSquare Team v1.0 
+{GREEN}##                                                                                                                           {YELLOW}An Advance Browser Automated Web Form Fuzzing Tool{GREEN}### 
+{GREEN}##################################################################################################################################################################################
+{GREEN}##################################################################################################################################################################################{RESET}""")
 
-### PRINTING BANNER ENDS ###
 
 ### DEFINING AND PARSING COMMAND LINE ARGUMENTS START ###
-
-argParser = argparse.ArgumentParser(description="BrowserBruter is a python3 script utilizing power of selenium and selenium-wire to automate fuzzing of variout input fields of webpages to test their security against malicious inputs. For contact and more information about project please visit https://github.com/netsquare/BrowserBruter",formatter_class=argparse.RawTextHelpFormatter)
-usage_examples = '''
+# Getting argument parser to parse and process arguments
+argParser = argparse.ArgumentParser(description="BrowserBruter is a python3 script, utilizing power of selenium and selenium-wire to automate fuzzing of various input fields of webpages to test their security against malicious inputs. For contact and more information about project please visit https://github.com/netsquare/BrowserBruter",formatter_class=argparse.RawTextHelpFormatter)
+# Defining the epilog message which will be displayed whith help message
+argParser.epilog = f'''
 Usage Examples:
 	1. Fuzz on login page
-	 > python3 BrowserBruter.py -e username,password -p sqli.txt -t http://owasp.com/login -b loginButton
+	   {YELLOW}python3 BrowserBruter.py -e username,password -p sqli.txt -t http://owasp.com/login -b loginButton{RESET}
 	
 	2. Fuzz on login page with csrf enabled
-	 > python3 BrowserBruter.py -e username,password -p sqli.txt -t http://owasp.com/login -b loginButton --csrf csrfToken
+	   {YELLOW}python3 BrowserBruter.py -e username,password -p sqli.txt -t http://owasp.com/login -b loginButton --avoid csrfToken{RESET}
 	
 	3. Fuzz on registration page with csrf enabled no output printed on console
-	 > python3 BrowserBruter.py -e name,age,address,phone -p payloads.txt -t http://dvwa.com/register -b register --csrf _token --silent
+	   {YELLOW}python3 BrowserBruter.py -e name,age,address,phone -p payloads.txt -t http://dvwa.com/register -b register --avoid _token --silent{RESET}
 	
 	4. Fuzz on 3rd form of registration page with csrf enabled no output printed on console
-	 > python3 BrowserBruter.py -e name,age,address,phone -p payloads.txt -t http://dvwa.com/register -b register --csrf _token --silent --form 3
+	   {YELLOW}python3 BrowserBruter.py -e name,age,address,phone -p payloads.txt -t http://dvwa.com/register -b register --avoid _token --silent --form 3{RESET}
 	
-	5. Fuzz on registration page with csrf and two cookies difficulty and hint
-	 > python3 BrowserBruter.py -e name,age,address,phone -p payloads.txt -t http://dvwa.com/register -b register --cookie difficulty:high:dvwa.com hint:no:dvwa.com --csrf _token
+	5. Fuzz on registration page with csrf and two cookies 1)'difficulty' and 2)'hint'
+	   {YELLOW}python3 BrowserBruter.py -e name,age,address,phone -p payloads.txt -t http://dvwa.com/register -b register --cookie difficulty:high:dvwa.com hint:no:dvwa.com --avoid _token{RESET}
 	
-	6. Fuzz on registration page with csrf and two cookies difficulty and hint and sent them forcefully on each request
-	 > python3 BrowserBruter.py -e name,age,address,phone -p payloads.txt -t http://dvwa.com/register -b register --cookie difficulty:high:dvwa.com hint:no:dvwa.com --csrf _token --forceCookie
+	6. Fuzz on registration page with csrf and two cookies 1)'difficulty' and 2)'hint' and sent them forcefully on each request becuase the initiali cookies might be overridden by new cookies values
+	   {YELLOW}python3 BrowserBruter.py -e name,age,address,phone -p payloads.txt -t http://dvwa.com/register -b register --cookie difficulty:high:dvwa.com hint:no:dvwa.com --avoid _token --forceCookie{RESET}
 	
-	7. Fuzz on 3rd form of registration page with csrf and two cookies difficulty and hint and sent them forcefully on each request and remove session data and cookie after each request-response cycle
-	 > python3 BrowserBruter.py -e name,age,address,phone -p payloads.txt -t http://dvwa.com/register -b register --cookie difficulty:high:dvwa.com hint:no:dvwa.com --csrf _token --form 3 --forceCookie --remove
+	7. Fuzz on 3rd form of registration page with csrf and two cookies 1)'difficulty' and 2)'hint' and sent them forcefully on each request and remove session data and cookie after each request-response cycle [this is useful against Authentication pages when you don't want redirection in case of successful login]
+	   {YELLOW}python3 BrowserBruter.py -e name,age,address,phone -p payloads.txt -t http://dvwa.com/register -b register --cookie difficulty:high:dvwa.com hint:no:dvwa.com --avoid _token --form 3 --forceCookie --removeSession{RESET}
 	
-	8. Fuzz on 3rd form of registration page with csrf and two cookies difficulty and hint and sent them forcefully on each request and remove session data and cookie after each request-response cycle and run browser in headless mode
-	 > python3 BrowserBruter.py -e name,age,address,phone -p payloads.txt -t http://dvwa.com/register -b register --cookie difficulty:high:dvwa.com hint:no:dvwa.com --csrf _token --form 3 --forceCookie --remove --headless
+	8. Fuzz on 3rd form of registration page with csrf and two cookies 1)'difficulty' and 2)'hint' and sent them forcefully on each request and remove session data and cookie after each request-response cycle and run browser in headless mode
+	   {YELLOW}python3 BrowserBruter.py -e name,age,address,phone -p payloads.txt -t http://dvwa.com/register -b register --cookie difficulty:high:dvwa.com hint:no:dvwa.com --avoid _token --form 3 --forceCookie --removeSession --headless{RESET}
 	
-	9. Fuzz on 3rd form of registration page with csrf and two cookies difficulty and hint and sent them forcefully on each request and remove session data and cookie after each request-response cycle and run browser in headless mode and run 5 instances of browser parallely
-	 > python3 BrowserBruter.py -e name,age,address,phone -p payloads.txt -t http://dvwa.com/register -b register --cookie difficulty:high:dvwa.com hint:no:dvwa.com --csrf _token --form 3 --forceCookie --remove --headless --threads 5
+	9. Fuzz on 3rd form of registration page with csrf and two cookies 1)'difficulty' and 2)'hint' and sent them forcefully on each request and remove session data and cookie after each request-response cycle and run browser in headless mode and run 5 instances of browser parallely
+	   {YELLOW}python3 BrowserBruter.py -e name,age,address,phone -p payloads.txt -t http://dvwa.com/register -b register --cookie difficulty:high:dvwa.com hint:no:dvwa.com --avoid _token --form 3 --forceCookie --removeSession --headless --threads 5{RESET}
    
-   10. Fuzz CheckBox for example '<input type="checkbox" name="hobbies" value="reading" /> <input type="checkbox" name="hobbies" value="writing" />'
-	 > python3 BrowserBruter.py -e hobbies -p paylods.txt -t http://dvwa.com/register -b register
+       10. Fuzz CheckBox for example '<input type="checkbox" name="hobbies" value="reading" /> <input type="checkbox" name="hobbies" value="writing" />'
+	   {YELLOW}python3 BrowserBruter.py -e hobbies -p paylods.txt -t http://dvwa.com/register -b register{RESET}
    
-   11. Fuzz Radio Button for example '<input type="radio" name="yesno" id="yes" value="yes" required/> <input type="radio" name="yesno" id="no" value="no" required/>'
-	 > python3 BrowserBruter.py -e yesno -p payloads.txt -t http://dvwa.com/register -b register 
+       11. Fuzz Radio Button for example '<input type="radio" name="yesno" id="yes" value="yes" required/> <input type="radio" name="yesno" id="no" value="no" required/>'
+	   {YELLOW}python3 BrowserBruter.py -e yesno -p payloads.txt -t http://dvwa.com/register -b register {RESET}
 	 OR
-	 > python3 BrowserBruter.py -e no -p payloads.txt -t http://dvwa.com/register -b register
+	   {YELLOW}python3 BrowserBruter.py -e no -p payloads.txt -t http://dvwa.com/register -b register{RESET}
    
-   12. Fuzz CSRF token + don't overwrite it while fuzzing other fields
-     > python3 BrowserBruter.py -e csrfToken,username,password -p payloads.txt -t http://dvwa.com/login -b login --csrf csrfToken
+       12. Fuzz CSRF token + don't overwrite it while fuzzing other fields
+           {YELLOW}python3 BrowserBruter.py -e csrfToken,username,password -p payloads.txt -t http://dvwa.com/login -b login --avoid csrfToken{RESET}
    
-   13. Fuzz <select> element - for example <select name="selectElement" required> <option value="">Select an option</option> <option value="option1">Option 1</option> </select>
-     > python3 BrowserBruter.py -e selectElement -p payloads.txt -t http://dvwa.com/selection -b submit
+       13. Fuzz <select> element - for example <select name="selectElement" required> <option value="">Select an option</option> <option value="option1">Option 1</option> </select>
+           {YELLOW}python3 BrowserBruter.py -e selectElement -p payloads.txt -t http://dvwa.com/selection -b submit{RESET}
    
-   14. Fuzz <textarea> element - for example <textarea name="textareaElement" placeholder="Enter text" required></textarea>
-     > python3 BrowserBruter.py -e textareaElement -p payloads.txt -t http://dvwa.com/registration -b submit
+       14. Fuzz <textarea> element - for example <textarea name="textareaElement" placeholder="Enter text" required></textarea>
+           {YELLOW}python3 BrowserBruter.py -e textareaElement -p payloads.txt -t http://dvwa.com/registration -b submit{RESET}
    
-   15. Fuzz colorpicker, datepicker, timepicker - for example <input type="color" name="colorElement" required/> <input type="date" name="dateElement" required/> <input type="time" name="timeElement" required/>
-     > python3 BrowserBruter.py -e colorElement,dateElement,timeElement -p payloads.txt -t http://localhost/ -b submit
+       15. Fuzz colorpicker, datepicker, timepicker - for example <input type="color" name="colorElement" required/> <input type="date" name="dateElement" required/> <input type="time" name="timeElement" required/>
+           {YELLOW}python3 BrowserBruter.py -e colorElement,dateElement,timeElement -p payloads.txt -t http://localhost/ -b submit{RESET}
 
-   16. Fuzz using Firefox instead of Chrome
-     > python3 BrowserBruter.py -e username,password -b button -t http://net-square.com/login -p payloads.txt --firefox
+       16. Fuzz using Firefox instead of Chrome
+           {YELLOW}python3 BrowserBruter.py -e username,password -b button -t http://net-square.com/login -p payloads.txt --firefox{RESET}
+   
+       17. Define API endpoint in scope for proper report generation and logging.
+           {YELLOW}python3 BrowserBruter.py -e username,password -b button -t http://net-square.com/login -p payloads.txt --scope api.net-square.com,dev.api.net-square.com{RESET}
+
+       18. Add Authorization header with bearer token for valid authorization.
+           {YELLOW}python3 BrowserBruter.py -e username,password -b button -t http://net-square.com/login -p payloads.txt --headers "Auth: 123","Auth1: Bearer emluamFjb2Rlcgo=" {RESET}
+	   
+       19. Provide custom values for each form field types, content of the file should be in JSON format and it should contain all of the field types, see example values.json for better understanding.
+           {YELLOW}python3 BrowserBruter.py -e username,password -b button -t http://net-square.com/login -p payloads.txt --values fields.json" {RESET}
+	   
+       20. Provide various fields (elements) to avoid being fuzzed or overwritten by BrowserBruter, set two cookies, force reuse of these cookies, reset session data each time. 
+           {YELLOW}python3 BrowserBruter.py -e ip -b Submit -p payloads.txt -t http://example.com/vulnerabilities/exec/ --cookie PHPSESSID:jtq7r9fbgf90h2qm9915qk6551:example.com security:low:example.com  --forceCookie --removeSession --avoid help_button,source_button,user_token{RESET}
+       
+       21. Pause BrowserBruter on startup to manually login and manually set cookies, press ENTER two times to continue.
+           {YELLOW}python3 BrowserBruter.py -e ip -b Submit -p payloads.txt -t http://example.com/vulnerabilities/exec/ --avoid help_button,source_button,user_token --pause
+ {RESET}
+       22. Pause the BrowserBruter on each iteration of fuzzing, so user can manually perform any task, complete captcha before BrowserBruter fuzzes the form, this will happen for each attempt to fuzz, so it will take a lot of time and user has to press ENTER two times to continue.
+           {YELLOW}python3 BrowserBruter.py -e textarea,select,yesno,hobbies,phone,data,time,calendar,color --avoid _csrf -b submit -p payloads.txt -t http://localhost:3000/ --threads 5 --values values.json --iterative{RESET}
+
 	'''
-argParser.description += '\n' + usage_examples
+# Adding various command line arguments
 argsRequired = argParser.add_argument_group("required")
-argsRequired.add_argument("-t","--target",help="target's url: http://www.owasp.com/index.php, for example python3 BrowserBruter.py -t http://localhost/index.js")
-argsRequired.add_argument("-e","--elements", help="Enter input fields in comma separated values for example suppose webpage has following input fields <input name='input1' type='text'/>, <input name='input2' type='number'/> then python3 BrowserBruter.py -e input1,input2")
-argsRequired.add_argument("-p","--payloads",help="/path/to/file - for example suppose /tmp/payloads.txt is file containing payloads then python3 BrowserBruter.py -p /tmp/paylods.txt")
-argsRequired.add_argument("-b","--button",help="button element, for example suppose web page has following element to submit form <input type='submit' id='submit'> then  python3 brute.py -t http://localhost:3000/ -e username,password -b submit -p payloads.txt --form 1")
-argParser.add_argument("-C","--csrf",help="Input field containing CSRF token so BrowserBruter leaves it unmodified for example suppose web page has following hidden field <input type='hidden' name='csrf' value='csrfTOKEN'/>, then python3 BrowserBruter.py --csrf csrf")
-argParser.add_argument("-d","--delay",help="Delay between each brute force attempt, for example -d 1 is 1 second delay, -d 0.5 is 0.5 seconds delay, use it make attack more reliable in case fuzzing process crashes due to speed, default delay is 0.2", type=float, default=0.2)
-argParser.add_argument("-c","--cookie",help="Use it to define cookies to be used while sending request note cookies will be set only once and they might be changed by browser, cookies should be in name:value:domain format, example python3 BrowseBruter.py -c cookie_name1:cookie_value1:locahost cookie_name2:cookie_value2:example.com", metavar="name:value:domain", nargs="+")
-argParser.add_argument("-f","--forceCookie",help="Use this switch to force setting of cookies given as argument using --cookie flag regardless of cookies being sent by server,for example python3 BrowserBruter.py --cookie cookieName:Vlaue1:localhost --forceCookie",action="store_true")
-argParser.add_argument("-r","--remove",help="Use this switch to remove session data and cookies after each request-response cycle, this is useful against Authentication pages when you don't want redirection in case of successful login, example python3 BrowserBruter.py --cookie cookieName:Vlaue1:localhost --forceCookie", action="store_true")
-argParser.add_argument("-s","--silent",help="Use this switch to disable output being printed on console. for example python3 brute.py -t http://localhost/index.php -e username,password -b submit -p payloads.txt --silent", action="store_true")
-argParser.add_argument("-F","--form",help="Specify the form number to fuzz, for example if webpage contains two form and you want to fuzz second form use --form 2, example  python3 brute.py -t http://localhost:3000/ -e username,password -b submit -p payloads.txt --form 3", type=int)
-argParser.add_argument("-hl","--headless",help="Use this switch to run browser in headless mode (No GUI), this is useful to save resources, though it is recommended to first run browser in GUI mode to verify the fuzzing is working properly, and in headless it is recommended to avoid --silent mode so logs can be printed on console", action="store_true")
-argParser.add_argument("-T","--threads",help="Specifies number of browsers instances to be run, max value is 5, default is 1, lower the instances slower the fuzzing process, more instances - faster fuzzing process, In other words --threads 1 slow, --threads 3 fast, --threads 5 faster",default=1, type=int)
-argParser.add_argument("-ff","--firefox",help="Use FireFox instead of chrome for fuzzing process",action="store_true")
+argsRequired.add_argument("-t","--target",help="Target's url: http://www.net-square.com/index.php")
+argsRequired.add_argument("-e","--elements", help="Enter input fields in comma separated values.")
+argsRequired.add_argument("-p","--payloads",help="/path/to/payload/file.")
+argsRequired.add_argument("-b","--button",help="Button element which will submit form data.")
+argParser.add_argument("--scope",help="Comma-separated list of in-scope domains.")
+argParser.add_argument("--avoid",help="Input fields and other elements to left untouched, BrowserBruter will avoid them, also useful to avoid csrf field.")
+argParser.add_argument("--headers", help=f"Comma-separated list of custom headers.")
+argParser.add_argument("--delay",help="Delay between each brute force attempt.",metavar="0.2", type=float, default=0.2)
+argParser.add_argument("--cookie",help="Use it to define cookies to be used while sending initial request, cookies should be in name:value:domain format.", metavar="name:value:domain", nargs="+")
+argParser.add_argument("--forceCookie",help="Use this switch to force setting of cookies given as argument using --cookie flag regardless of cookies being sent by server.",action="store_true")
+argParser.add_argument("--removeSession",help="Use this switch to remove session data and cookies after each request-response cycle.", action="store_true")
+argParser.add_argument("--silent",help="Use this switch to disable output being printed on console and STDLOG file.", action="store_true")
+argParser.add_argument("-F","--form",help="Specify the form number to fuzz.", type=int)
+argParser.add_argument("--headless",help="Use this switch to run browser in headless mode (No GUI).", action="store_true")
+argParser.add_argument("-T","--threads",help="Specifies number of browsers instances to be run, max value is 5, default is 1, lower the instances slower the fuzzing process, more instances - faster fuzzing process.",default=1, type=int)
+argParser.add_argument("--firefox",help="Use FireFox instead of chrome for fuzzing process",action="store_true")
+argParser.add_argument("--values", help="Path to User-configurable attribute values file")
+argParser.add_argument("--pause", help="Pause the BrowserBruter and spawn Browser instances on startup, press ENTER to resume",action="store_true")
+argParser.add_argument("--iterative",help="Pause the BrowserBruter before fuzzing any element at each payload and wait for user to continue",action="store_true")
 
 # Getting the arguments in args variable
 args = argParser.parse_args()
 
 # Check if all required arguments are given and threads are not more than 5
 if args.payloads is None or args.target is None or args.elements is None or args.button is None:
-	print("Please Enter all required arguments --target, --paylods, --elements, --button")
+	print(f"{RED}Please Enter all required arguments --target, --paylods, --elements, --button{RESET}")
 	sys.exit(0)
 elif args.threads > 5 or args.threads < 0:
-	print("Value of threads must less than 6 and more than 0")
+	print(f"{RED}Value of threads must less than 6 and more than 0{RESET}")
 	sys.exit(0)
+# if forceCookie argument is present withouth --cookie option then throw error 
 elif args.forceCookie:
 	if args.cookie is None:
-		print("You can not use --forceCookie without --cookie option")
+		print(f"{RED}You can not use --forceCookie without --cookie option{RESET}")
 		sys.exit(0)
 
 ### DEFINING AND PARSING COMMAND LINE ARGUMENTS ENDS ###
 
-### DEFINING AND ASSIGNING GLOBAL VARIABLES STARTS ###
-
-# Assigning browser options
-# Checking whether user has to run fuzzing on firefox or chrome
-if args.firefox:
-	options = FirefoxOptions()
-	options.add_argument('--disable-dev-shm-usage')
-	options.add_argument('--executable-path=res/Drivers/geckodriver')
-	# Check if browser has to be run headless mode
-	if args.headless:
-		options.add_argument('--headless')
-else:
-	options = ChromeOptions()
-	options.add_argument('--disable-dev-shm-usage')
-	options.add_argument('--executable-path=res/Drivers/chromedriver')
-	# Check if browser has to be run headless mode
-	if args.headless:
-		options.add_argument('--headless')
-	
+### DEFINING AND ASSIGNING GLOBAL VARIABLES STARTS ###	
 
 # Getting hostname from target for filtering the output this will work as one kind scope for filtering output to be stored in report
-hostname = args.target
-hostname = hostname.split("://",1)[-1]
-hostname = hostname.split("/")[0]
+target_url = urlparse(args.target)
+hostname = target_url.hostname
+# Get the scope hostnames from the command-line arguments
+scope_hostnames = args.scope.split(',') if args.scope else []
 
 # Getting time when script started to name the final report
 start_time = datetime.datetime.now()
@@ -170,12 +185,26 @@ start_time = start_time.strftime("%Y-%m-%d_%H-%M-%S")
 
 # Setting flag which indicates threads to run or stop
 terminate = False
+# Pause event will be used to pause the threads when user presses the ENTER KEY
+pause_event = threading.Event()
+# Set Pause event if --pause flag is set
+if args.pause:
+	pause_event.set()
+
+# Get Payloads from file and store them in list
+payloads = []
+try:
+	with open(args.payloads, "r") as s:
+		for i in s:
+			i = i.strip()
+			payloads.append(i)
+except FileNotFoundError:
+	print(f"\n\n{RED}++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\nERROR: The specified payloads file '{args.payloads}' does not exist.\n++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++{RESET}")
+	sys.exit(1)
 
 # Creating Reports directory in current directory to store reports
-if not os.path.exists("BrowserBruter_Reports"):
-	os.makedirs("BrowserBruter_Reports")
-if not os.path.exists(f"BrowserBruter_Reports/{hostname}/{start_time}"):
-	os.makedirs(f"BrowserBruter_Reports/{hostname}/{start_time}")
+os.makedirs("BrowserBruter_Reports",exist_ok=True)
+os.makedirs(f"BrowserBruter_Reports/{hostname}/{start_time}",exist_ok=True)
 
 # Non targeted input field value, will update this to allow user specify them, please contribute to add more types and let us know https://github.com/netsquare/BrowserBruter/issues
 attribute_values = {
@@ -183,7 +212,7 @@ attribute_values = {
 	# For example BrowserBruter will send 0123456789 in fields which has type tel and which are not being fuzzed
 	"text":"text",
 	"number":"1234567890",
-	"password":"password",
+	"password":"P2$$@@wrd0!@#JJJ",
 	"email":"email@email.com",
 	"url":"http://localhost.xyz/",
 	"file":"name.txt",
@@ -196,17 +225,67 @@ attribute_values = {
 	"color":"#ff0000",
 	"range":"50"
 }
+# if user has provided values for above, then override them with user's values
+if args.values:
+    try:
+        with open(args.values, 'r') as values_file:
+            attribute_values = json.load(values_file)
+    except FileNotFoundError:
+        print(f"\n\n{RED}++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\nERROR: The specified values file '{args.values}' does not exist.\n++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++{RESET}")
+        sys.exit(1)
+    except json.JSONDecodeError:
+        print(f"\n\n{RED}++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\nERROR: Invalid JSON format in the specified values file '{args.values}'.\n++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++{RESET}")
+        sys.exit(1)
+
 
 ### DEFINING AND ASSIGNING GLOBAL VARIABLES ENDS ###
 
 ### FUNCTIONS STARTS ###
 
-# Function to Handle CTRL+C signal
+# Function to get browser driver specific to the running os
+def get_driver_path():
+    os_name = platform.system().lower()
+    
+    if os_name == 'linux':
+        return 'res/Drivers/linux/geckodriver' if args.firefox else 'res/Drivers/linux/chromedriver'
+    elif os_name == 'windows':
+        return 'res/Drivers/Win/chromedriver.exe' if args.firefox else 'res/Drivers/Win/geckodriver.exe'
+    elif os_name == 'darwin':  # Mac then use the installed firefox or chrome, no driver support as of now
+        return 'darwin'
+    else:
+        print(f"\n\n{RED}++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\nERROR: Unsupported operating system: {os_name}\n++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++{RESET}")
+        sys.exit(1)
+
+# Function to Handle CTRL+C
 def signal_handler(signal, frame):
-	print("\n\n++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\nINFO: CTRL+C pressed. Waiting for remaining request/response to stop. Exiting...\n++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++")
+	print(f"\n\n{RED}++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\nINFO: CTRL+C pressed. Waiting for remaining request/response to stop. Exiting...\n++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++{RESET}")
 	# Set the global termination flag to True so all threads can stop gracefully
 	global terminate
 	terminate = True
+
+# Function to run in a separate thread to pause and resume the browserbruter if user presses enter key
+def pause_resume():
+    global pause_event
+    while not terminate:
+        userText, timeout = timedKey(prompt="", timeout=3, resetOnInput=True)
+        if not (timeout):
+            pause_event.set()  # Set the pause event
+            print(f"\n\n{RED}++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\nWARNING: BROWSERBRUTER IS PAUSED\nPress ENTER to resumse\n++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++{RESET}")
+            k = input()				
+            pause_event.clear()  # Clear the pause event 
+            print(f"\n\n{RED}++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\nWARNING: Resuming BROWSERBRUTER\n++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++{RESET}")
+
+# Function to get BrowserOptions
+def get_browser_options(browser_type):
+	options = FirefoxOptions() if browser_type == 'firefox' else ChromeOptions()
+	# add below option to prevent use of shared memory
+	options.add_argument('--disable-dev-shm-usage')
+	if args.headless:
+		options.add_argument('--headless')
+	driver_path = get_driver_path() # Get driver path according to specific os
+	if driver_path != "darwin": # If running os is mac use pre-installed browser, do not use provided driver
+			options.add_argument(f'--executable-path={get_driver_path()}')
+	return options
 
 # Function to add cookies into selenium session
 def add_cookies(driver):
@@ -223,12 +302,12 @@ def add_cookies(driver):
 			driver.add_cookie(cookie_dict)
 	except ValueError as e:
 		sleep(2)
-		log_error(traceback.format_exc())
-		print("\n\n++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\nError: You have entered arguments in invalid format, please read help message for valid formate of passing cookies. Closing the Fuzzing process\n++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++")
+		log_error(format_exc())
+		print(f"\n\n{RED}++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\nError: You have entered arguments in invalid format, please read help message for valid formate of passing cookies. Closing the Fuzzing process\n++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++{RESET}")
 		driver.quit()
 		sys.exit(0)
 
-# Function to Remove attributes
+# Function to Remove attributes this is created to reduce code in attempt function
 def remove_attributes(driver, field):
 	driver.execute_script("arguments[0].removeAttribute('pattern');",field)
 	driver.execute_script("arguments[0].removeAttribute('min');",field)
@@ -239,131 +318,191 @@ def remove_attributes(driver, field):
 
 # Function to log errors 
 def log_error(error):
-	#log_file_lock.acquire()
 	try:
-		with open("Error.log","a") as log:
+		with open("logs/Error.txt","a") as log:
 				error_time = datetime.datetime.now()
 				error_time = error_time.strftime("%Y-%m-%d_%H-%M-%S")
-				log.write("\n++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\n")
+				log.write(f"\n++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\n")
 				log.write(f"Error Time - {error_time}")
 				log.write("\n++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\n")
 				log.write(error)
 	except:
-		print("\n\n++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\nERROR: An unknown error has been occured, Please open issue request at https://github.com/netsquare/BrowserBruter/issues and paste above message there, we are glad to help\n++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++")
+		print(f"\n\n{RED}++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\nERROR: An unknown error has been occured, Please open issue request at https://github.com/netsquare/BrowserBruter/issues and paste above message there, we are glad to help\n++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++{RESET}")
 
 # Funtion to Generate filename for each differnt thread
 def get_filename():
 	# Getting current date and time to name the output file accrodingly
 	current_datetime = datetime.datetime.now()
 	formatted_datetime = current_datetime.strftime("%Y-%m-%d_%H-%M-%S")
-	filename = f"BrowserBruter_Reports/{hostname}/{start_time}/{hostname}-{formatted_datetime}.csv"
+	filename = [f"BrowserBruter_Reports/{hostname}/{start_time}/{hostname}-{formatted_datetime}.csv",f"BrowserBruter_Reports/{hostname}/{start_time}/{hostname }-{formatted_datetime}.txt"]
 	return filename
 
 # Function to Generate Final Report
 def generate_final_report():
-	print("\n\n++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\nINFO: Genrating Final Report\n++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++")
+	print(f"\n\n{YELLOW}++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\nINFO: Genrating Final Report\n++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++{RESET}")
 	directory = f"BrowserBruter_Reports/{hostname}/{start_time}"
 	final_report = f"BrowserBruter_Reports/{hostname}/{start_time}/{hostname}-{start_time}.csv"
-	all_threads_files = [file for file in os.listdir(directory) if file.endswith('.csv')]
+	try:
+		processed_payloads = f"BrowserBruter_Reports/{hostname}/{start_time}/Processed_Payloads.txt"
+		all_threads_files = [file for file in os.listdir(directory) if file.endswith('.csv')]
+		all_processed_payloads_files = [file for file in os.listdir(directory) if file.endswith('.txt')]
+		global payloads
+		# Initialize index counter
+		index_counter = 0
 
-	# Merge other files into single final report
-	with open(final_report, 'w',newline='') as final:
-		writer = csv.writer(final)
+		# Merge other files into single final report
+		with open(final_report, 'w',newline='') as final:
+			writer = csv.writer(final)
 
-		# Insert columns names or in other words headings
-		writer.writerow(['Request Time','Selected','Payload','Web Page Before','Method','URL','Request Headers','Request Body','Response Time','Cycle Time MilliSeconds','Response Status Code','Response Reason','Response Headers','Response Body', 'Web Page After'])
-		# Iterate over each CSV file
-		for csv_file in all_threads_files:
-			file_path = os.path.join(directory, csv_file)
+			# Insert columns names or in other words headings
+			writer.writerow(['Index','Request Time','Selected','Payload','Web Page Before','Method','URL','Request Headers','Request Body','Response Time','Cycle Time MilliSeconds','Response Status Code','Response Reason','Response Headers','Response Body', 'Response Body Length', 'Web Page After'])
+			# Iterate over each CSV file
+			for csv_file in all_threads_files:
+				file_path = os.path.join(directory, csv_file)
 
-        	# Open the current CSV file in 'r' mode
-			with open(file_path, 'r') as infile:
-				reader = csv.reader(infile)
+        		# Open the current CSV file in 'r' mode
+				with open(file_path, 'r') as infile:
+					reader = csv.reader(infile)
 
-            	# Read and write the rows to the output file
-				writer.writerows(reader)
+                	# Read and write the rows to the output file
+					for row in reader:
+                    	# Insert the index value at the beginning of each row
+						row.insert(0, index_counter)
+						writer.writerow(row)
 
-        	# Delete the current CSV file
-			os.remove(file_path)
-	print(f"\n\n++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\nINFO: Report Generated -> {final_report}\n++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++")
+                    	# Increment the index counter
+						index_counter += 1
 
+        		# Delete the current CSV file
+				os.remove(file_path)
+		# Merge the processed payloads file into one, logic is same as above
+		with open(processed_payloads,'w',newline='') as final_processed_payloads:
+			for one_threads_processed_paylods in all_processed_payloads_files:
+				file_path = os.path.join(directory,one_threads_processed_paylods)
+			
+				with open(file_path,'r') as infile:
+					for i in infile:
+						final_processed_payloads.write(i)
+						# keeping track of remaining payloads by removing processed payloads from payload[] list
+						payloads.remove(i.strip())
+				# Delete the current threads processed payloads file
+				os.remove(file_path)
+		# Storing remaining payloads in separate file
+		remaining_payloads = os.path.join(directory,"Remaining_Payloads.txt")
+		with open(remaining_payloads,'w',newline='') as remaining_payloads_file:
+			for payload in payloads:
+				remaining_payloads_file.write(payload+'\n')
+		print(f"\n\n{YELLOW}++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\nINFO: Report Generated -> {final_report}\n++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++{RESET}")
+		print(f"\n\n{YELLOW}++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\nINFO: Processed Payloads (if any) have been stored -> {processed_payloads}\n++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++{RESET}")
+		print(f"\n\n{YELLOW}++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\nINFO: Remaining Payloads (if any) have been stored -> {remaining_payloads}\n++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++{RESET}")
+	except FileNotFoundError:
+		sys.exit(0)
 # Funtion to Run Single Browser instance
 def run_browser_instance(payloads, elements, instance_number):
 	try:
-		# Spawwing an instance of browser
-		if args.firefox:
-			driver = webdriver.Firefox(options=options)
-		else:
-			driver = webdriver.Chrome(options=options)
-	
+		# Spawing an instance of browser
+		# Assigning browser options
+		# Checking whether user has to run fuzzing on firefox or chrome and assigning browser options
+		options = get_browser_options('firefox') if args.firefox else get_browser_options('chrome')
+		driver = webdriver.Firefox(options=options) if args.firefox else webdriver.Chrome(options=options)
+
 		# If cookies are provided assign them to session
 		if args.cookie:
 			# first visit the domain so Chrome does not trow InvalidCookieDomainException
 			driver.get(args.target)
 			add_cookies(driver)
 
-		# Initialize report file
-		this_threads_file = get_filename()
+		 # Set custom headers
+		if args.headers:
+			custom_headers = {}
+			try:
+            	# Split the raw string into headers and set each one
+				for header in args.headers.split(','):
+					key, value = map(str.strip, header.split(':'))
+					custom_headers[key] = value
+				# Update header_overrides with all custom headers
+				driver.header_overrides = custom_headers
+			except ValueError:
+				print(f"\n\n{RED}++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\nERROR: Error setting headers. Please provide headers in valid format.\n++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++{RESET}")
+				driver.quit()
+				sys.exit(1)
+
+		# Initialize report file and processed payload file
+		this_threads_files = get_filename()
 
 		# Start the Fuzzing process
-		for i in range(len(elements)):
-			for j in range(len(payloads)):
+		for i in range(len(payloads)):
+			for j in range(len(elements)):
+					# Fuzz until terminate flag is not set, if it set then exit and close browser
 					if not terminate:
-						attempt(elements[i],payloads[j], driver, this_threads_file)
+						# if iterative option is set stop and wait for user to continue
+						if args.iterative:
+							pause_event.set()
+						# if pause event is set then pause the fuzzing process
+						if pause_event.is_set():
+							while pause_event.is_set():
+								sleep(1)
+						attemptToInsertOnePayloadAndFuzzOneElement(elements[j],payloads[i], driver, this_threads_files[0])
 						sleep(args.delay)
 					j += 1
+			# Add the processed payload into the file to keep track of processed payloads by this thread
+			with open(this_threads_files[1],'a',newline='') as processed_payload_file:
+				processed_payload_file.write(payloads[i]+'\n')
 			i+=i
-		print(f"\n\n++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\nINFO: Fuzzing completed for Browser Instance number - {instance_number}\n++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++")
+		print(f"\n\n{YELLOW}++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\nINFO: Fuzzing completed for Browser Instance number: {instance_number}\n++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++{RESET}")
 
 	# Handle the exceptions which specific to this thread and does not affects other threads
 	except NoSuchWindowException as e:
 		sleep(0.5)
-		log_error(traceback.format_exc())
-		print("\n\n++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\nINFO: Browser's window has been closed, closing the BrowserBruter, check error log if this is unintentional\n++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++")
+		log_error(format_exc())
+		print(f"\n\n{YELLOW}++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\nINFO: Browser's window has been closed, closing the BrowserBruter, check error log if this is unintentional\n++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++{RESET}")
 	except RemoteDisconnected as e:
 		sleep(0.7)
-		log_error(traceback.format_exc())
+		log_error(format_exc())
 		# This exception can be arrived whene user closes browser window
-		print("\n\n++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\nINFO: Browser's window has been closed or Remote connection lost, check error log if this is unintentional\n++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++")
+		print(f"\n\n{YELLOW}++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\nINFO: Browser's window has been closed or Remote connection lost, check error log if this is unintentional\n++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++{RESET}")
 	except ProtocolError as e:
 		sleep(0.9)
-		log_error(traceback.format_exc())
+		log_error(format_exc())
 		# This exception can be arrived whene user closes browser window
-		print("\n\n++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\nINFO: Browser's window has been closed or Remote connection lost, check error log if this is unintentional\n++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++")
+		print(f"\n\n{YELLOW}++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\nINFO: Browser's window has been closed or Remote connection lost, check error log if this is unintentional\n++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++{RESET}")
 	except MaxRetryError as e:
 		sleep(0.3)
-		error = traceback.format_exc()
+		error = format_exc()
 		log_error(error)
 		# This exception can be arrived whene user closes browser window
-		print("\n\n++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\nINFO: Browser's window has been closed or Browsers has reached maximum retries, if you have closed BrowserBruter ignore this else report the issue, check error log if this is unintentional\n++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++")
+		print(f"\n\n{YELLOW}++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\nINFO: Browser's window has been closed or Browsers has reached maximum retries, if you have closed BrowserBruter ignore this else report the issue, check error log if this is unintentional\n++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++{RESET}")
 	except WebDriverException as e:
 		sleep(1)
-		log_error(traceback.format_exc())
+		log_error(format_exc())
 		# This exception can be arrived whene user closes browser window
-		print("\n\n++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\nINFO: Browser's window has been closed or Remote connection lost, check error log if this is unintentional\n++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++") 
+		print(f"\n\n{YELLOW}++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\nINFO: Browser's window has been closed or Remote connection lost, check error log if this is unintentional\n++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++{RESET}") 
 	except:
 		sleep(3.5)
-		log_error(traceback.format_exc())
+		log_error(format_exc())
 		# Print Traceback
-		traceback.print_exc()
+		print_exc()
 		# Ask user to send this to github
-		print("\n\n++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\nError: An unkown error has been occured, Please open pull request at https://github.com/netsquare/BrowserBruter/issues and paste above message there, we are glad to help\n++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++")
+		print(f"\n\n{RED}++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\nError: An unkown error has been occured, Please open pull request at https://github.com/netsquare/BrowserBruter/issues and paste above message there, we are glad to help\n++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++{RESET}")
 	finally:
 		#close the specific thread's driver
-		if driver is not None:
-			driver.quit()
+		try:
+			if driver is not None:
+				driver.quit()
+		except UnboundLocalError:
+			sys.exit(1)
 
 # Function to attempt a single request-response cycle with payload
-def attempt(element, payload, driver, filename):
+def attemptToInsertOnePayloadAndFuzzOneElement(element, payload, driver, this_threads_files):
 
-	# If --force is set then set the initial cookies
-	if args.forceCookie == True:
-		add_cookies()
+	# If --forceCookie is set then set the initial cookies
+	if args.forceCookie:
+		add_cookies(driver)
 
 	# Go to the target website
 	driver.get(args.target)
 
-	#Clear previous requests
+	# Clear previous requests
 	del driver.requests
 
 	# Wait for body to be loaded in case of slow response
@@ -390,13 +529,19 @@ def attempt(element, payload, driver, filename):
 
 	# Check if form with specified number exists or not
 	if not input_fields:
-		print("\n\n++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\nERROR: Form with specified number does not exists, please verify form number, closing the BrowserBruter\n++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++")
+		print(f"\n\n{RED}++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\nERROR: Form with specified number does not exists, please verify form number, closing the BrowserBruter\n++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++{RESET}")
 		driver.quit()
 		sys.exit(0)
 
-	# Remove CSRF token field to avoid overwriting it
-	if args.csrf:
-		input_fields = [field for field in input_fields if field.get_attribute("name") != args.csrf and field.get_attribute("id") != args.csrf and field.get_attribute("type") != "button" and field.get_attribute("type") != "submit"]
+	# Remove CSRF and other elements to be excluded to avoid overwriting it
+	if args.avoid:
+		list_of_elements_to_avoid = args.avoid.split(',')
+		input_fields = [
+        	field for field in input_fields 
+        	if field.get_attribute("name") not in list_of_elements_to_avoid and
+        	field.get_attribute("id") not in list_of_elements_to_avoid and
+        	field.get_attribute("type") not in ["button", "submit"]
+   		 ]
 	
 	for field in input_fields:
 		# Fill other fields with valid inputs
@@ -423,7 +568,6 @@ def attempt(element, payload, driver, filename):
 			# Filling the predefined values
 			fieldValue = attribute_values.get(fieldType,"defaultValue")
 			driver.execute_script("arguments[0].setAttribute('value',arguments[1]);",field,fieldValue)
-			
 
 	# Fill target field which is being fuzzed with current payload	
 	# Finding the element either by id, name or class
@@ -437,8 +581,8 @@ def attempt(element, payload, driver, filename):
 				element_being_fuzzed = driver.find_element(By.CLASS_NAME, element)
 			except NoSuchElementException as e:
 				sleep(1.2)
-				log_error(traceback.format_exc())
-				print(f"\n\n++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\nError: Specified element {element} is not found. Please verify the name of element, for more information check Error.log\n++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++")
+				log_error(format_exc())
+				print(f"\n\n{RED}++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\nError: Specified element {element} is not found. Please verify the name of element, for more information check Error.txt\n++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++{RESET}")
 				driver.quit()
 				sys.exit(0)
 
@@ -474,8 +618,8 @@ def attempt(element, payload, driver, filename):
 				driver.find_element(By.CLASS_NAME,args.button).click()
 			except NoSuchElementException as e:
 				sleep(1.7)
-				log_error(traceback.format_exc())
-				print(f"\n\n++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\nError: Button element {args.button} is not found to press, please verify the id or name of the button element, for more information check Error.log\n++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++")
+				log_error(format_exc())
+				print(f"\n\n{RED}++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\nError: Button element {args.button} is not found to press, please verify the id or name of the button element, for more information check Error.txt\n++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++{RESET}")
 				driver.quit()
 				sys.exit(0)
 
@@ -498,52 +642,52 @@ def attempt(element, payload, driver, filename):
 	cycle_time = response_datetime - request_datetime
 	cycle_time_in_milliseconds = int(cycle_time.total_seconds() * 1000)
 
-	with open(filename,'a', newline='') as report:
+	with open(this_threads_files,'a', newline='') as report:
 
 		# Filtering request which are in scope
 		captured_requests = driver.requests
-		filtered_requests = [req for req in captured_requests if hostname in req.url]
+		filtered_requests = [req for req in captured_requests if hostname in req.url or scope_hostnames] 
 
 		writer = csv.writer(report)
 		for request in filtered_requests:
+			request_body = decode(request.body,"utf-8")
 			# Check whether should output be printed on console or not
 			if not args.silent:
 				# Print the request
-				print('\n---------------------Single Request/Response Cycle-------------------')
-				print("Fuzzing - " + element)
-				print("Payload - " + payload)
-				print('----------------------REQUEST---------------------')
+				print(f'\n{GREEN}---------------------Single Request/Response Cycle-------------------')
+				print(f"Fuzzing - " + element)
+				print(f"Payload - " + payload)
+				print(f'----------------------REQUEST---------------------{RESET}')
 				print('Time - '+requestTime+'\n', request.method, request.url)
 				# Print in new line
-				print(request.headers, request.body)
+				print(request.headers, request_body)
 				# Print the response
-				print('----------------------RESPONSE--------------------')
+				print(f'{GREEN}----------------------RESPONSE--------------------{RESET}')
 				if request.response:
 					print(
-						'Time - '+responseTime+'\n',
+						'Time - '+responseTime+'\n',  
 						request.response.status_code,
-						request.response.reason,
-						#bs.prettify(request.response.body, request.response.headers.get('Content-Encoding', 'identity'))
+						request.response.reason
 					)
 				print(request.response.headers)
 				raw = decode(request.response.body, request.response.headers.get('Content-Encoding','identity'))
 				# Using BeutifulSoup4 to reformat the HTML content
 				soup = bs(raw,features="html.parser")
 				print(soup.prettify())
+				print(f"{GREEN}++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\n\nTIME: {cycle_time_in_milliseconds} MiliSeconds ({cycle_time})\n\n++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++{RESET}")
 				# After printing on display write it to report
-				row = [value if value else '-' for value in [requestTime, element, payload, webpage_before, request.method, request.url, request.headers, request.body, responseTime, cycle_time_in_milliseconds, request.response.status_code, request.response.reason, request.response.headers, soup.prettify(), webpage_after]]
+				row = [value if value else ' ' for value in [requestTime, element, payload, webpage_before, request.method, request.url, request.headers, request_body, responseTime, cycle_time_in_milliseconds, request.response.status_code, request.response.reason, request.response.headers, soup.prettify(), len(request.response.body), webpage_after]]
 				writer.writerow(row)
 			else:
 				# Store the logs in report file
 				raw = decode(request.response.body, request.response.headers.get('Content-Encoding','identity'))
 				soup = bs(raw,features="html.parser")
 				# Substituting blank or no values with N/A then writing it to file
-				print(f"++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\n\n\n\n{cycle_time}\n\n\n++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++")
-				row = [value if value else '-' for value in [requestTime, element, payload, webpage_before, request.method, request.url, request.headers, request.body, responseTime, cycle_time_in_milliseconds, request.response.status_code, request.response.reason, request.response.headers, soup.prettify(), webpage_after]]
+				row = [value if value else ' ' for value in [requestTime, element, payload, webpage_before, request.method, request.url, request.headers, request_body, responseTime, cycle_time_in_milliseconds, request.response.status_code, request.response.reason, request.response.headers, soup.prettify(), len(request.response.body), webpage_after]]
 				writer.writerow(row)
 		
 	# Clear the cookies and other data
-	if args.remove == True:
+	if args.removeSession:
 		driver.delete_all_cookies() 
 
 ### VARIOUS FUNCTIONS ENDS ###
@@ -552,19 +696,18 @@ def attempt(element, payload, driver, filename):
 # Checking if script is running directly
 if __name__ == "__main__":
 	try:
-		# Get Payloads
-		payloads = []
-		with open(args.payloads, "r") as s:
-			for i in s:
-				i = i.strip()
-				payloads.append(i)
 
+		# Redirect stdout to the Tee class, the tee class redirects STDOUT to STDOUT and the log file
+		log_file = 'logs/BrowserBruterSTDOUT.txt'  # This file stores console output
+		tee_instance = Tee(log_file)
+		sys.stdout = tee_instance
+	
 		# Get the elements to be fuzzed
 		elements = args.elements.split(',')
 
 		# Get the number of threads or in other words number of browsers instances to use
 		num_threads = args.threads
-
+	
 		# Dividing payloads among threads and running the threads
 		# Check the number of threads specified in the command line arguments
 		num_threads = min(args.threads, 5)
@@ -572,6 +715,10 @@ if __name__ == "__main__":
 		# Divide the payload data equally among the threads
 		payloads_per_thread = len(payloads) // num_threads
 		extra_payloads = len(payloads) % num_threads
+
+		 # Create and start the keyboard listener thread which will pause and resume the BrowserBruter
+		keyboard_thread = threading.Thread(target=pause_resume)
+		keyboard_thread.start()
 
 		# Create and start the threads
 		threads = []
@@ -598,27 +745,34 @@ if __name__ == "__main__":
 		# Wait for all threads to finish
 		for thread in threads: 
 			thread.join()
-
+		# Set the terminate flag so the keyboard thread stops
+		terminate = True
+		
 	except KeyboardInterrupt:
 		signal_handler(signal.SIGINT, None)
 		sleep(3)
-		log_error(traceback.format_exc())
-		print("CTRL+C")
+		log_error(format_exc())
+		print(f"{RED}CTRL+C{RESET}")
 		sys.exit(0)
 	except SystemExit:
 		sleep(1.4)
-		log_error(traceback.format_exc())
+		log_error(format_exc())
 		print("")
 	except:
 		sleep(3.3)
-		log_error(traceback.format_exc())
+		log_error(format_exc())
 		# Print Traceback
-		traceback.print_exc()
+		print_exc()
 		# Ask user to send this to github
-		print("\n\n++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\nError: An unkown error has been occured, Please open pull request at https://github.com/netsquare/BrowserBruter/issues and paste above message there, we are glad to help\n++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++")
+		print(f"\n\n{RED}++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\nError: An unkown error has been occured, Please open pull request at https://github.com/netsquare/BrowserBruter/issues and paste above message there, we are glad to help\n++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++{RESET}")
 	finally:
+		# Generate report
 		generate_final_report()
+		# wait for the thread which is responsible for puase-resume mechanism to stop
+		keyboard_thread.join()
+		# Reset sys.stdout to the console at the end of your script
+		sys.stdout = sys.__stdout__ 
 else:          
-	print("\n\n++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\nError: Please run the script again using python3 BrowserBruter.py, closing the BrowserBruter\n++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++")
+	print(f"\n\n{RED}++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\nError: Please run the script again using python3 BrowserBruter.py, closing the BrowserBruter\n++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++{RESET}")
 
 ### MAIN EXECUTION BLOCK ENDS ###
