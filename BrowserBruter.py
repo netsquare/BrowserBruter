@@ -129,6 +129,11 @@ Usage Examples:
  {RESET}
        22. Pause the BrowserBruter on each iteration of fuzzing, so user can manually perform any task, complete captcha before BrowserBruter fuzzes the form, this will happen for each attempt to fuzz, so it will take a lot of time and user has to press ENTER two times to continue.
            {YELLOW}python3 BrowserBruter.py -e textarea,select,yesno,hobbies,phone,data,time,calendar,color --avoid _csrf -b submit -p payloads.txt -t http://localhost:3000/ --threads 5 --values values.json --iterative{RESET}
+       
+       23. Send traffic to BurpSuite
+           {YELLOW}python3 BrowserBruter.py -e textarea,select,yesno,hobbies,phone,data,time,calendar,color --avoid _csrf -b submit -p payloads.txt -t http://localhost:3000/ --proxy http://127.0.0.1:8080 {RESET}
+           OR
+           {YELLOW}python3 BrowserBruter.py -e textarea,select,yesno,hobbies,phone,data,time,calendar,color --avoid _csrf -b submit -p payloads.txt -t http://localhost:3000/ --proxy http://localhost:8080 {RESET}
 
 	'''
 # Adding various command line arguments
@@ -137,6 +142,7 @@ argsRequired.add_argument("-t","--target",help="Target's url: http://www.net-squ
 argsRequired.add_argument("-e","--elements", help="Enter input fields in comma separated values.")
 argsRequired.add_argument("-p","--payloads",help="/path/to/payload/file.")
 argsRequired.add_argument("-b","--button",help="Button element which will submit form data.")
+argParser.add_argument("--proxy",help="Set proxy to route traffic to, for example give IP:PORT of Burpsuite to send traffic to burpsuite.",metavar="http://proxyaddress:port/",default="")
 argParser.add_argument("--scope",help="Comma-separated list of in-scope domains.")
 argParser.add_argument("--avoid",help="Input fields and other elements to left untouched, BrowserBruter will avoid them, also useful to avoid csrf field.")
 argParser.add_argument("--headers", help=f"Comma-separated list of custom headers.")
@@ -299,7 +305,11 @@ def add_cookies(driver):
 				"value": value,
 				"domain": domain
 			}
-			driver.add_cookie(cookie_dict)
+			if args.firefox:
+				driver.execute_script(f'document.cookie="{cookie_dict["name"]}={cookie_dict["value"]}";')
+			else:
+				driver.add_cookie(cookie_dict)  
+
 	except ValueError as e:
 		sleep(2)
 		log_error(format_exc())
@@ -404,7 +414,7 @@ def run_browser_instance(payloads, elements, instance_number):
 		# Assigning browser options
 		# Checking whether user has to run fuzzing on firefox or chrome and assigning browser options
 		options = get_browser_options('firefox') if args.firefox else get_browser_options('chrome')
-		driver = webdriver.Firefox(options=options) if args.firefox else webdriver.Chrome(options=options)
+		driver = webdriver.Firefox(options=options,seleniumwire_options={'proxy': { 'http': args.proxy, 'https': args.proxy } } if args.proxy else {}) if args.firefox else webdriver.Chrome(options=options,seleniumwire_options={'proxy': { 'http': args.proxy, 'https': args.proxy } } if args.proxy else {})
 
 		# If cookies are provided assign them to session
 		if args.cookie:
