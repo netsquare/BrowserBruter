@@ -1,22 +1,29 @@
-# Import necessary libraries
+import sys
 import pandas as pd
 import tkinter as tk
 from tkinter import ttk
 from tkinter import filedialog
-from ttkthemes import ThemedStyle 
+from ttkthemes import ThemedStyle
 from tkinter.simpledialog import askstring
 from tkinter import messagebox
+
+# Get Greppable values from user
+greppables = []
+if len(sys.argv) > 1:
+    greppables = sys.argv[1].split(',')
 
 # Create a Pandas DataFrame to store the data
 df = pd.DataFrame()
 
-
-
 # Define dictionaries and lists for sorting and managing data
 sort_order = {}
-columns = ['Index', 'Request Time', 'Selected', 'Payload', 'Method', 'URL',
+columns = ['Index', 'Request Time', 'Fuzzing', 'Payload', 'Method', 'URL',
            'Request Headers', 'Request Body', 'Response Time', 'Cycle Time MilliSeconds',
-           'Response Status Code', 'Response Reason', 'Response Headers', 'Response Body', 'Web Page Before', 'Web Page After']
+           'Response Status Code', 'Response Reason', 'Response Headers', 'Response Body', 'Response Length', 'Web Page Before', 'Web Page After']
+
+# Append greppable columns
+for greppable in greppables:
+    columns.append(greppable)
 
 # Function to load a CSV file and display its data
 def load_csv():
@@ -30,10 +37,22 @@ def load_csv():
             df = pd.read_csv(file_path)
             # Set the 'Index' column as the DataFrame index
             df.set_index('Index', inplace=True)
+
+            # Check if 'Index' column is empty
+            if df.index.isnull().all():
+                # Fill 'Index' column with sequential numbers starting from 0
+                df['Index'] = range(len(df))
+
+            # Replace incorrect or null values with "N/A"
+            df.fillna("N/A", inplace=True)
+
             sort_order = {}
-            # Display the data in the Treeview widget
-            display_data(df)
-        #df2 = df
+            if greppables:
+                grep_strings(greppables)
+            else:
+                # Display the data in the Treeview widget
+                display_data(df)
+
     except pd.errors.EmptyDataError:
         # Handle empty file error
         messagebox.showerror("Error", "The selected file is empty.")
@@ -43,30 +62,64 @@ def load_csv():
 
 # Function to display data in the Treeview widget
 def display_data(dataframe):
+    # Check if 'Index' column is present in the DataFrame
+    if 'Index' not in dataframe.columns:
+        # If 'Index' column is missing, reset the index
+        dataframe.reset_index(drop=False, inplace=True)
     # Clear existing data in the Treeview
     tree.delete(*tree.get_children())
-    # Insert data from the DataFrame into the Treeview
-    for index, row in dataframe.iterrows():
+    # Get the sorted index of the DataFrame
+    sorted_index = dataframe.index.tolist()
+    # Insert data from the DataFrame into the Treeview using the sorted index
+    for index in sorted_index:
         item_id = str(index)
-        values = [index] + [row[col] for col in columns[1:] if col in row.index]
+        values = [dataframe.at[index, col] for col in columns]
         tree.insert("", "end", iid=item_id, values=values)
 
-# Function to search for text in specific columns and display the results
-def search_data(search_text):
+# If user has entered the greppable values, count the occurences of those strings in data and display the occurrence coun
+def grep_strings(greppables):
     global df
-    if not search_text:
-        # If search text is empty, display all data
+
+    if not greppables:
+        return
+
+    # Define columns to filter for text
+    filter_columns = ['Web Page Before', 'Web Page After', 'Request Body', 'Request Headers', 'Response Headers', 'Response Body']
+
+    # Add greppable columns at the last position in the DataFrame and UI
+    for greppable in greppables:
+        df = df.assign(col_name=greppable)
+        df[greppable] = 0
+
+    # Iterate over each greppable string
+    for greppable in greppables:
+        greppable_lower = greppable.lower()  # Convert greppable string to lowercase
+        # Iterate over each row
+        for index, row in df.iterrows():
+            # Convert content to lowercase before counting
+            count = sum([str(row[col]).lower().count(greppable_lower) for col in filter_columns])
+            # Update the value in the greppable column for the current row
+            df.at[index, greppable] = count
+
+    # Update the display after processing all greppable strings
+    display_data(df)
+
+# Function to filter for text in specific columns and display the results
+def filter_data(filter_text):
+    global df
+    if not filter_text:
+        # If filter text is empty, display all data
         display_data(df)
         return
 
-    # Define columns to search for text
-    search_columns = ['Web Page Before', 'Web Page After', 'Request Headers', 'Response Headers', 'Response Body']
+    # Define columns to filter for text
+    filter_columns = ['URL','Web Page Before', 'Web Page After', 'Request Body', 'Request Headers', 'Response Headers', 'Response Body']
     # Create a new DataFrame to store the filtered results
     filtered_df = pd.DataFrame(columns=df.columns)
 
-    # Iterate over search columns and filter the DataFrame
-    for col in search_columns:
-        condition = df[col].str.contains(search_text, case=False, na=False)
+    # Iterate over filter columns and filter the DataFrame
+    for col in filter_columns:
+        condition = df[col].str.contains(filter_text, case=False, na=False)
         filtered_df = pd.concat([filtered_df, df[condition]])
 
     # Remove duplicate rows from the filtered DataFrame
@@ -74,35 +127,82 @@ def search_data(search_text):
     # Display the filtered data in the Treeview
     display_data(filtered_df)
 
-# Function to handle the click event of the search button
-def search_button_click():
-    # Prompt the user to enter search text
-    search_text = askstring("Search", "Enter search text:")
-    if search_text is not None:
-        # Perform the search and display the results
-        search_data(search_text)
+# Function to handle the click event of the filter button
+def filter_button_click():
+    # Prompt the user to enter filter text
+    filter_text = askstring("filter", "Enter filter text:")
+    if filter_text is not None:
+        # Perform the filter and display the results
+        filter_data(filter_text)
 
-# Function to clear the search results and display all data
-def clear_search():
+# Function to clear the filter results and display all data
+def clear_filter():
     display_data(df)
-
 
 # Function to sort the Treeview based on the selected column
 def sort_treeview(column):
-    global sort_order
+    try:
+        global sort_order, df
 
-    # Determine the sorting order for the column
-    if column not in sort_order:
-        sort_order[column] = 'asc'
-    elif sort_order[column] == 'asc':
-        sort_order[column] = 'desc'
-    else:
-        sort_order.pop(column)
+        # Determine the sorting order for the column
+        if column not in sort_order:
+            sort_order[column] = 'asc'
+        elif sort_order[column] == 'asc':
+            sort_order[column] = 'desc'
+        else:
+            sort_order.pop(column)
 
-    # Sort the DataFrame based on the selected column and order
-    df.sort_values(by=column, inplace=True, ascending=(sort_order.get(column) == 'asc'))
-    # Display the sorted data in the Treeview
-    display_data(df)
+        # Sort the DataFrame based on the selected column and order
+        df = df.sort_values(by=column, ascending=(sort_order[column] == 'asc')).reset_index(drop=True)
+        # Display the sorted data in the Treeview
+        display_data(df)
+    except KeyError:
+        pass
+
+# Function to copy payload from selected row
+def copy_payload():
+    selected_item = tree.selection()
+    if selected_item:
+        iid = selected_item[0]
+        index = tree.index(iid)
+        payload = df.at[index, 'Payload']
+        root.clipboard_clear()
+        root.clipboard_append(payload)
+
+# Function to copy whole selected row
+def copy_row():
+    selected_item = tree.selection()
+    if selected_item:
+        iid = selected_item[0]
+        index = tree.index(iid)
+        # Exclude 'Index' column when copying the row
+        row_data = [f"\n\n[+]-------------------------------------------[+]\n{col}\n[+]-------------------------------------------[+]\n\n{df.at[index, col]}" for col in columns[1:]]
+        row_string = "\n".join(row_data)
+        root.clipboard_clear()
+        root.clipboard_append(row_string)
+
+# Function to show context menu when user right clicks on selected row
+def show_context_menu(event):
+    # Get the selected item from the Treeview
+    selected_item = tree.selection()
+    if selected_item:
+        iid = selected_item[0]
+        index = tree.index(iid)
+
+        # Define a context menu
+        context_menu = tk.Menu(root, tearoff=0)
+        context_menu.add_command(label="Copy Payload", command=copy_payload)
+        context_menu.add_command(label="Copy Row", command=copy_row)
+
+        # Display the context menu at the current mouse position
+        context_menu.post(event.x_root, event.y_root)
+
+        # Hide the context menu when an option is selected or the user clicks somewhere else
+        def hide_menu(event):
+            context_menu.unpost()
+            root.unbind("<Button-1>", hide_menu)
+
+        root.bind("<Button-1>", hide_menu)
 
 # Function to show request/response details when a Treeview item is selected
 def show_request_response(event):
@@ -114,7 +214,7 @@ def show_request_response(event):
 
         # Define required columns for request/response details
         required_columns = ['Method', 'URL', 'Request Headers', 'Response Status Code', 'Web Page Before', 'Web Page After', 'Response Body', 'Request Body']
-        
+
         # Check if required columns are present in the DataFrame
         if all(col in df.columns for col in required_columns):
             if index in df.index:
@@ -133,8 +233,8 @@ def show_request_response(event):
                 web_page_after = df.at[index, 'Web Page After']
 
                 # Build full request and response strings
-                full_request = f"{method} {url}\n{request_headers}\n{request_body}"
-                full_response = f"HTTP/1.1 {response_status} {response_reason}\n{response_headers}\n{response_body}"
+                full_request = f"{method} {url}\n{request_headers}{request_body}"
+                full_response = f"HTTP/1.1 {response_status} {response_reason}\n{response_headers}{response_body}"
 
                 # Display request and response details in the respective Text widgets
                 request_text.delete(1.0, tk.END)
@@ -155,6 +255,8 @@ def show_request_response(event):
 root = tk.Tk()
 root.title("BrowserBruter Report Explorer")
 root.geometry("1200x600")
+
+# Maximize the window
 root.attributes('-zoomed', True)
 
 # Setting theme
@@ -170,11 +272,11 @@ file_menu = tk.Menu(menu_bar, tearoff=0)
 menu_bar.add_cascade(label="File", menu=file_menu)
 file_menu.add_command(label="Load Report", command=load_csv)
 
-# Create search menu
-search_menu = tk.Menu(menu_bar, tearoff=0)
-menu_bar.add_cascade(label="Search", menu=search_menu)
-search_menu.add_command(label="Search", command=search_button_click)
-search_menu.add_command(label="Clear", command=clear_search)
+# Create filter menu
+filter_menu = tk.Menu(menu_bar, tearoff=0)
+menu_bar.add_cascade(label="filter", menu=filter_menu)
+filter_menu.add_command(label="filter", command=filter_button_click)
+filter_menu.add_command(label="Clear", command=clear_filter)
 
 # Create Panedwindow for Treeview and Notebook
 paned_window = ttk.Panedwindow(root, orient=tk.VERTICAL)
@@ -203,8 +305,6 @@ tree.configure(yscrollcommand=tree_scroll.set, xscrollcommand=tree_hscroll.set)
 
 # Pack Treeview widget
 tree.pack(expand=True, fill='both')
-
-
 
 # Create Notebook widget
 notebook = ttk.Notebook(paned_window)
@@ -277,6 +377,13 @@ web_page_after_text.bind("<KeyPress>", ignore_keyboard)
 
 # Bind Treeview click event to show_request_response function
 tree.bind('<ButtonRelease-1>', show_request_response)
+
+# Bind Treeview up and down arrow keys to show_request_response function
+tree.bind('<Up>', show_request_response)
+tree.bind('<Down>', show_request_response)
+
+# Bind the right-click event to the show_request_response function
+tree.bind("<Button-3>", show_context_menu)
 
 # Configure column weights for the Treeview frame
 for i in range(len(columns)):

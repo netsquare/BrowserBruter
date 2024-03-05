@@ -5,3 +5,5 @@ ttkthemes
 pytimedinput
 colorama
 beautifulsoup4
+undetected_chromedriver
+tqdm
