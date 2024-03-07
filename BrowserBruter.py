@@ -19,6 +19,7 @@ from res.tee import Tee
 from time import sleep
 from seleniumwire.undetected_chromedriver.v2 import Chrome, ChromeOptions
 from seleniumwire import webdriver
+from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
@@ -32,6 +33,7 @@ from selenium.common.exceptions import ElementNotInteractableException
 from selenium.common.exceptions import ElementClickInterceptedException
 from selenium.common.exceptions import InvalidElementStateException
 from selenium.common.exceptions import InvalidCookieDomainException
+from selenium.common.exceptions import InvalidArgumentException
 from http.client import RemoteDisconnected
 from urllib3.exceptions import ProtocolError
 from urllib3.exceptions import MaxRetryError
@@ -62,7 +64,7 @@ print(f"""{GREEN}
 {GREEN}## {YELLOW}╚═════╝░╚═╝░░╚═╝░╚════╝░░░░╚═╝░░░╚═╝░░╚═════╝░╚══════╝╚═╝░░╚═╝░░░░░░╚═════╝░╚═╝░░╚═╝░╚═════╝░░░░╚═╝░░░╚══════╝╚═╝░░╚═╝⠀⠀⠀{RED}⣆⠀⢶⡆⠀⠀⠀⢀⡟⠀⣼⡇                                 
 {GREEN}##                                                                                                                       ⠀⠀⠀{RED}⢹⣄⠘⣷⡀⠀⢀⡼⠁⣰⡟⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀                  
 {GREEN}##                                                                                                                       ⠀⠀⠀⠀{RED}⠙⠦⡈⠻⢶⣿⣥⡾⠋ {YELLOW}by Jafar Pathan 
-{GREEN}##                                                                                                           {YELLOW}The First-Ever Advance Browser Based Automated Web Form Fuzzing Tool{GREEN}### 
+{GREEN}##                                                                                        {YELLOW}The First-Ever Advance Browser Based Automated Web Form Fuzzing Tool{GREEN} 
 {GREEN}##################################################################################################################################################################
 {GREEN}##################################################################################################################################################################{RESET}""")
 
@@ -74,221 +76,223 @@ argParser = argparse.ArgumentParser(description="BrowserBruter is a python3 scri
 argParser.epilog = f'''
 Usage Examples:
     1. Perform Bruteforce(ClusterBomb) on login page:
-        {YELLOW}BrowserBruter --elements-payloads username:username.txt,password:passwords.txt --target http://localhost/login.php --button Login --attack 4 --remove-session{RESET}
+        {YELLOW}BrowserBruter{GREEN} --elements-payloads{RESET} username:username.txt,password:passwords.txt {GREEN}--target{RESET} http://localhost/login.php {GREEN}--button{RESET} Login {GREEN}--attack{RESET} 4 {GREEN}--remove-session{RESET}
 
     2. Perform PitchFork on login page:
-        {YELLOW}BrowserBruter --elements-payloads username:username.txt,password:passwords.txt --target http://localhost/login.php --button Login --attack 3{RESET}
+        {YELLOW}BrowserBruter{GREEN} --elements-payloads{RESET} username:username.txt,password:passwords.txt {GREEN}--target{RESET} http://localhost/login.php {GREEN}--button{RESET} Login {GREEN}--attack{RESET} 3
 
     3. Perform BatteringRam on login page:
-        {YELLOW}BrowserBruter --elements username,password --payloads sqli.txt --target http://localhost/login.php --button Login --verbose --attack 2{RESET}
+        {YELLOW}BrowserBruter{GREEN} --elements{RESET} username,password {GREEN}--payloads{RESET} sqli.txt {GREEN}--target{RESET} http://localhost/login.php {GREEN}--button{RESET} Login {GREEN}--verbose{RESET} {GREEN}--attack{RESET} 2{RESET}
 
     4. Fuzz on login page and make it verbose:
-        {YELLOW}BrowserBruter --elements username,password --fill username,password --payloads sqli.txt --target http://localhost/login.php --button Login --verbose --attack 1{RESET}
+        {YELLOW}BrowserBruter{GREEN} --elements{RESET} username,password {GREEN}--fill{RESET} username,password {GREEN}--payloads{RESET} sqli.txt {GREEN}--target{RESET} http://localhost/login.php {GREEN}--button{RESET} Login {GREEN}--verbose{RESET} {GREEN}--attack{RESET} 1{RESET}
 
     5. Fuzz on registration page with two cookies 1)'difficulty' and 2)'hint':
-        {YELLOW}BrowserBruter --elements name,age,address,phone --fill name,age,address,phone --payloads payloads.txt --target http://localhost/register --button register --cookie difficulty:high,hint:no --attack 1{RESET}
+        {YELLOW}BrowserBruter{GREEN} --elements{RESET} name,age,address,phone {GREEN}--fill{RESET} name,age,address,phone {GREEN}--payloads{RESET} payloads.txt {GREEN}--target{RESET} http://localhost/register {GREEN}--button{RESET} register {GREEN}--cookie{RESET} difficulty:high,hint:no {GREEN}--attack{RESET} 1{RESET}
 	
     6. Fuzz on registration page with two cookies 1)'difficulty' and 2)'hint' and sent them forcefully on each request becuase the initial cookies might be overridden by new cookies values:
-        {YELLOW}BrowserBruter --elements name,age,address,phone --fill name,age,address,phone --payloads payloads.txt --target http://localhost/register --button register --cookie difficulty:high,hint:no --force-cookie --attack 1{RESET}
+        {YELLOW}BrowserBruter{GREEN} --elements{RESET} name,age,address,phone {GREEN}--fill{RESET} name,age,address,phone {GREEN}--payloads{RESET} payloads.txt {GREEN}--target{RESET} http://localhost/register {GREEN}--button{RESET} register {GREEN}--cookie{RESET} difficulty:high,hint:no {GREEN}--force-cookie {GREEN}--attack{RESET} 1{RESET}
 	
     7. Fuzz registration page with two cookies 1)'difficulty' and 2)'hint' and sent them forcefully on each request and remove session data and cookie after each request-response cycle [this is useful against Authentication pages when you don't want redirection in case of successful login]:
-        {YELLOW}BrowserBruter --elements name,age,address,phone --fill name,age,address,phone --payloads payloads.txt --target http://localhost/register --button register --cookie difficulty:high,hint:no --force-cookie --remove-session --attack 1{RESET}
+        {YELLOW}BrowserBruter{GREEN} --elements{RESET} name,age,address,phone {GREEN}--fill{RESET} name,age,address,phone {GREEN}--payloads{RESET} payloads.txt {GREEN}--target{RESET} http://localhost/register {GREEN}--button{RESET} register {GREEN}--cookie{RESET} difficulty:high,hint:no {GREEN}--force-cookie {GREEN}--remove-session {GREEN}--attack{RESET} 1{RESET}
 	
     8. Fuzz registration page with two cookies 1)'difficulty' and 2)'hint' and sent them forcefully on each request and remove session data and cookie after each request-response cycle and run browser in headless mode:
-        {YELLOW}BrowserBruter --elements name,age,address,phone --fill name,age,address,phone --payloads payloads.txt --target http://localhost/register --button register --cookie difficulty:high,hint:no --force-cookie --remove-session --headless --attack 1{RESET}
+        {YELLOW}BrowserBruter{GREEN} --elements{RESET} name,age,address,phone {GREEN}--fill{RESET} name,age,address,phone {GREEN}--payloads{RESET} payloads.txt {GREEN}--target{RESET} http://localhost/register {GREEN}--button{RESET} register {GREEN}--cookie{RESET} difficulty:high,hint:no {GREEN}--force-cookie {GREEN}--remove-session {GREEN}--headless {GREEN}--attack{RESET} 1{RESET}
 	
     9. Fuzz registration page with two cookies 1)'difficulty' and 2)'hint' and sent them forcefully on each request and remove session data and cookie after each request-response cycle and run browser in headless mode and run 5 instances of browser parallely:
-        {YELLOW}BrowserBruter --elements name,age,address,phone --fill name,age,address,phone --payloads payloads.txt --target http://localhost/register --button register --cookie difficulty:high,hint:no --force-cookie --remove-session --headless --threads 5 --attack 1{RESET}
+        {YELLOW}BrowserBruter{GREEN} --elements{RESET} name,age,address,phone {GREEN}--fill{RESET} name,age,address,phone {GREEN}--payloads{RESET} payloads.txt {GREEN}--target{RESET} http://localhost/register {GREEN}--button{RESET} register {GREEN}--cookie{RESET} difficulty:high,hint:no {GREEN}--force-cookie {GREEN}--remove-session {GREEN}--headless {GREEN}--threads{RESET} 5 {GREEN}--attack{RESET} 1{RESET}
    
     10. Fuzz CheckBox for example '<input type="checkbox" name="hobbies" value="reading" /> <input type="checkbox" name="hobbies" value="writing" />':
-        {YELLOW}BrowserBruter --elements hobbies --payloads paylods.txt --target http://localhost/register --button register --attack 1{RESET}
+        {YELLOW}BrowserBruter{GREEN} --elements{RESET} hobbies {GREEN}--payloads{RESET} paylods.txt {GREEN}--target{RESET} http://localhost/register {GREEN}--button{RESET} register {GREEN}--attack{RESET} 1{RESET}
    
     11. Fuzz Radio Button for example '<input type="radio" name="yesno" id="yes" value="yes" required/> <input type="radio" name="yesno" id="no" value="no" required/>':
-        {YELLOW}BrowserBruter --elements yesno --payloads payloads.txt --target http://localhost/register --button register --attack 1{RESET}
+        {YELLOW}BrowserBruter{GREEN} --elements{RESET} yesno {GREEN}--payloads{RESET} payloads.txt {GREEN}--target{RESET} http://localhost/register {GREEN}--button{RESET} register {GREEN}--attack{RESET} 1{RESET}
     OR
-        {YELLOW}BrowserBruter --elements no --payloads payloads.txt --target http://localhost/register --button register --attack 1{RESET}
+        {YELLOW}BrowserBruter{GREEN} --elements{RESET} no {GREEN}--payloads{RESET} payloads.txt {GREEN}--target{RESET} http://localhost/register {GREEN}--button{RESET} register {GREEN}--attack{RESET} 1{RESET}
    
     12. Fuzz <select> element - for example <select name="selectElement" required> <option value="">Select an option</option> <option value="option1">Option 1</option> </select>:
-        {YELLOW}BrowserBruter --elements selectElement --payloads payloads.txt --target http://dvwa.com/selection --button submit --attack 1{RESET}
+        {YELLOW}BrowserBruter{GREEN} --elements{RESET} selectElement {GREEN}--payloads{RESET} payloads.txt {GREEN}--target{RESET} http://localhost/selection {GREEN}--button{RESET} submit {GREEN}--attack{RESET} 1{RESET}
     
     13. Fuzz <textarea> element - for example <textarea name="textareaElement" placeholder="Enter text" required></textarea>:
-        {YELLOW}BrowserBruter --elements textareaElement --payloads payloads.txt --target http://dvwa.com/registration --button submit --attack 1{RESET}
+        {YELLOW}BrowserBruter{GREEN} --elements{RESET} textareaElement {GREEN}--payloads{RESET} payloads.txt {GREEN}--target{RESET} http://localhost/registration {GREEN}--button{RESET} submit {GREEN}--attack{RESET} 1{RESET}
    
     14. Fuzz colorpicker, datepicker, timepicker - for example <input type="color" name="colorElement" required/> <input type="date" name="dateElement" required/> <input type="time" name="timeElement" required/>:
-        {YELLOW}BrowserBruter --elements colorElement,dateElement,timeElement --fill colorElement,dateElement,timeElement --payloads payloads.txt --target http://localhost/ --button submit --attack 1{RESET}
+        {YELLOW}BrowserBruter{GREEN} --elements{RESET} colorElement,dateElement,timeElement {GREEN}--fill{RESET} colorElement,dateElement,timeElement {GREEN}--payloads{RESET} payloads.txt {GREEN}--target{RESET} http://localhost/ {GREEN}--button{RESET} submit {GREEN}--attack{RESET} 1{RESET}
 
     15. Define API domain in scope for proper report generation and logging:
-        {YELLOW}BrowserBruter --elements username,password --fill username,password --button button --target http://net-square.com/login --payloads payloads.txt --attack 1 --scope api.net-square.com,dev.api.net-square.com{RESET}
+        {YELLOW}BrowserBruter{GREEN} --elements{RESET} username,password {GREEN}--fill{RESET} username,password {GREEN}--button{RESET} button {GREEN}--target{RESET} http://net-square.com/login {GREEN}--payloads{RESET} payloads.txt {GREEN}--attack{RESET} 1 {GREEN}--scope{RESET} api.net-square.com,dev.api.net-square.com{RESET}
 
     16. Add Authorization headers with bearer token for valid authorization:
-        {YELLOW}BrowserBruter --elements username,password --fill username,password --button button --target http://net-square.com/login --payloads payloads.txt --headers "Auth: 123","Auth1: Bearer emluamFjb2Rlcgo=" {RESET}
+        {YELLOW}BrowserBruter{GREEN} --elements{RESET} username,password {GREEN}--fill{RESET} username,password {GREEN}--button{RESET} button {GREEN}--target{RESET} http://net-square.com/login {GREEN}--payloads{RESET} payloads.txt {GREEN}--header{RESET} "Auth: 123","Auth1: Bearer emluamFjb2Rlcgo=" {RESET}
 	   
     17. Provide custom values for each form field types, content of the file should be in JSON format and it should contain all of the field types, see example values.json for better understanding:
-        {YELLOW}BrowserBruter --elements username,password --fill username,password --fill-values fields.json --button button --target http://net-square.com/login --payloads payloads.txt" {RESET}
+        {YELLOW}BrowserBruter{GREEN} --elements{RESET} username,password {GREEN}--fill{RESET} username,password {GREEN}--fill-values{RESET} fields.json {GREEN}--button{RESET} button {GREEN}--target{RESET} http://net-square.com/login {GREEN}--payloads{RESET} payloads.txt" {RESET}
 
     18. Pause the BrowserBruter on each iteration of fuzzing, so user can manually perform any task, complete captcha before BrowserBruter fuzzes the form, press ENTER two times to continue:
-        {YELLOW}BrowserBruter --elements textarea,select,yesno,hobbies,phone,data,time,calendar,color --fill textarea,select,yesno,hobbies,phone,data,time,calendar,color --button submit --payloads payloads.txt --target http://localhost:3000/ --threads 5 --fill-values values.json --interacitve --attack 1{RESET}
+        {YELLOW}BrowserBruter{GREEN} --elements{RESET} textarea,select,yesno,hobbies,phone,data,time,calendar,color {GREEN}--fill{RESET} textarea,select,yesno,hobbies,phone,data,time,calendar,color {GREEN}--button{RESET} submit {GREEN}--payloads{RESET} payloads.txt {GREEN}--target{RESET} http://localhost:3000/ {GREEN}--threads{RESET} 5 {GREEN}--fill-values{RESET} values.json {GREEN}--interacitve {GREEN}--attack{RESET} 1{RESET}
 
     19. Replace the content of a file in HTTP responses and specify the replacement file URL:
-        {YELLOW}BrowserBruter --elements username,password --fill username,password --button login --target http://localhost/login --payloads payloads.txt --replace-files "input-validation.js"++"http://localhost/assets/js/input-validation.js" --attack 1{RESET}
+        {YELLOW}BrowserBruter{GREEN} --elements{RESET} username,password {GREEN}--fill{RESET} username,password {GREEN}--button{RESET} login {GREEN}--target{RESET} http://localhost/login {GREEN}--payloads{RESET} payloads.txt {GREEN}--replace-files{RESET} "input-validation.js"++"http://localhost/assets/js/input-validation.js" {GREEN}--attack{RESET} 1{RESET}
 
     20. Replace the content of a file in HTTP responses and run JavaScript:
-        {YELLOW}BrowserBruter --elements username,password --fill username,password --button login --target http://localhost/login --payloads payloads.txt --replace-files "input-validation.js"++"http://localhost/assets/js/input-validation.js" --javascript "var elmnt = document.getElementById('ClickMe'); elmnt.click();" --attack 1{RESET}
+        {YELLOW}BrowserBruter{GREEN} --elements{RESET} username,password {GREEN}--fill{RESET} username,password {GREEN}--button{RESET} login {GREEN}--target{RESET} http://localhost/login {GREEN}--payloads{RESET} payloads.txt {GREEN}--replace-files{RESET} "input-validation.js"++"http://localhost/assets/js/input-validation.js" {GREEN}--javascript{RESET} "var elmnt = document.getElementById('ClickMe'); elmnt.click();" {GREEN}--attack{RESET} 1{RESET}
 
     21. Replace the content of a file in HTTP responses and run JavaScript code by providing the code in file:
-        {YELLOW}BrowserBruter --elements username,password --fill username,password --button login --target http://localhost/login --payloads payloads.txt --replace-files "input-validation.js"++"http://localhost/assets/js/input-validation.js" --javascript-file element-click.js --attack 1{RESET}
+        {YELLOW}BrowserBruter{GREEN} --elements{RESET} username,password {GREEN}--fill{RESET} username,password {GREEN}--button{RESET} login {GREEN}--target{RESET} http://localhost/login {GREEN}--payloads{RESET} payloads.txt {GREEN}--replace-files{RESET} "input-validation.js"++"http://localhost/assets/js/input-validation.js" {GREEN}--javascript-file{RESET} element-click.js {GREEN}--attack{RESET} 1{RESET}
     
     22. Replace every "return false" statement with "return true" and replace every "alert(0)" with "alert(1)":
-        {YELLOW}BrowserBruter --elements username,password --fill username,password --button login --target http://localhost/login --payloads payloads.txt --replace-code "return false","return true","alert(0)","alert(1)" --javascript "var elmnt = document.getElementById('ClickMe'); elmnt.click();" --attack 1{RESET}
+        {YELLOW}BrowserBruter{GREEN} --elements{RESET} username,password {GREEN}--fill{RESET} username,password {GREEN}--button{RESET} login {GREEN}--target{RESET} http://localhost/login {GREEN}--payloads{RESET} payloads.txt {GREEN}--replace-code{RESET} "return false","return true","alert(0)","alert(1)" {GREEN}--javascript{RESET} "var elmnt = document.getElementById('ClickMe'); elmnt.click();" {GREEN}--attack{RESET} 1{RESET}
     
     23. Replace bunch of javascript code into return true:
-        {YELLOW}BrowserBruter --elements-payloads textarea:sqli.txt,data:sqli.txt --button submit --target http://localhost:3000/index.html --attack 3 --replace-code "return false","return true","return regex.test(dateString)","return true","return regex.test(timeString)","return true","return regex.test(colorString)","return true"{RESET}
+        {YELLOW}BrowserBruter{GREEN} --elements-payloads{RESET} textarea:sqli.txt,data:sqli.txt {GREEN}--button{RESET} submit {GREEN}--target{RESET} http://localhost:3000/index.html {GREEN}--attack{RESET} 3 {GREEN}--replace-code{RESET} "return false","return true","return regex.test(dateString)","return true","return regex.test(timeString)","return true","return regex.test(colorString)","return true"{RESET}
 
     24. Fuzz the search box, when user have to press enter to submit the search query, the user has to click on search icon to make search box appear:
-        {YELLOW}BrowserBruter --elements search-bar --button search-bar --attack 1 --target http://localhost:3000/#/ --payloads fuzz.txt --buttons-to-press-before-fuzz searchQuery --press-enter-no-click{RESET}
+        {YELLOW}BrowserBruter{GREEN} --elements{RESET} search-bar {GREEN}--button{RESET} search-bar {GREEN}--attack{RESET} 1 {GREEN}--target{RESET} http://localhost:3000/#/ {GREEN}--payloads{RESET} fuzz.txt {GREEN}--buttons-to-press-before-fuzz searchQuery {GREEN}--press-enter-no-click{RESET}
     
     25. Tell Browser Bruter to remove commong javascript input validation:
-        {YELLOW}BrowserBruter --elements search-bar --button search-bar --attack 1 --target http://localhost:3000/#/ --payloads fuzz.txt --buttons-to-press-before-fuzz searchQuery --press-enter-no-click --auto-remove-javascript-validation{RESET}
+        {YELLOW}BrowserBruter{GREEN} --elements{RESET} search-bar {GREEN}--button{RESET} search-bar {GREEN}--attack{RESET} 1 {GREEN}--target{RESET} http://localhost:3000/#/ {GREEN}--payloads{RESET} fuzz.txt {GREEN}--buttons-to-press-before-fuzz searchQuery {GREEN}--press-enter-no-click{RESET} {GREEN}--auto-remove-javascript-validation{RESET}
         
     26. Tell Browser Bruter to ignore pop ups like alert() box:
-        {YELLOW}BrowserBruter --elements search-bar --button search-bar --attack 1 --target http://localhost:3000/#/ --payloads fuzz.txt --buttons-to-press-before-fuzz searchQuery --press-enter-no-click --auto-remove-javascript-validation --ignore-popups{RESET}
+        {YELLOW}BrowserBruter{GREEN} --elements{RESET} search-bar {GREEN}--button{RESET} search-bar {GREEN}--attack{RESET} 1 {GREEN}--target{RESET} http://localhost:3000/#/ {GREEN}--payloads{RESET} fuzz.txt {GREEN}--buttons-to-press-before-fuzz searchQuery {GREEN}--press-enter-no-click{RESET} {GREEN}--auto-remove-javascript-validation {GREEN}--ignore-popups{RESET}
 
     27. Tell Browser Bruter to select the elements under the specified form only, in case there are two forms and multiple elements have same name and ids:
-        {YELLOW}BrowserBruter --form changePasswordForm --elements username,password --fill username,password --button login --target http://localhost/login --payloads payloads.txt --attack 1{RESET}
+        {YELLOW}BrowserBruter{GREEN} --form{RESET} changePasswordForm {GREEN}--elements{RESET} username,password {GREEN}--fill{RESET} username,password {GREEN}--button{RESET} login {GREEN}--target{RESET} http://localhost/login {GREEN}--payloads{RESET} payloads.txt {GREEN}--attack{RESET} 1{RESET}
 
     28. Pause the Browser Bruter on startup to manually login to the application:
-        {YELLOW}BrowserBruter --pause --elements textarea,select,yesno,hobbies,phone,data,time,calendar,color --fill textarea,select,yesno,hobbies,phone,data,time,calendar,color --button submit --payloads payloads.txt --target http://localhost:3000/ --attack 1{RESET}
+        {YELLOW}BrowserBruter{GREEN} --pause {GREEN}--elements{RESET} textarea,select,yesno,hobbies,phone,data,time,calendar,color {GREEN}--fill{RESET} textarea,select,yesno,hobbies,phone,data,time,calendar,color {GREEN}--button{RESET} submit {GREEN}--payloads{RESET} payloads.txt {GREEN}--target{RESET} http://localhost:3000/ {GREEN}--attack{RESET} 1{RESET}
 
     29. Pause the Browser Bruter on startup to manually login to the application then run Browser Bruter in interactive mode to solve the captcha before inserting the payloads:
-        {YELLOW}BrowserBruter --pause --interactive --elements textarea,select,yesno,hobbies,phone,data,time,calendar,color --fill textarea,select,yesno,hobbies,phone,data,time,calendar,color --button submit --payloads payloads.txt --target http://localhost:3000/ --attack 1{RESET}
+        {YELLOW}BrowserBruter{GREEN} --pause {GREEN}--interactive {GREEN}--elements{RESET} textarea,select,yesno,hobbies,phone,data,time,calendar,color {GREEN}--fill{RESET} textarea,select,yesno,hobbies,phone,data,time,calendar,color {GREEN}--button{RESET} submit {GREEN}--payloads{RESET} payloads.txt {GREEN}--target{RESET} http://localhost:3000/ {GREEN}--attack{RESET} 1{RESET}
         
     30. Pause the Browser Bruter on startup to manually login to the application then run Browser Bruter in interactive mode to solve the captcha before inserting the payloads, pause the Browser Bruter after submitting the form to perform some manual human interaction:
-        {YELLOW}BrowserBruter --pause --interactive --pause-after-submit --elements textarea,select,yesno,hobbies,phone,data,time,calendar,color --fill textarea,select,yesno,hobbies,phone,data,time,calendar,color --button submit --payloads payloads.txt --target http://localhost:3000/ --attack 1{RESET}
+        {YELLOW}BrowserBruter{GREEN} --pause {GREEN}--interactive {GREEN}--pause-after-submit {GREEN}--elements{RESET} textarea,select,yesno,hobbies,phone,data,time,calendar,color {GREEN}--fill{RESET} textarea,select,yesno,hobbies,phone,data,time,calendar,color {GREEN}--button{RESET} submit {GREEN}--payloads{RESET} payloads.txt {GREEN}--target{RESET} http://localhost:3000/ {GREEN}--attack{RESET} 1{RESET}
     
     31. Wait for 1 seconds before and after submission of the form:
-        {YELLOW}BrowserBruter --delay-before 1 --delay-after 1 --elements textarea,select,yesno,hobbies,phone,data,time,calendar,color --fill textarea,select,yesno,hobbies,phone,data,time,calendar,color --button submit --payloads payloads.txt --target http://localhost:3000/ --attack 1{RESET}
+        {YELLOW}BrowserBruter{GREEN} --delay-before{RESET} 1 {GREEN}--delay-after{RESET} 1 {GREEN}--elements{RESET} textarea,select,yesno,hobbies,phone,data,time,calendar,color {GREEN}--fill{RESET} textarea,select,yesno,hobbies,phone,data,time,calendar,color {GREEN}--button{RESET} submit {GREEN}--payloads{RESET} payloads.txt {GREEN}--target{RESET} http://localhost:3000/ {GREEN}--attack{RESET} 1{RESET}
 
     32. Route traffic via proxy i.e. BurpSuite and load the static media like images:
-        {YELLOW}BrowserBruter --proxy http://127.0.0.1:8080/ --elements textarea,select,yesno,hobbies,phone,data,time,calendar,color --fill textarea,select,yesno,hobbies,phone,data,time,calendar,color --button submit --payloads payloads.txt --target http://localhost:3000/ --attack 1 --load-static-media{RESET}
+        {YELLOW}BrowserBruter{GREEN} --proxy{RESET} http://127.0.0.1:8080/ {GREEN}--elements{RESET} textarea,select,yesno,hobbies,phone,data,time,calendar,color {GREEN}--fill{RESET} textarea,select,yesno,hobbies,phone,data,time,calendar,color {GREEN}--button{RESET} submit {GREEN}--payloads{RESET} payloads.txt {GREEN}--target{RESET} http://localhost:3000/ {GREEN}--attack{RESET} 1 {GREEN}--load-static-media{RESET}
 
     33. Add custom chrome options which will be passed to chrome browser:
-        {YELLOW}BrowserBruter --elements id --button Submit --payloads sqli.txt --target http://localhost/ --attack 1 --chrome-options ignore-certificate-errors,disable-dev-shm-usage{RESET}
+        {YELLOW}BrowserBruter{GREEN} --elements{RESET} id {GREEN}--button{RESET} Submit {GREEN}--payloads{RESET} sqli.txt {GREEN}--target{RESET} http://localhost/ {GREEN}--attack{RESET} 1 {GREEN}--chrome-options{RESET} ignore-certificate-errors,disable-dev-shm-usage{RESET}
 
     34. Override all chrome options and use raw anti bot detection evasions:
-        {YELLOW}BrowserBruter --elements id --button Submit --payloads sqli.txt --target http://localhost/ --attack 1 --anti-bot{RESET}
+        {YELLOW}BrowserBruter{GREEN} --elements{RESET} id {GREEN}--button{RESET} Submit {GREEN}--payloads{RESET} sqli.txt {GREEN}--target{RESET} http://localhost/ {GREEN}--attack{RESET} 1 {GREEN}--anti-bot{RESET}
 
-    35. Brute force login page and try to bypass authentication and also do not try to evade anti bot defences:
-        {YELLOW}BrowserBruter --elements-payloads username:userid.txt,password:passwords.txt --button Login --target http://localhost/login.php --attack 4 --proxy http://127.0.0.1:8080/ --no-anti-bot --remove-session{RESET}
+    35. Brute force login page and try to bypass authentication and also do not try to evade anti bot defences and route traffic via proxy:
+        {YELLOW}BrowserBruter{GREEN} --elements-payloads{RESET} username:userid.txt,password:passwords.txt {GREEN}--button{RESET} Login {GREEN}--target{RESET} http://localhost/login.php {GREEN}--attack{RESET} 4 {GREEN}--proxy{RESET} http://127.0.0.1:8080/ {GREEN}--no-anti-bot {GREEN}--remove-session{RESET}
 
     36. Perform BatteringRam attack on web page which has invisible captcha so start each payload insertion on new fresh instance of browser:
-        {YELLOW}BrowserBruter --elements name,email,phone --payloads payloads.txt --target http://example.com/signup --button submit --attack 2 --new-instance{RESET}
+        {YELLOW}BrowserBruter{GREEN} --elements{RESET} name,email,phone {GREEN}--payloads{RESET} payloads.txt {GREEN}--target{RESET} http://example.com/signup {GREEN}--button{RESET} submit {GREEN}--attack{RESET} 2 {GREEN}--new-instance{RESET}
 
-    37. Perform BatteringRam attack on web page which has invisible captcha so start each payload insertion on new fresh instance of browser and restore the previous session:
-        {YELLOW}BrowserBruter --elements name,email,phone --payloads payloads.txt --target http://example.com/signup --button submit --attack 2 --new-instance --new-instance-restore-session{RESET}
+    37. Perform BatteringRam attack on web page which has invisible captcha so start each payload insertion on new fresh instance of browser and force restore the cookie:
+        {YELLOW}BrowserBruter{GREEN} --elements{RESET} name,email,phone {GREEN}--payloads{RESET} payloads.txt {GREEN}--target{RESET} http://example.com/signup {GREEN}--button{RESET} submit {GREEN}--attack{RESET} 2 {GREEN}--new-instance {GREEN}--force-cookie{RESET}
 	
     38. There is field called name that you don't want to fuzz but it requires to be filled while submitting the form:
-        {YELLOW}BrowserBruter --elements email,phone --fill name --payloads payloads.txt --target http://example.com/signup --button submit --attack 1{RESET}
+        {YELLOW}BrowserBruter{GREEN} --elements{RESET} email,phone {GREEN}--fill{RESET} name {GREEN}--payloads{RESET} payloads.txt {GREEN}--target{RESET} http://example.com/signup {GREEN}--button{RESET} submit {GREEN}--attack{RESET} 1{RESET}
           
     39. There is input validation that is preventing the payloads, try to remove the class attribute from these elements to see if payloads are correctly inserted:
-        {YELLOW}BrowserBruter --elements email,phone --fill name --remove-class email,phone --payloads payloads.txt --target http://example.com/signup --button submit --attack 1{RESET}
+        {YELLOW}BrowserBruter{GREEN} --elements{RESET} email,phone {GREEN}--fill{RESET} name {GREEN}--remove-class{RESET} email,phone {GREEN}--payloads{RESET} payloads.txt {GREEN}--target{RESET} http://example.com/signup {GREEN}--button{RESET} submit {GREEN}--attack{RESET} 1{RESET}
 
     40. Split the final report into smaller chunks by specifying the rows limit in each report to make report review process faster in ReportExplorer:
-        {YELLOW}BrowserBruter --elements email,phone --fill name --remove-class email,phone --payloads payloads.txt --target http://example.com/signup --button submit --attack 1 --rows-limit 200{RESET}
+        {YELLOW}BrowserBruter{GREEN} --elements{RESET} email,phone {GREEN}--fill{RESET} name {GREEN}--remove-class{RESET} email,phone {GREEN}--payloads{RESET} payloads.txt {GREEN}--target{RESET} http://example.com/signup {GREEN}--button{RESET} submit {GREEN}--attack{RESET} 1 {GREEN}--rows-limit{RESET} 200{RESET}
 
-    DVWA Usage Examples:
+    41. Print the stack trace for debugging purpose:
+        {YELLOW}BrowserBruter{GREEN} --target{RESET} http://localhost:13066/ {GREEN}--elements-payloads{RESET} username:username.txt,password:passwords.txt {GREEN}--button{RESET} btn-default {GREEN}--attack{RESET} 4 {GREEN}--debug{RESET}
+
+    {RED}DVWA Usage Examples:{RESET}
 
     1. Fuzz the Command Injection page of DVWA, Pause BrowserBruter on startup to manually login and manually set cookies, press ENTER two times to continue:
-        {YELLOW}BrowserBruter --elements ip --button Submit --payloads payloads.txt --target http://localhost/vulnerabilities/exec/ --pause --attack 1{RESET}    
+        {YELLOW}BrowserBruter{GREEN} --elements{RESET} ip {GREEN}--button{RESET} Submit {GREEN}--payloads{RESET} payloads.txt {GREEN}--target{RESET} http://localhost/vulnerabilities/exec/ {GREEN}--pause {GREEN}--attack{RESET} 1{RESET}    
     
     2. Fuzz the Command Injection page of DVWA, set two cookies, force reuse of these cookies, reset session data each time:
-        {YELLOW}BrowserBruter --elements ip --button Submit --payloads payloads.txt --target http://localhost/vulnerabilities/exec/ --cookie PHPSESSID:jtq7r9fbgf90h2qm9915qk6551,security:low --force-cookie --remove-session --attack 1{RESET}
-       
+        {YELLOW}BrowserBruter{GREEN} --elements{RESET} ip {GREEN}--button{RESET} Submit {GREEN}--payloads{RESET} payloads.txt {GREEN}--target{RESET} http://localhost/vulnerabilities/exec/ {GREEN}--cookie{RESET} PHPSESSID:jtq7r9fbgf90h2qm9915qk6551,security:low {GREEN}--force-cookie {GREEN}--remove-session {GREEN}--attack{RESET} 1{RESET}
 
     {RED}jsdebugging lab - https://hub.docker.com/r/bhattsameer/jsdebugginglab Usage Examples:{RESET}
         
     1. Perform BruteForce attack on login page:
-        {YELLOW}BrowserBruter --elements-payloads email:username.txt,password:passwords.txt --target http://172.17.0.2/Lab3/login.php --attack 4 --button btn-secondary --remove-session{RESET}
+        {YELLOW}BrowserBruter{GREEN} --elements-payloads{RESET} email:username.txt,password:passwords.txt {GREEN}--target{RESET} http://172.17.0.2/Lab3/login.php {GREEN}--attack{RESET} 4 {GREEN}--button{RESET} btn-secondary {GREEN}--remove-session{RESET}
         
     2. Perform bruteforce attack on otp page, but otp is being checked on frontend client side, so there are no http request-response from server, so perform brute force attack on client side only:
-        {YELLOW}BrowserBruter --elements otp --payloads otps.txt --target http://localhost/Lab3/OTP.php --button button --attack 1 --delay-after 0.3 --cookie PHPSESSID:9u593rhl797n3v6aa5vu8mjj20{RESET}
+        {YELLOW}BrowserBruter{GREEN} --elements{RESET} otp {GREEN}--payloads{RESET} otps.txt {GREEN}--target{RESET} http://localhost/Lab3/OTP.php {GREEN}--button{RESET} button {GREEN}--attack{RESET} 1 {GREEN}--delay-after{RESET} 0.3 {GREEN}--cookie{RESET} PHPSESSID:9u593rhl797n3v6aa5vu8mjj20{RESET}
 
     {RED}Stock Management System Lab Usage Examples:{RESET}
 
     1. Perform brute force attack on login page to bypass authentication:
-        {YELLOW}python3 BrowserBruter.py --elements-payloads username:username.txt,password:passwords.txt --button btn-default --target http://localhost:13066/ --attack 4 --remove-session
+        {YELLOW}BrowserBruter{GREEN} --elements-payloads{RESET} username:username.txt,password:passwords.txt {GREEN}--button{RESET} btn-default {GREEN}--target{RESET} http://localhost:13066/ {GREEN}--attack{RESET} 4 {GREEN}--remove-session
 {RESET}
 
     2. Perform Sniper attack on form page which is hidden, and requires pressing a button to be revealed, so use --interactive option to manually press the button:
-        {YELLOW}BrowserBruter --elements editBrandStatus,editBrandName,brandId --payloads sqli.txt --button editBrandBtn --target http://localhost:13066/brand.php --cookie PHPSESSID:lqiqsdi8trjfeijdf8i2s2qru1 --attack 1 --interactive --delay-after 0.5 --fill editBrandName,brandId,editBrandStatus
+        {YELLOW}BrowserBruter{GREEN} --elements{RESET} editBrandStatus,editBrandName,brandId {GREEN}--payloads{RESET} sqli.txt {GREEN}--button{RESET} editBrandBtn {GREEN}--target{RESET} http://localhost:13066/brand.php {GREEN}--cookie{RESET} PHPSESSID:lqiqsdi8trjfeijdf8i2s2qru1 {GREEN}--attack{RESET} 1 {GREEN}--interactive {GREEN}--delay-after{RESET} 0.5 {GREEN}--fill{RESET} editBrandName,brandId,editBrandStatus
 
     3. Further automate the script by locating and clickng the buttons which enables the form:
-        {YELLOW}BrowserBruter --elements editBrandStatus,editBrandName,brandId --payloads sqli.txt --button editBrandBtn --target http://localhost:13066/brand.php --cookie PHPSESSID:lqiqsdi8trjfeijdf8i2s2qru1 --attack 1 --delay-before 0.3 --fill editBrandName --javascript "document.querySelector('button.btn.btn-default.dropdown-toggle').click(); document.querySelector('a[data-target=\"#editBrandModel\"]').click();" --delay-after 0.3{RESET}
+        {YELLOW}BrowserBruter{GREEN} --elements{RESET} editBrandStatus,editBrandName,brandId {GREEN}--payloads{RESET} sqli.txt {GREEN}--button{RESET} editBrandBtn {GREEN}--target{RESET} http://localhost:13066/brand.php {GREEN}--cookie{RESET} PHPSESSID:lqiqsdi8trjfeijdf8i2s2qru1 {GREEN}--attack{RESET} 1 {GREEN}--delay-before{RESET} 0.3 {GREEN}--fill{RESET} editBrandName {GREEN}--javascript{RESET} "document.querySelector('button.btn.btn-default.dropdown-toggle').click(); document.querySelector('a[data-target=\"#editBrandModel\"]').click();" {GREEN}--delay-after{RESET} 0.3{RESET}
 
     4. Provide above javascript code in file:    
-        {YELLOW}BrowserBruter --elements editBrandStatus,editBrandName,brandId --payloads sqli.txt --button editBrandBtn --target http://localhost:13066/brand.php --cookie PHPSESSID:lqiqsdi8trjfeijdf8i2s2qru1 --attack 1 --delay-before 1 --fill editBrandName --javascript-file click.js{RESET}
+        {YELLOW}BrowserBruter{GREEN} --elements{RESET} editBrandStatus,editBrandName,brandId {GREEN}--payloads{RESET} sqli.txt {GREEN}--button{RESET} editBrandBtn {GREEN}--target{RESET} http://localhost:13066/brand.php {GREEN}--cookie{RESET} PHPSESSID:lqiqsdi8trjfeijdf8i2s2qru1 {GREEN}--attack{RESET} 1 {GREEN}--delay-before{RESET} 1 {GREEN}--fill{RESET} editBrandName {GREEN}--javascript-file{RESET} click.js{RESET}
 
     5. Remove input validations form bootstrap.min.js file and press two buttons on web page using --javascript which will enable the web form:
-        {YELLOW}BrowserBruter --elements editBrandStatus,editBrandName --payloads fuzz.txt --button editBrandBtn --target http://localhost:13066/brand.php --cookie PHPSESSID:lqiqsdi8trjfeijdf8i2s2qru1 --attack 1 --delay-before 0.7 --fill editBrandName --javascript "document.querySelector('button.btn.btn-default.dropdown-toggle').click();document.querySelector('a[data-target=\"#editBrandModel\"]').click();" --delay-after 0.5 --replace-files "js-files-with-no-input-validation/bootstrap.min.js"++"http://localhost:13066/assests/bootstrap/js/bootstrap.min.js"{RESET}
+        {YELLOW}BrowserBruter{GREEN} --elements{RESET} editBrandStatus,editBrandName {GREEN}--payloads{RESET} fuzz.txt {GREEN}--button{RESET} editBrandBtn {GREEN}--target{RESET} http://localhost:13066/brand.php {GREEN}--cookie{RESET} PHPSESSID:lqiqsdi8trjfeijdf8i2s2qru1 {GREEN}--attack{RESET} 1 {GREEN}--delay-before{RESET} 0.7 {GREEN}--fill{RESET} editBrandName {GREEN}--javascript{RESET} "document.querySelector('button.btn.btn-default.dropdown-toggle').click();document.querySelector('a[data-target=\"#editBrandModel\"]').click();" {GREEN}--delay-after{RESET} 0.5 {GREEN}--replace-files{RESET} "./res/samples/js-files-with-no-input-validation/bootstrap.min.js"++"http://localhost:13066/assests/bootstrap/js/bootstrap.min.js"{RESET}
 
     6. Brute force change password form with submit button's class name is 'btn btn-primary':
-        {YELLOW}BrowserBruter --elements-payloads user_id:username.txt,password:passwords.txt,npassword:passwords.txt,cpassword:passwords.txt --target http://localhost:13066/setting.php --attack 4 --cookie PHPSESSID:lqiqsdi8trjfeijdf8i2s2qru1 --button 'btn-primary'{RESET}
+        {YELLOW}BrowserBruter{GREEN} --elements-payloads{RESET} user_id:username.txt,password:passwords.txt,npassword:passwords.txt,cpassword:passwords.txt {GREEN}--target{RESET} http://localhost:13066/setting.php {GREEN}--attack{RESET} 4 {GREEN}--cookie{RESET} PHPSESSID:lqiqsdi8trjfeijdf8i2s2qru1 {GREEN}--button{RESET} 'btn-primary'{RESET}
 
     7. Brute force change password form by selecting the specific form, because there is other form with same elements:
-        {YELLOW}BrowserBruter --elements-payloads user_id:username.txt,password:passwords.txt,npassword:passwords.txt,cpassword:passwords.txt --target http://localhost:13066/setting.php --attack 4 --cookie PHPSESSID:lqiqsdi8trjfeijdf8i2s2qru1 --button 'btn-primary' --form changePasswordForm{RESET}
+        {YELLOW}BrowserBruter{GREEN} --elements-payloads{RESET} user_id:username.txt,password:passwords.txt,npassword:passwords.txt,cpassword:passwords.txt {GREEN}--target{RESET} http://localhost:13066/setting.php {GREEN}--attack{RESET} 4 {GREEN}--cookie{RESET} PHPSESSID:lqiqsdi8trjfeijdf8i2s2qru1 {GREEN}--button{RESET} 'btn-primary' {GREEN}--form{RESET} changePasswordForm{RESET}
  
     8. Brute force add user form but first press one using --buttons-to-press-before-fuzz to enable this form:
-        {YELLOW}BrowserBruter --elements-payloads userName:fuzz.txt,upassword:fuzz.txt,uemail:fuzz.txt --button createUserBtn --target http://localhost:13066/user.php --attack 4 --cookie PHPSESSID:lqiqsdi8trjfeijdf8i2s2qru1 --buttons-to-press-before-fuzz addUserModalBtn{RESET}
+        {YELLOW}BrowserBruter{GREEN} --elements-payloads{RESET} userName:fuzz.txt,upassword:fuzz.txt,uemail:fuzz.txt {GREEN}--button{RESET} createUserBtn {GREEN}--target{RESET} http://localhost:13066/user.php {GREEN}--attack{RESET} 4 {GREEN}--cookie{RESET} PHPSESSID:lqiqsdi8trjfeijdf8i2s2qru1 {GREEN}--buttons-to-press-before-fuzz{RESET} addUserModalBtn{RESET}
 
     9. Audit an complex form, replacing jquery-ui with no input validation jquery-ui and replacing bootstrap.min.js too, running 5 threads:
-        {YELLOW}BrowserBruter --form createOrderForm --elements orderDate,clientName,clientContact,productName1,rate1,rateValue1,quantity1,total1,totalValue1,subTotal,subTotalValue,totalAmount,totalAmountValue,discount,grandTotal,grandTotalValue,vat,vatValue,paid,due,dueValue,paymentType,paymentStatus,paymentPlace --fill orderDate,clientName,clientContact,productName1,rate1,rateValue1,quantity1,total1,totalValue1,subTotal,subTotalValue,totalAmount,totalAmountValue,discount,grandTotal,grandTotalValue,vat,vatValue,paid,due,dueValue,paymentType,paymentStatus,paymentPlace --payloads fuzz.txt --cookie PHPSESSID:lqiqsdi8trjfeijdf8i2s2qru1 --button createOrderBtn --attack 1 --replace-file js-files-with-no-input-validation/bootstrap.min.js++http//localhost:13066/assests/bootstrap/bootstrap.min.js,"js-files-with-no-input-validation/jquery-ui.min.js"++"http://localhost:13066/assests/jquery-ui/jquery-ui.min.js" --attack 1 --target "http://localhost:13066/orders.php?o=add" --threads 5{RESET}
+        {YELLOW}BrowserBruter{GREEN} --form{RESET} createOrderForm {GREEN}--elements{RESET} orderDate,clientName,clientContact,productName1,rate1,rateValue1,quantity1,total1,totalValue1,subTotal,subTotalValue,totalAmount,totalAmountValue,discount,grandTotal,grandTotalValue,vat,vatValue,paid,due,dueValue,paymentType,paymentStatus,paymentPlace {GREEN}--fill{RESET} orderDate,clientName,clientContact,productName1,rate1,rateValue1,quantity1,total1,totalValue1,subTotal,subTotalValue,totalAmount,totalAmountValue,discount,grandTotal,grandTotalValue,vat,vatValue,paid,due,dueValue,paymentType,paymentStatus,paymentPlace {GREEN}--payloads{RESET} fuzz.txt {GREEN}--cookie{RESET} PHPSESSID:lqiqsdi8trjfeijdf8i2s2qru1 {GREEN}--button{RESET} createOrderBtn {GREEN}--attack{RESET} 1 {GREEN}--replace-file{RESET} ./res/samples/js-files-with-no-input-validation/bootstrap.min.js++http//localhost:13066/assests/bootstrap/bootstrap.min.js,"./res/samples/js-files-with-no-input-validation/jquery-ui.min.js"++"http://localhost:13066/assests/jquery-ui/jquery-ui.min.js" {GREEN}--attack{RESET} 1 {GREEN}--target{RESET} "http://localhost:13066/orders.php?o=add" {GREEN}--threads{RESET} 5{RESET}
 
     {RED}OWASP JuiceShop Usage Examples:{RESET}
          
     1. Testing SQLi on OWASP JuiceShop's login page by clusterbombing the payloads:
-        {YELLOW}BrowserBruter --elements-payloads email:sqli.txt,password:sqli.txt --target http://localhost:3000/#/login --attack 4 --button loginButton --proxy http://127.0.0.1:8080/ --cookie welcomebanner_status:dismiss --remove-session{RESET}
+        {YELLOW}BrowserBruter{GREEN} --elements-payloads{RESET} email:sqli.txt,password:sqli.txt {GREEN}--target{RESET} http://localhost:3000/#/login {GREEN}--attack{RESET} 4 {GREEN}--button{RESET} loginButton {GREEN}--cookie{RESET} welcomebanner_status:dismiss {GREEN}--remove-session{RESET}
 
     2. Fuzzing registration page of OWASP JuiceShop:
-        {YELLOW}BrowserBruter --elements emailControl,passwordControl,repeatPasswordControl,mat-slide-toggle-1-input,securityAnswerControl --button registerButton --attack 1 --fill emailControl,passwordControl,repeatPasswordControl,mat-slide-toggle-1-input,securityAnswerControl --payloads fuzz.txt --target http://localhost:3000/#/register --cookie welcomebanner_status:dismiss --proxy http://127.0.0.1:8080/{RESET}
+        {YELLOW}BrowserBruter{GREEN} --elements{RESET} emailControl,passwordControl,repeatPasswordControl,mat-slide-toggle-1-input,securityAnswerControl {GREEN}--button{RESET} registerButton {GREEN}--attack{RESET} 1 {GREEN}--fill{RESET} emailControl,passwordControl,repeatPasswordControl,mat-slide-toggle-1-input,securityAnswerControl {GREEN}--payloads{RESET} fuzz.txt {GREEN}--target{RESET} http://localhost:3000/#/register {GREEN}--cookie{RESET} welcomebanner_status:dismiss
 
     3. Fuzz the email field for various vulnerabilities of OWASP JuiceShop and split the final report into 100 rows of multiples reports:
-        {YELLOW}BrowserBruter --elements emailControl --button registerButton --attack 1 --fill emailControl,passwordControl,repeatPasswordControl,mat-slide-toggle-1-input,securityAnswerControl --payloads sqli.txt --target http://localhost:3000/#/register --cookie welcomebanner_status:dismiss --proxy http://127.0.0.1:8080/ --rows-limit 100{RESET}
+        {YELLOW}BrowserBruter{GREEN} --elements{RESET} emailControl {GREEN}--button{RESET} registerButton {GREEN}--attack{RESET} 1 {GREEN}--fill{RESET} emailControl,passwordControl,repeatPasswordControl,mat-slide-toggle-1-input,securityAnswerControl {GREEN}--payloads{RESET} sqli.txt {GREEN}--target{RESET} http://localhost:3000/#/register {GREEN}--cookie{RESET} welcomebanner_status:dismiss {GREEN}--rows-limit{RESET} 100{RESET}
 
     4. Fuzz the file upload functionality of OWASP JuiceShop's complaint page:
-        {YELLOW}BrowserBruter --elements cdk-text-field-autofill-monitored,complaintMessage,file --button submitButton --attack 1 --target http://localhost:3000/#/complain --cookie welcomebanner_status:dismiss --proxy http://127.0.0.1:8080/ --payloads fuzz.txt --fill cdk-text-field-autofill-monitored,complaintMessage,file{RESET}
+        {YELLOW}BrowserBruter{GREEN} --elements{RESET} cdk-text-field-autofill-monitored,complaintMessage,file {GREEN}--button{RESET} submitButton {GREEN}--attack{RESET} 1 {GREEN}--target{RESET} http://localhost:3000/#/complain {GREEN}--cookie{RESET} welcomebanner_status:dismiss {GREEN}--payloads{RESET} fuzz.txt {GREEN}--fill{RESET} cdk-text-field-autofill-monitored,complaintMessage,file{RESET}
 
     5. Fuzz the file upload functionality of OWASP JuiceShop's complain page and remove the class attribute from the email field to make it intractable:
-        {YELLOW}BrowserBruter --elements cdk-text-field-autofill-monitored,complaintMessage,file --button submitButton --attack 1 --target http://localhost:3000/#/complain --cookie welcomebanner_status:dismiss --proxy http://127.0.0.1:8080/ --payloads fuzz.txt --fill cdk-text-field-autofill-monitored,complaintMessage,file --remove-class cdk-text-field-autofill-monitored{RESET}
+        {YELLOW}BrowserBruter{GREEN} --elements{RESET} cdk-text-field-autofill-monitored,complaintMessage,file {GREEN}--button{RESET} submitButton {GREEN}--attack{RESET} 1 {GREEN}--target{RESET} http://localhost:3000/#/complain {GREEN}--cookie{RESET} welcomebanner_status:dismiss {GREEN}--payloads{RESET} fuzz.txt {GREEN}--fill{RESET} cdk-text-field-autofill-monitored,complaintMessage,file {GREEN}--remove-class{RESET} cdk-text-field-autofill-monitored{RESET}
 
     6. Fuzz the file upload functionality of OWASP JuiceShop's complain page and remove the class attribute from the email field to make it intractable and include the auth cookies and Authorization header to be able fuzz while being authenticated:
-        {YELLOW}BrowserBruter --elements cdk-text-field-autofill-monitored,complaintMessage,file --button submitButton --attack 1 --target http://localhost:3000/#/complain --cookie welcomebanner_status:dismiss --proxy http://127.0.0.1:8080/ --payloads fuzz.txt --fill cdk-text-field-autofill-monitored,complaintMessage,file --remove-class cdk-text-field-autofill-monitored --headers "Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJzdGF0dXMiOiJzdWNjZXNzIiwiZGF0YSI6eyJpZCI6MTI3LCJ1c2VybmFtZSI6IiIsImVtYWlsIjoiemluamFAMTIzLmNvbSIsInBhc3N3b3JkIjoiZjViYjBjOGRlMTQ2YzY3YjQ0YmFiYmY0ZTY1ODRjYzAiLCJyb2xlIjoiY3VzdG9tZXIiLCJkZWx1eGVUb2tlbiI6IiIsImxhc3RMb2dpbklwIjoiMC4wLjAuMCIsInByb2ZpbGVJbWFnZSI6Ii9hc3NldHMvcHVibGljL2ltYWdlcy91cGxvYWRzL2RlZmF1bHQuc3ZnIiwidG90cFNlY3JldCI6IiIsImlzQWN0aXZlIjp0cnVlLCJjcmVhdGVkQXQiOiIyMDI0LTAzLTA0IDE0OjEzOjIzLjQ2NCArMDA6MDAiLCJ1cGRhdGVkQXQiOiIyMDI0LTAzLTA0IDE0OjEzOjIzLjQ2NCArMDA6MDAiLCJkZWxldGVkQXQiOm51bGx9LCJpYXQiOjE3MDk1NjE2MTV9.oWlMbKjqEk2kxamx5lIgIrnFyXd4vV01xZXPUWLywB-FEfVk6SIx7NA9iNSCjCAwqjKcbKOZIqevIGdvkgiGQw6TpjZhs8_fGtlGIfU7Ud3kjk0MyoXauws9mC1LT9Zn5V2ik2GcuEi-xLgrWi6fNM34F6PQA2c1naeQ_mHkqVI"
+        {YELLOW}BrowserBruter{GREEN} --elements{RESET} cdk-text-field-autofill-monitored,complaintMessage,file {GREEN}--button{RESET} submitButton {GREEN}--attack{RESET} 1 {GREEN}--target{RESET} http://localhost:3000/#/complain {GREEN}--cookie{RESET} welcomebanner_status:dismiss {GREEN}--payloads{RESET} fuzz.txt {GREEN}--fill{RESET} cdk-text-field-autofill-monitored,complaintMessage,file {GREEN}--remove-class{RESET} cdk-text-field-autofill-monitored {GREEN}--header{RESET} "Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJzdGF0dXMiOiJzdWNjZXNzIiwiZGF0YSI6eyJpZCI6MTI3LCJ1c2VybmFtZSI6IiIsImVtYWlsIjoiemluamFAMTIzLmNvbSIsInBhc3N3b3JkIjoiZjViYjBjOGRlMTQ2YzY3YjQ0YmFiYmY0ZTY1ODRjYzAiLCJyb2xlIjoiY3VzdG9tZXIiLCJkZWx1eGVUb2tlbiI6IiIsImxhc3RMb2dpbklwIjoiMC4wLjAuMCIsInByb2ZpbGVJbWFnZSI6Ii9hc3NldHMvcHVibGljL2ltYWdlcy91cGxvYWRzL2RlZmF1bHQuc3ZnIiwidG90cFNlY3JldCI6IiIsImlzQWN0aXZlIjp0cnVlLCJjcmVhdGVkQXQiOiIyMDI0LTAzLTA0IDE0OjEzOjIzLjQ2NCArMDA6MDAiLCJ1cGRhdGVkQXQiOiIyMDI0LTAzLTA0IDE0OjEzOjIzLjQ2NCArMDA6MDAiLCJkZWxldGVkQXQiOm51bGx9LCJpYXQiOjE3MDk1NjE2MTV9.oWlMbKjqEk2kxamx5lIgIrnFyXd4vV01xZXPUWLywB-FEfVk6SIx7NA9iNSCjCAwqjKcbKOZIqevIGdvkgiGQw6TpjZhs8_fGtlGIfU7Ud3kjk0MyoXauws9mC1LT9Zn5V2ik2GcuEi-xLgrWi6fNM34F6PQA2c1naeQ_mHkqVI"
 {RESET}
 
     7. Fuzz the file upload functionality of OWASP JuiceShop's complain page and remove the class attribute from the email field to make it intractable and include the auth cookies and Authorization header to be able fuzz while being authenticated and split the final report into smaller reports containing 200 rows each:
-        {YELLOW}BrowserBruter --elements cdk-text-field-autofill-monitored,complaintMessage,file --button submitButton --attack 1 --target http://localhost:3000/#/complain --cookie welcomebanner_status:dismiss --proxy http://127.0.0.1:8080/ --payloads fuzz.txt --fill cdk-text-field-autofill-monitored,complaintMessage,file --remove-class cdk-text-field-autofill-monitored --headers "Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJzdGF0dXMiOiJzdWNjZXNzIiwiZGF0YSI6eyJpZCI6MTI3LCJ1c2VybmFtZSI6IiIsImVtYWlsIjoiemluamFAMTIzLmNvbSIsInBhc3N3b3JkIjoiZjViYjBjOGRlMTQ2YzY3YjQ0YmFiYmY0ZTY1ODRjYzAiLCJyb2xlIjoiY3VzdG9tZXIiLCJkZWx1eGVUb2tlbiI6IiIsImxhc3RMb2dpbklwIjoiMC4wLjAuMCIsInByb2ZpbGVJbWFnZSI6Ii9hc3NldHMvcHVibGljL2ltYWdlcy91cGxvYWRzL2RlZmF1bHQuc3ZnIiwidG90cFNlY3JldCI6IiIsImlzQWN0aXZlIjp0cnVlLCJjcmVhdGVkQXQiOiIyMDI0LTAzLTA0IDE0OjEzOjIzLjQ2NCArMDA6MDAiLCJ1cGRhdGVkQXQiOiIyMDI0LTAzLTA0IDE0OjEzOjIzLjQ2NCArMDA6MDAiLCJkZWxldGVkQXQiOm51bGx9LCJpYXQiOjE3MDk1NjE2MTV9.oWlMbKjqEk2kxamx5lIgIrnFyXd4vV01xZXPUWLywB-FEfVk6SIx7NA9iNSCjCAwqjKcbKOZIqevIGdvkgiGQw6TpjZhs8_fGtlGIfU7Ud3kjk0MyoXauws9mC1LT9Zn5V2ik2GcuEi-xLgrWi6fNM34F6PQA2c1naeQ_mHkqVI"
+        {YELLOW}BrowserBruter{GREEN} --elements{RESET} cdk-text-field-autofill-monitored,complaintMessage,file {GREEN}--button{RESET} submitButton {GREEN}--attack{RESET} 1 {GREEN}--target{RESET} http://localhost:3000/#/complain {GREEN}--cookie{RESET} welcomebanner_status:dismiss {GREEN}--payloads{RESET} fuzz.txt {GREEN}--fill{RESET} cdk-text-field-autofill-monitored,complaintMessage,file {GREEN}--remove-class{RESET} cdk-text-field-autofill-monitored {GREEN}--header{RESET} "Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJzdGF0dXMiOiJzdWNjZXNzIiwiZGF0YSI6eyJpZCI6MTI3LCJ1c2VybmFtZSI6IiIsImVtYWlsIjoiemluamFAMTIzLmNvbSIsInBhc3N3b3JkIjoiZjViYjBjOGRlMTQ2YzY3YjQ0YmFiYmY0ZTY1ODRjYzAiLCJyb2xlIjoiY3VzdG9tZXIiLCJkZWx1eGVUb2tlbiI6IiIsImxhc3RMb2dpbklwIjoiMC4wLjAuMCIsInByb2ZpbGVJbWFnZSI6Ii9hc3NldHMvcHVibGljL2ltYWdlcy91cGxvYWRzL2RlZmF1bHQuc3ZnIiwidG90cFNlY3JldCI6IiIsImlzQWN0aXZlIjp0cnVlLCJjcmVhdGVkQXQiOiIyMDI0LTAzLTA0IDE0OjEzOjIzLjQ2NCArMDA6MDAiLCJ1cGRhdGVkQXQiOiIyMDI0LTAzLTA0IDE0OjEzOjIzLjQ2NCArMDA6MDAiLCJkZWxldGVkQXQiOm51bGx9LCJpYXQiOjE3MDk1NjE2MTV9.oWlMbKjqEk2kxamx5lIgIrnFyXd4vV01xZXPUWLywB-FEfVk6SIx7NA9iNSCjCAwqjKcbKOZIqevIGdvkgiGQw6TpjZhs8_fGtlGIfU7Ud3kjk0MyoXauws9mC1LT9Zn5V2ik2GcuEi-xLgrWi6fNM34F6PQA2c1naeQ_mHkqVI"
 {RESET}
 
     8. Fuzz the global search functionality of the OWASP JuiceShop while authenticated by sending ENTER key instead of click:
-        {YELLOW}BrowserBruter --elements mat-input-0 --button mat-input-0 --attack 1 --target http://localhost:3000/#/ --cookie welcomebanner_status:dismiss --proxy http://127.0.0.1:8080/ --payloads fuzz.txt --headers "Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJzdGF0dXMiOiJzdWNjZXNzIiwiZGF0YSI6eyJpZCI6MTI3LCJ1c2VybmFtZSI6IiIsImVtYWlsIjoiemluamFAMTIzLmNvbSIsInBhc3N3b3JkIjoiZjViYjBjOGRlMTQ2YzY3YjQ0YmFiYmY0ZTY1ODRjYzAiLCJyb2xlIjoiY3VzdG9tZXIiLCJkZWx1eGVUb2tlbiI6IiIsImxhc3RMb2dpbklwIjoiMC4wLjAuMCIsInByb2ZpbGVJbWFnZSI6Ii9hc3NldHMvcHVibGljL2ltYWdlcy91cGxvYWRzL2RlZmF1bHQuc3ZnIiwidG90cFNlY3JldCI6IiIsImlzQWN0aXZlIjp0cnVlLCJjcmVhdGVkQXQiOiIyMDI0LTAzLTA0IDE0OjEzOjIzLjQ2NCArMDA6MDAiLCJ1cGRhdGVkQXQiOiIyMDI0LTAzLTA0IDE0OjEzOjIzLjQ2NCArMDA6MDAiLCJkZWxldGVkQXQiOm51bGx9LCJpYXQiOjE3MDk1NjE2MTV9.oWlMbKjqEk2kxamx5lIgIrnFyXd4vV01xZXPUWLywB-FEfVk6SIx7NA9iNSCjCAwqjKcbKOZIqevIGdvkgiGQw6TpjZhs8_fGtlGIfU7Ud3kjk0MyoXauws9mC1LT9Zn5V2ik2GcuEi-xLgrWi6fNM34F6PQA2c1naeQ_mHkqVI" --buttons-to-press-before-fuzz searchQuery --press-enter-no-click
+        {YELLOW}BrowserBruter{GREEN} --elements{RESET} mat-input-0 {GREEN}--button{RESET} mat-input-0 {GREEN}--attack{RESET} 1 {GREEN}--target{RESET} http://localhost:3000/#/ {GREEN}--cookie{RESET} welcomebanner_status:dismiss {GREEN}--payloads{RESET} fuzz.txt {GREEN}--header{RESET} "Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJzdGF0dXMiOiJzdWNjZXNzIiwiZGF0YSI6eyJpZCI6MTI3LCJ1c2VybmFtZSI6IiIsImVtYWlsIjoiemluamFAMTIzLmNvbSIsInBhc3N3b3JkIjoiZjViYjBjOGRlMTQ2YzY3YjQ0YmFiYmY0ZTY1ODRjYzAiLCJyb2xlIjoiY3VzdG9tZXIiLCJkZWx1eGVUb2tlbiI6IiIsImxhc3RMb2dpbklwIjoiMC4wLjAuMCIsInByb2ZpbGVJbWFnZSI6Ii9hc3NldHMvcHVibGljL2ltYWdlcy91cGxvYWRzL2RlZmF1bHQuc3ZnIiwidG90cFNlY3JldCI6IiIsImlzQWN0aXZlIjp0cnVlLCJjcmVhdGVkQXQiOiIyMDI0LTAzLTA0IDE0OjEzOjIzLjQ2NCArMDA6MDAiLCJ1cGRhdGVkQXQiOiIyMDI0LTAzLTA0IDE0OjEzOjIzLjQ2NCArMDA6MDAiLCJkZWxldGVkQXQiOm51bGx9LCJpYXQiOjE3MDk1NjE2MTV9.oWlMbKjqEk2kxamx5lIgIrnFyXd4vV01xZXPUWLywB-FEfVk6SIx7NA9iNSCjCAwqjKcbKOZIqevIGdvkgiGQw6TpjZhs8_fGtlGIfU7Ud3kjk0MyoXauws9mC1LT9Zn5V2ik2GcuEi-xLgrWi6fNM34F6PQA2c1naeQ_mHkqVI" {GREEN}--buttons-to-press-before-fuzz{RESET} searchQuery {GREEN}--press-enter-no-click{RESET} 
 {RESET}
 
         OR -> following removes class attribute so the script does no throw element not intreactable error:
-        {YELLOW}BrowserBruter --elements mat-input-0 --button mat-input-0 --attack 1 --target http://localhost:3000/#/ --cookie welcomebanner_status:dismiss --proxy http://127.0.0.1:8080/ --payloads fuzz.txt --headers "Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJzdGF0dXMiOiJzdWNjZXNzIiwiZGF0YSI6eyJpZCI6MTI3LCJ1c2VybmFtZSI6IiIsImVtYWlsIjoiemluamFAMTIzLmNvbSIsInBhc3N3b3JkIjoiZjViYjBjOGRlMTQ2YzY3YjQ0YmFiYmY0ZTY1ODRjYzAiLCJyb2xlIjoiY3VzdG9tZXIiLCJkZWx1eGVUb2tlbiI6IiIsImxhc3RMb2dpbklwIjoiMC4wLjAuMCIsInByb2ZpbGVJbWFnZSI6Ii9hc3NldHMvcHVibGljL2ltYWdlcy91cGxvYWRzL2RlZmF1bHQuc3ZnIiwidG90cFNlY3JldCI6IiIsImlzQWN0aXZlIjp0cnVlLCJjcmVhdGVkQXQiOiIyMDI0LTAzLTA0IDE0OjEzOjIzLjQ2NCArMDA6MDAiLCJ1cGRhdGVkQXQiOiIyMDI0LTAzLTA0IDE0OjEzOjIzLjQ2NCArMDA6MDAiLCJkZWxldGVkQXQiOm51bGx9LCJpYXQiOjE3MDk1NjE2MTV9.oWlMbKjqEk2kxamx5lIgIrnFyXd4vV01xZXPUWLywB-FEfVk6SIx7NA9iNSCjCAwqjKcbKOZIqevIGdvkgiGQw6TpjZhs8_fGtlGIfU7Ud3kjk0MyoXauws9mC1LT9Zn5V2ik2GcuEi-xLgrWi6fNM34F6PQA2c1naeQ_mHkqVI" --buttons-to-press-before-fuzz searchQuery --press-enter-no-click --remove-class mat-input-0
+        {YELLOW}BrowserBruter{GREEN} --elements{RESET} mat-input-0 {GREEN}--button{RESET} mat-input-0 {GREEN}--attack{RESET} 1 {GREEN}--target{RESET} http://localhost:3000/#/ {GREEN}--cookie{RESET} welcomebanner_status:dismiss {GREEN}--payloads{RESET} fuzz.txt {GREEN}--header{RESET} "Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJzdGF0dXMiOiJzdWNjZXNzIiwiZGF0YSI6eyJpZCI6MTI3LCJ1c2VybmFtZSI6IiIsImVtYWlsIjoiemluamFAMTIzLmNvbSIsInBhc3N3b3JkIjoiZjViYjBjOGRlMTQ2YzY3YjQ0YmFiYmY0ZTY1ODRjYzAiLCJyb2xlIjoiY3VzdG9tZXIiLCJkZWx1eGVUb2tlbiI6IiIsImxhc3RMb2dpbklwIjoiMC4wLjAuMCIsInByb2ZpbGVJbWFnZSI6Ii9hc3NldHMvcHVibGljL2ltYWdlcy91cGxvYWRzL2RlZmF1bHQuc3ZnIiwidG90cFNlY3JldCI6IiIsImlzQWN0aXZlIjp0cnVlLCJjcmVhdGVkQXQiOiIyMDI0LTAzLTA0IDE0OjEzOjIzLjQ2NCArMDA6MDAiLCJ1cGRhdGVkQXQiOiIyMDI0LTAzLTA0IDE0OjEzOjIzLjQ2NCArMDA6MDAiLCJkZWxldGVkQXQiOm51bGx9LCJpYXQiOjE3MDk1NjE2MTV9.oWlMbKjqEk2kxamx5lIgIrnFyXd4vV01xZXPUWLywB-FEfVk6SIx7NA9iNSCjCAwqjKcbKOZIqevIGdvkgiGQw6TpjZhs8_fGtlGIfU7Ud3kjk0MyoXauws9mC1LT9Zn5V2ik2GcuEi-xLgrWi6fNM34F6PQA2c1naeQ_mHkqVI" {GREEN}--buttons-to-press-before-fuzz{RESET} searchQuery {GREEN}--press-enter-no-click{RESET} {GREEN}--remove-class{RESET} mat-input-0
 {RESET}
 
     9. Fuzz the Customer Feedback form of OWASP JuiceShop:
-        {YELLOW}BrowserBruter --button submitButton --proxy http://127.0.0.1:8080/ --target http://localhost:3000/#/contact --cookie welcomebanner_status:dismiss --payloads fuzz.txt --attack 1 --elements userId,cdk-text-field-autofill-monitored,comment,rating --fill cdk-text-field-autofill-monitored,comment,rating --remove-class userId,cdk-text-field-autofill-monitored,comment,rating --interactive --rows-limit 200{RESET}
+        {YELLOW}BrowserBruter{GREEN} --button{RESET} submitButton {GREEN}--target{RESET} http://localhost:3000/#/contact {GREEN}--cookie{RESET} welcomebanner_status:dismiss {GREEN}--payloads{RESET} fuzz.txt {GREEN}--attack{RESET} 1 {GREEN}--elements{RESET} userId,cdk-text-field-autofill-monitored,comment,rating {GREEN}--fill{RESET} cdk-text-field-autofill-monitored,comment,rating {GREEN}--remove-class{RESET} userId,cdk-text-field-autofill-monitored,comment,rating {GREEN}--interactive {GREEN}--rows-limit{RESET} 200{RESET}
 
         OR -> Fuzz the captcha field too:
-        {YELLOW}BrowserBruter --button submitButton --proxy http://127.0.0.1:8080/ --target http://localhost:3000/#/contact --cookie welcomebanner_status:dismiss --payloads fuzz.txt --attack 1 --elements userId,cdk-text-field-autofill-monitored,comment,rating,captchaControl --fill cdk-text-field-autofill-monitored,comment,rating --remove-class userId,cdk-text-field-autofill-monitored,comment,rating,captchaControl --interactive --rows-limit 200{RESET}
+        {YELLOW}BrowserBruter{GREEN} --button{RESET} submitButton {GREEN}--target{RESET} http://localhost:3000/#/contact {GREEN}--cookie{RESET} welcomebanner_status:dismiss {GREEN}--payloads{RESET} fuzz.txt {GREEN}--attack{RESET} 1 {GREEN}--elements{RESET} userId,cdk-text-field-autofill-monitored,comment,rating,captchaControl {GREEN}--fill{RESET} cdk-text-field-autofill-monitored,comment,rating {GREEN}--remove-class{RESET} userId,cdk-text-field-autofill-monitored,comment,rating,captchaControl {GREEN}--interactive {GREEN}--rows-limit{RESET} 200{RESET}
 
         OR -> Fuzz the captcha field and auto fill too:
-        {YELLOW}BrowserBruter --button submitButton --proxy http://127.0.0.1:8080/ --target http://localhost:3000/#/contact --cookie welcomebanner_status:dismiss --headers "Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJzdGF0dXMiOiJzdWNjZXNzIiwiZGF0YSI6eyJpZCI6MTI3LCJ1c2VybmFtZSI6IiIsImVtYWlsIjoiemluamFAMTIzLmNvbSIsInBhc3N3b3JkIjoiZjViYjBjOGRlMTQ2YzY3YjQ0YmFiYmY0ZTY1ODRjYzAiLCJyb2xlIjoiY3VzdG9tZXIiLCJkZWx1eGVUb2tlbiI6IiIsImxhc3RMb2dpbklwIjoiMC4wLjAuMCIsInByb2ZpbGVJbWFnZSI6Ii9hc3NldHMvcHVibGljL2ltYWdlcy91cGxvYWRzL2RlZmF1bHQuc3ZnIiwidG90cFNlY3JldCI6IiIsImlzQWN0aXZlIjp0cnVlLCJjcmVhdGVkQXQiOiIyMDI0LTAzLTA0IDE0OjEzOjIzLjQ2NCArMDA6MDAiLCJ1cGRhdGVkQXQiOiIyMDI0LTAzLTA0IDE0OjEzOjIzLjQ2NCArMDA6MDAiLCJkZWxldGVkQXQiOm51bGx9LCJpYXQiOjE3MDk1NjE2MTV9.oWlMbKjqEk2kxamx5lIgIrnFyXd4vV01xZXPUWLywB-FEfVk6SIx7NA9iNSCjCAwqjKcbKOZIqevIGdvkgiGQw6TpjZhs8_fGtlGIfU7Ud3kjk0MyoXauws9mC1LT9Zn5V2ik2GcuEi-xLgrWi6fNM34F6PQA2c1naeQ_mHkqVI" --payloads fuzz.txt --attack 1 --elements userId,cdk-text-field-autofill-monitored,comment,rating,captchaControl --fill cdk-text-field-autofill-monitored,comment,rating,captchaControl --remove-class userId,cdk-text-field-autofill-monitored,comment,rating,captchaControl --rows-limit 200{RESET}
+        {YELLOW}BrowserBruter{GREEN} --button{RESET} submitButton {GREEN}--target{RESET} http://localhost:3000/#/contact {GREEN}--cookie{RESET} welcomebanner_status:dismiss {GREEN}--header{RESET} "Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJzdGF0dXMiOiJzdWNjZXNzIiwiZGF0YSI6eyJpZCI6MTI3LCJ1c2VybmFtZSI6IiIsImVtYWlsIjoiemluamFAMTIzLmNvbSIsInBhc3N3b3JkIjoiZjViYjBjOGRlMTQ2YzY3YjQ0YmFiYmY0ZTY1ODRjYzAiLCJyb2xlIjoiY3VzdG9tZXIiLCJkZWx1eGVUb2tlbiI6IiIsImxhc3RMb2dpbklwIjoiMC4wLjAuMCIsInByb2ZpbGVJbWFnZSI6Ii9hc3NldHMvcHVibGljL2ltYWdlcy91cGxvYWRzL2RlZmF1bHQuc3ZnIiwidG90cFNlY3JldCI6IiIsImlzQWN0aXZlIjp0cnVlLCJjcmVhdGVkQXQiOiIyMDI0LTAzLTA0IDE0OjEzOjIzLjQ2NCArMDA6MDAiLCJ1cGRhdGVkQXQiOiIyMDI0LTAzLTA0IDE0OjEzOjIzLjQ2NCArMDA6MDAiLCJkZWxldGVkQXQiOm51bGx9LCJpYXQiOjE3MDk1NjE2MTV9.oWlMbKjqEk2kxamx5lIgIrnFyXd4vV01xZXPUWLywB-FEfVk6SIx7NA9iNSCjCAwqjKcbKOZIqevIGdvkgiGQw6TpjZhs8_fGtlGIfU7Ud3kjk0MyoXauws9mC1LT9Zn5V2ik2GcuEi-xLgrWi6fNM34F6PQA2c1naeQ_mHkqVI" {GREEN}--payloads{RESET} fuzz.txt {GREEN}--attack{RESET} 1 {GREEN}--elements{RESET} userId,cdk-text-field-autofill-monitored,comment,rating,captchaControl {GREEN}--fill{RESET} cdk-text-field-autofill-monitored,comment,rating,captchaControl {GREEN}--remove-class{RESET} userId,cdk-text-field-autofill-monitored,comment,rating,captchaControl {GREEN}--rows-limit{RESET} 200{RESET}
 
     10. Fuzz the chatbot of OWASP JuiceShop by first manually sign-in into the application:
-        {YELLOW}BrowserBruter --button message-input --elements message-input --press-enter-no-click --proxy http://127.0.0.1:8080/ --target http://localhost:3000/#/chatbot --cookie test:working,welcomebanner_status:dismiss,language:en --pause --payloads fuzz.txt --attack 1 --rows-limit 200{RESET}
+        {YELLOW}BrowserBruter{GREEN} --button{RESET} message-input {GREEN}--elements{RESET} message-input {GREEN}--press-enter-no-click --target{RESET} http://localhost:3000/#/chatbot {GREEN}--cookie{RESET} test:working,welcomebanner_status:dismiss,language:en {GREEN}--pause {GREEN}--payloads{RESET} fuzz.txt {GREEN}--attack{RESET} 1 {GREEN}--rows-limit{RESET} 200{RESET}
 
     11. Fuzz the write review form of product by first manually login to the application, then automatically click on the image of product to make produc review menu appear:
-        {YELLOW}BrowserBruter --buttons-to-press-before-fuzz img-container --elements "cdk-text-field-autofill-monitored" --button submitButton --target http://localhost:3000/#/ --cookie cookieconsent_status:dismiss,language:en,welcomebanner_status:dismiss --proxy http://127.0.0.1:8080/ --attack 1 --payloads fuzz.txt --remove-class cdk-text-field-autofill-monitored --pause{RESET}
+        {YELLOW}BrowserBruter{GREEN} --buttons-to-press-before-fuzz{RESET} img-container {GREEN}--elements{RESET} "cdk-text-field-autofill-monitored" {GREEN}--button{RESET} submitButton {GREEN}--target{RESET} http://localhost:3000/#/ {GREEN}--cookie{RESET} cookieconsent_status:dismiss,language:en,welcomebanner_status:dismiss {GREEN}--attack{RESET} 1 {GREEN}--payloads{RESET} fuzz.txt {GREEN}--remove-class{RESET} cdk-text-field-autofill-monitored {GREEN}--pause{RESET}
 '''
 # Adding various command line arguments
 args_basic = argParser.add_argument_group("Basic")
@@ -337,9 +341,10 @@ args_browser.add_argument("--chrome-options",help="Custom comma separated list o
 args_browser.add_argument("--anti-bot",help="This switch tells BrowserBruter to use avoid any chrome options and use raw undetected chrome driver to avoid bot detection, by default Browser-Bruter uses custom Chrome options along with undetected chrome driver like disabling xss protection along with undeteced chrome driver",action="store_true",default=False)
 args_browser.add_argument("--no-anti-bot",help="Completely removes any anti bot detection evasions.",action="store_true",default=False)
 args_browser.add_argument("--new-instance",help="Start new fresh instance of browser for each new payload [Fuzzing process's iteration] usefull in bypassing the invisible captchas.",action="store_true")
-args_browser.add_argument("--new-instance-restore-session",help="Start new fresh browser instance but restore the cookies", action="store_true")
 args_report.add_argument("--rows-limit",help="Specify the number of rows to be included in single file, if not specified, a single report will be generated, if specified, multiple reports with specified rows amount will be generated, useful when test consists of thousands of payloads.", type=int, metavar="200")
 args_debug.add_argument("--verbose",help="Use this switch to enable HTTP request/response output being printed on console and STDLOG file.", action="store_true",default=False)
+args_debug.add_argument("--debug",help="Use this switch to print the Stack Trace messages in case of the error!",action="store_true")
+
 # Getting the arguments in args variable
 args = argParser.parse_args()
 
@@ -353,7 +358,7 @@ elif args.threads > 5 or args.threads < 0:
 elif (args.elements and args.elements_payloads):
     print(f"\n\n{RED}++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\nERROR: {RESET}--elements and --elements--payloads can't be used together\n{RED}++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++{RESET}")
     sys.exit(0)
-# if forceCookie argument is present withouth --cookie option then throw error 
+# if force-cookie argument is present withouth --cookie option then throw error 
 elif args.force_cookie:
 	if args.cookie is None:
 		print(f"\n\n{RED}++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\nERROR: {RESET}You can not use --forceCookie without --cookie option\n{RED}++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++{RESET}")
@@ -387,7 +392,8 @@ elif args.javascript_file:
     except FileNotFoundError:
         print(f"\n\n{RED}++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\nERROR: {RESET}The specified replacement file '{args.replace_files}' does not exist.\n{RED}++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++{RESET}")
         sys.exit(0)
-
+# Get current working directory to set path for chrome executables
+#current_working_directory = os.getcwd()
 # Setting flag which indicates threads to run or stop
 terminate = False
 # Pause event will be used to pause the threads when user presses the ENTER KEY
@@ -514,8 +520,9 @@ if args.fill_values:
         sys.exit(0)
     except json.JSONDecodeError:
         print(f"\n\n{RED}++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\nERROR: {RESET}Invalid JSON format in the specified values file '{args.values}'.\n{RED}++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++{RESET}")
-        print_exc()
-        print(f"\n\n{RED}++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\nERROR: {RESET}Refer Above Stack Trace\n{RED}++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++{RESET}")
+        if args.debug:
+            print_exc()
+            print(f"\n\n{RED}++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\nERROR: {RESET}Refer Above Stack Trace\n{RED}++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++{RESET}")
         sys.exit(0)
 # Supress the http encoding and bs prettify warnings
 warnings.filterwarnings("ignore", category=MarkupResemblesLocatorWarning)
@@ -544,9 +551,11 @@ def wait_and_handle_popup(driver):
 
 # Handle Unknown Exception
 def handle_unknown_exception(exception):
-    print(exception)
-    print_exc()
-    print(f"\n\n{RED}++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\nERROR: {RESET}An unknown error has been occured, Please open issue request at https://github.com/netsquare/BrowserBruter/issues and paste above message there, we are glad to help\n{RED}++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++{RESET}")
+    if args.debug:
+        print_exc()
+        print(f"\n\n{RED}++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\nERROR: {RESET}An unknown error has been occured, Please open issue request at https://github.com/netsquare/BrowserBruter/issues and paste above message there, we are glad to help\n{RED}++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++{RESET}")
+    else:
+        print(f"\n\n{RED}++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\nERROR: {RESET}An unknown error has been occured, Please refer logs/Error.txt or use --debug flag.\n{RED}++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++{RESET}")
     log_error(format_exc(exception))
     sys.exit(0)
 
@@ -610,8 +619,12 @@ def pause_resume():
             userText, timeout = timedKey(prompt="", timeout=-1, resetOnInput=True)
             if not (timeout):
                 pause_event.set()  # Set the pause event
-                print(f"\n\n{RED}++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\nWARNING: {RESET}BROWSERBRUTER IS PAUSED\npress ENTER to resume\n{RED}++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++{RESET}")
-                k = input()				
+                print(f"\n\n{RED}++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\nWARNING: {RESET}BROWSERBRUTER IS PAUSED\npress ENTER to resume\nPress y to Enter Interactive Mode\nPress n to Exit Interactive Mode\n{RED}++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++{RESET}")
+                k = input()
+                if k == 'Y' or k == 'y':
+                    args.interactive = True
+                elif k == 'N' or k == 'n':
+                    args.interactive = False
                 pause_event.clear()  # Clear the pause event 
                 print(f"\n\n{RED}++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\nWARNING: {RESET}Resuming BROWSERBRUTER\n{RED}++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++{RESET}")
     except KeyboardInterrupt as e:
@@ -688,11 +701,19 @@ def add_cookies(driver):
                 "value": value,
                 "domain": hostname
             }
-            try:
-                driver.add_cookie(cookie_dict)  
-            except InvalidCookieDomainException as e:
-                print(f"\n\n{RED}++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\nError:{RESET} Cookie Domain is invalid -> {cookie_dict} -> Skipping\n{RED}++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++{RESET}")
-                log_error(format_exc())       
+            driver.add_cookie(cookie_dict)  
+    except InvalidArgumentException as e:
+            if "invalid argument: invalid 'domain'" in str(e):
+                cookie_dict = {
+                    "name": name,
+                    "value": value
+                }
+                driver.add_cookie(cookie_dict)
+            else:
+                handle_unknown_exception(e)
+    except InvalidCookieDomainException as e:
+        print(f"\n\n{RED}++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\nError:{RESET} Cookie Domain is invalid -> {cookie_dict} -> Skipping\n{RED}++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++{RESET}")
+        log_error(format_exc())                
     except ValueError as e:
         print(f"\n\n{RED}++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\nError:{RESET} You have entered arguments in invalid format -> {args.cookie} please read help message for valid format of passing cookies. Closing the Fuzzing process\n{RED}++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++{RESET}")
         driver.quit()
@@ -736,17 +757,16 @@ def replace_response_content(request, response):
                 # Update the response content using replace method
                 del request.response.headers['Content-Encoding']
                 request.response.headers['Content-Encoding'] = 'utf-8'
-                request.response.body = file_contents[file_name]#response_content
+                request.response.body = file_contents[file_name]
                 request.response.headers['Content-Length'] = len(request.response.body)
 
 # Function to get and initialize the driver
 def get_and_initialize_chrome_driver():
     options = get_browser_options()
     if args.no_anti_bot:
-        options=get_browser_options()
-        driver = webdriver.Chrome(executable_path="res/chrome/chromedriver", options=options, seleniumwire_options={'proxy': {'http': args.proxy, 'https': args.proxy}} if args.proxy else {})
+        service = Service(executable_path="res/chrome/chromedriver")
+        driver = webdriver.Chrome(service=service, options=options, seleniumwire_options={'proxy': {'http': args.proxy, 'https': args.proxy}} if args.proxy else {})
     else:
-        options = get_browser_options()
         driver = Chrome(executable_path="res/chrome/chromedriver", version_main=122, options=options, seleniumwire_options={'proxy': {'http': args.proxy, 'https': args.proxy}} if args.proxy else {})
     # Set request interceptor
     if not args.load_static_media:
@@ -848,12 +868,10 @@ def get_filename():
 
 # Function to handle --new-instance option
 def handle_new_instance(driver):
-    cookies_to_be_restored = driver.get_cookies()
     driver.quit()
     driver = get_and_initialize_chrome_driver()
-    if args.new_instance_restore_session:
-        for cookie in cookies_to_be_restored:
-            driver.add_cookie(cookie)
+    # Following lines solves the bug in which the --new-instace was not working
+    driver.get(args.target)
     return driver
 
 # Function to press the button
@@ -865,15 +883,16 @@ def press_button(driver,button,from_buttons_to_press):
             button.click()
     except ElementClickInterceptedException as e:
         print(f"\n\n{RED}++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\nERROR: {RESET}The button -> {button} is not clickable or click has been intercepted by some other element, there might be some javascript being executed on web page which is preventing the click. Please remove the code intercepting the click.\n{RED}++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++{RESET}")
-        print_exc()
+        if args.debug:
+            print_exc()
+            print(f"\n\n{RED}++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\nERROR: {RESET}Refer Above Stack Trace\n{RED}++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++{RESET}")
         log_error(format_exc())
-        print(f"\n\n{RED}++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\nERROR: {RESET}Refer Above Stack Trace\n{RED}++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++{RESET}")
         driver.quit()
         sys.exit(0)
 
 # Function to perform generic initial operations before filling the form
 def initial_operations_before_filling_the_form(driver):
-    # If --forceCookie is set then set the initial cookies
+    # If --force-cookie is set then set the initial cookies
     if args.force_cookie:
         add_cookies(driver)
     # Wait for body to be loaded in case of slow response
@@ -1152,9 +1171,10 @@ def get_form(driver,form):
             try:
                 return driver.find_element(By.CLASS_NAME, form)
             except NoSuchElementException as e:
-                print(f"\n\n{RED}++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\nError:{RESET} Specified element {element} is not found. Please verify the name of the element. For more information, check Error.txt\n{RED}++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++{RESET}")
-                print_exc()
-                print(f"\n\n{RED}++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\nERROR: {RESET}Refer Above Stack Trace\n{RED}++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++{RESET}")
+                print(f"\n\n{RED}++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\nError:{RESET} Specified element {element} is not found. Please verify the name of the element. For more information, check Error.txt or use --debug flag.\n{RED}++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++{RESET}")
+                if args.debug:
+                    print_exc()
+                    print(f"\n\n{RED}++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\nERROR: {RESET}Refer Above Stack Trace\n{RED}++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++{RESET}")
                 driver.quit()
                 log_error(format_exc())
                 sys.exit(0)
@@ -1189,9 +1209,10 @@ def get_element(driver,element,coming_from_initial_operations_method):
                                 try:
                                     element = selector.find_element(By.XPATH,f"//button[@Type='{element}']")
                                 except NoSuchElementException as e:
-                                    print(f"\n\n{RED}++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\nError:{RESET} Specified element {element} is not found. Please verify the name of the element. For more information, check Error.txt\n{RED}++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++{RESET}")
-                                    print_exc()
-                                    print(f"\n\n{RED}++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\nERROR: {RESET}Refer Above Stack Trace\n{RED}++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++{RESET}")
+                                    print(f"\n\n{RED}++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\nError:{RESET} Specified element {element} is not found. Please verify the name of the element. For more information, check Error.txt or use --debug flag.\n{RED}++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++{RESET}")
+                                    if args.debug:
+                                        print_exc()
+                                        print(f"\n\n{RED}++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\nERROR: {RESET}Refer Above Stack Trace\n{RED}++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++{RESET}")
                                     driver.quit()
                                     log_error(format_exc())
                                     sys.exit(0)
@@ -1306,7 +1327,6 @@ def run_browser_instance(payloads, instance_number):
             log_error(format_exc())
             # This exception can be arrived when the user closes the browser window
             print(f"\n\n{YELLOW}++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\nINFO: {RESET}Browser's window has been closed or Remote connection lost with following message\n{YELLOW}++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++{RESET}")
-            print_exc()
         except SystemExit as e:
             log_error(format_exc())
         except Exception as e:
@@ -1519,7 +1539,7 @@ def attempt_clusterbomb_fuzz(payloads_combinations, driver,this_threads_files, i
                 with open(this_threads_files[1], 'w', newline='') as processed_payload_file:
                     processed_payload_file.write(str(payloads) + '\n')
                 if args.new_instance:
-                    handle_new_instance(driver)
+                    driver = handle_new_instance(driver)
         # Close the progress bar
         progress_bar.close()
     except KeyboardInterrupt:
@@ -1636,7 +1656,8 @@ if __name__ == "__main__":
         sys.exit(0)      
 else:
     print(f"\n\n{RED}++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\nError:{RESET} Please run the script again using python3 BrowserBruter.py, closing the BrowserBruter\n{RED}++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++{RESET}")
-    print_exc()
-    print(f"\n\n{RED}++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\nERROR: {RESET}Refer Above Stack Trace\n{RED}++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++{RESET}")
+    if args.debug:
+        print_exc()
+        print(f"\n\n{RED}++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\nERROR: {RESET}Refer Above Stack Trace\n{RED}++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++{RESET}")
 
 ### MAIN EXECUTION BLOCK ENDS ###
