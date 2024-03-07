@@ -50,30 +50,56 @@ GREEN = Fore.GREEN
 YELLOW = Fore.YELLOW
 RED = Fore.RED
 RESET = Fore.RESET
+BLUE = Fore.BLUE
 
 ### PRINTING BANNER ###
-print(f"""{GREEN}
-##################################################################################################################################################################
-##################################################################################################################################################################
-##                                                                                                                                                             ###
-## {YELLOW}██████╗░██████╗░░█████╗░░██╗░░░░░░░██╗░██████╗███████╗██████╗░░░░░░░██████╗░██████╗░██╗░░░██╗████████╗███████╗██████╗░                                                       
-{GREEN}## {YELLOW}██╔══██╗██╔══██╗██╔══██╗░██║░░██╗░░██║██╔════╝██╔════╝██╔══██╗░░░░░░██╔══██╗██╔══██╗██║░░░██║╚══██╔══╝██╔════╝██╔══██╗⠀⠀⠀⠀{RED}⠿⠿⠿⠿⠿⢿⣿⣿⣿⣿⣿⣿⡇⢰⣶⣶⣶⣶⣶⣶⣾⣷⣾⣷⣶{YELLOW}. . . .
-{GREEN}## {YELLOW}██████╦╝██████╔╝██║░░██║░╚██╗████╗██╔╝╚█████╗░█████╗░░██████╔╝█████╗██████╦╝██████╔╝██║░░░██║░░░██║░░░█████╗░░██████╔╝⠀{RED}⣶⣶⣶⣶⣶⣶⣶⡆⢸⣿⣿⣿⣿⣿⣿⡇⠸⠿⠿⠿⠿⠿⠿⢿⡿⢿⡿⠿{YELLOW}. . . . . 
-{GREEN}## {YELLOW}██╔══██╗██╔══██╗██║░░██║░░████╔═████║░░╚═══██╗██╔══╝░░██╔══██╗╚════╝██╔══██╗██╔══██╗██║░░░██║░░░██║░░░██╔══╝░░██╔══██╗⠀{RED}⣿⣿⣿⣿⣿⣿⣿⡇⠘⠛⢻⠟⠛⣿⠛⠃⠀⠀⠀⠀⠀⠀⠀⠈⠁⠀⠁⠀⠀                  
-{GREEN}## {YELLOW}██████╦╝██║░░██║╚█████╔╝░░╚██╔╝░╚██╔╝░██████╔╝███████╗██║░░██║░░░░░░██████╦╝██║░░██║╚██████╔╝░░░██║░░░███████╗██║░░██║⠀{RED}⠿⠿⠿⠿⠿⠿⠿⠇⠀⠀⣸⠀⢰⣿⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀                  
-{GREEN}## {YELLOW}╚═════╝░╚═╝░░╚═╝░╚════╝░░░░╚═╝░░░╚═╝░░╚═════╝░╚══════╝╚═╝░░╚═╝░░░░░░╚═════╝░╚═╝░░╚═╝░╚═════╝░░░░╚═╝░░░╚══════╝╚═╝░░╚═╝⠀⠀⠀{RED}⣆⠀⢶⡆⠀⠀⠀⢀⡟⠀⣼⡇                                 
-{GREEN}##                                                                                                                       ⠀⠀⠀{RED}⢹⣄⠘⣷⡀⠀⢀⡼⠁⣰⡟⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀                  
-{GREEN}##                                                                                                                       ⠀⠀⠀⠀{RED}⠙⠦⡈⠻⢶⣿⣥⡾⠋ {YELLOW}by Jafar Pathan 
-{GREEN}##                                                                                        {YELLOW}The First-Ever Advance Browser Based Automated Web Form Fuzzing Tool{GREEN} 
-{GREEN}##################################################################################################################################################################
-{GREEN}##################################################################################################################################################################{RESET}""")
+print(f"""
+{GREEN}###############################################################################################################################
+{GREEN}###############################################################################################################################
+{GREEN}###                                                                                                                         ###
+{GREEN}### {YELLOW}██████╗░██████╗░░█████╗░░██╗░░░░░░░██╗░██████╗███████╗██████╗░░░░░░░██████╗░██████╗░██╗░░░██╗████████╗███████╗██████╗░  {GREEN}###
+{GREEN}### {YELLOW}██╔══██╗██╔══██╗██╔══██╗░██║░░██╗░░██║██╔════╝██╔════╝██╔══██╗░░░░░░██╔══██╗██╔══██╗██║░░░██║╚══██╔══╝██╔════╝██╔══██╗  {GREEN}###
+{GREEN}### {YELLOW}██████╦╝██████╔╝██║░░██║░╚██╗████╗██╔╝╚█████╗░█████╗░░██████╔╝█████╗██████╦╝██████╔╝██║░░░██║░░░██║░░░█████╗░░██████╔╝  {GREEN}###
+{GREEN}### {YELLOW}██╔══██╗██╔══██╗██║░░██║░░████╔═████║░░╚═══██╗██╔══╝░░██╔══██╗╚════╝██╔══██╗██╔══██╗██║░░░██║░░░██║░░░██╔══╝░░██╔══██╗  {GREEN}###
+{GREEN}### {YELLOW}██████╦╝██║░░██║╚█████╔╝░░╚██╔╝░╚██╔╝░██████╔╝███████╗██║░░██║░░░░░░██████╦╝██║░░██║╚██████╔╝░░░██║░░░███████╗██║░░██║  {GREEN}###
+{GREEN}### {YELLOW}╚═════╝░╚═╝░░╚═╝░╚════╝░░░░╚═╝░░░╚═╝░░╚═════╝░╚══════╝╚═╝░░╚═╝░░░░░░╚═════╝░╚═╝░░╚═╝░╚═════╝░░░░╚═╝░░░╚══════╝╚═╝░░╚═╝  {GREEN}###
+{GREEN}###                                                                                   {YELLOW}by Jafar Pathan(@github/zinja-coder)  {GREEN}###
+{GREEN}###                                                                                                                         {GREEN}###
+{GREEN}###                                                                                                                         {GREEN}###
+{GREEN}### 	                   {YELLOW}The First-Ever Advance Browser Based Automated Web Form Fuzzing Tool                             {GREEN}###
+{GREEN}### 	                   {YELLOW}Version: {BLUE} v2024.3.1                                                                              {GREEN}###
+{GREEN}###                        {YELLOW}Github : {BLUE} https://github.com/netsquare/BrowserBruter                                             {GREEN}###
+{GREEN}###                                                                                                                         {GREEN}###
+{GREEN}###        {RED}     ..,:dOkxl:.                                                                                                 {GREEN}###
+{GREEN}###         {RED}.,coooooooooooooc,.                                                                                             {GREEN}###
+{GREEN}###      {RED}.,lllllllllllllllllllll,.                                                                                          {GREEN}###
+{GREEN}###     {RED};ccccccccccccccccccccccccc;                                                                                         {GREEN}###
+{GREEN}###   {RED}'ccccccccccccccccccccccccccccc.                                                                                       {GREEN}###
+{GREEN}### {GREEN} ,ooc::::::::ok{RESET}O0000{YELLOW}OOkkkkkkkkkkk:                _____                                                                 {GREEN}###
+{GREEN}### {GREEN}.ooool;;;;:x{RESET}K0{BLUE}kxxxxxk{RESET}0X{YELLOW}K0000000000.            .'{RED}:::::::{YELLOW}'.                                                              {GREEN}###
+{GREEN}### {GREEN}:oooool;,;O{RESET}K{BLUE}ddddddddddd{RESET}KX{YELLOW}000000000d       ___ /{RED}:::::::::::{YELLOW}\\____ _            {GREEN}_.''_                                      ###
+{GREEN}### {GREEN}lllllool;l{RESET}N{BLUE}dllllllllllld{RESET}N{YELLOW}K000000000    {RESET}/{YELLOW}||   ||`.______.-`||   | |\\_{BLUE}\\\\\\\\{YELLOW}____/_{GREEN} _.-'{BLUE}\\\\\\\\{RED}-- -- -- -- -- --                {GREEN}###
+{GREEN}### {GREEN}lllllllllo{RESET}M{BLUE}dccccccccccco{RESET}W{YELLOW}K000000000.{RESET}|-|{YELLOW} ||===||           ||===| ||_{BLUE}||||{YELLOW}____|_|{GREEN} .-'{BLUE}|||||{RED}-- -- -- -- -- --               {GREEN}###
+{GREEN}### {GREEN};cllllllllX{RESET}X{BLUE}c:::::::::c{RESET}0X{YELLOW}000000000d'{RESET}|-|{YELLOW} ||===||===========||===| ||_{BLUE}||||{YELLOW}____|_|{GREEN}`-._{BLUE}|||||{RED}-- -- -- -- -- --               {GREEN}###
+{GREEN}### .ccccllllllO{RESET}Nk{BLUE}c;,,,;cx{RESET}KK{YELLOW}0000000000.    {RESET}\{YELLOW}||___||___________||___|_|/ {BLUE}////{YELLOW}   {RESET}##{GREEN}  `-._{BLUE}////{RED}-- -- -- -- -- --                {GREEN}###
+{GREEN}### .cccccclllllxOO{RESET}OOOOkx{YELLOW}O0000000000;          )  _____  (                     {RESET}##                                           {GREEN}###
+{GREEN}###   {GREEN}.:ccccccccllllllllo{YELLOW}O0000000OOO,          / .'| {RESET}({YELLOW}  '. \\                   {RESET}##                                           {GREEN}###
+{GREEN}###     {GREEN},:ccccccccclllcd{YELLOW}0000OOOOOOl.          (  './    )   )                  {RESET}##                                           {GREEN}###
+{GREEN}###       {GREEN}'::ccccccccc{YELLOW}dOOOOOOOkx:.             \ '._____.' /                   {RESET}##                                           {GREEN}###
+{GREEN}###         {GREEN}..,::cccc{YELLOW}xOOOkkko;.                 '._______.'                    {RESET}##                                           {GREEN}###
+{GREEN}###             {GREEN}..,:{YELLOW}dOkxl:.                                                    {RESET}##                                           {GREEN}###
+{GREEN}###           {RESET}###############                                                  {RESET}##                                           {GREEN}###
+{GREEN}###          {RESET}#################                                                {RESET}####                                          {GREEN}###
+{GREEN}###         {RESET}###################                                              {RESET}######                                         {GREEN}###
+{GREEN}###############################################################################################################################
+{GREEN}###############################################################################################################################{RESET}""")
 
 
 ### DEFINING AND PARSING COMMAND LINE ARGUMENTS START ###
 # Getting argument parser to parse and process arguments
 argParser = argparse.ArgumentParser(description="BrowserBruter is a python3 script, utilizing power of selenium and selenium-wire to automate fuzzing of various input fields of webpages to test their security against malicious inputs. For contact and more information about project please visit https://github.com/netsquare/BrowserBruter",formatter_class=argparse.RawTextHelpFormatter)
 # Defining the epilog message which will be displayed with help message
-argParser.epilog = f'''
+usage_examples = f'''
 Usage Examples:
     1. Perform Bruteforce(ClusterBomb) on login page:
         {YELLOW}BrowserBruter{GREEN} --elements-payloads{RESET} username:username.txt,password:passwords.txt {GREEN}--target{RESET} http://localhost/login.php {GREEN}--button{RESET} Login {GREEN}--attack{RESET} 4 {GREEN}--remove-session{RESET}
@@ -304,6 +330,7 @@ args_javascript = argParser.add_argument_group("JavaScript and Code Handling")
 args_browser = argParser.add_argument_group("Browser Options")
 args_debug = argParser.add_argument_group("Debug Option")
 args_report = argParser.add_argument_group("Report Generation")
+args_help = argParser.add_argument_group("Help")
 # Adding CLI arguments
 args_basic.add_argument("--target",help="Target's url: https://zinja-coder.github.io/jafarpathan", metavar="TARGET_URL")
 args_basic.add_argument("--button",help="Button element which will submit form data.", metavar="submit")
@@ -344,24 +371,30 @@ args_browser.add_argument("--new-instance",help="Start new fresh instance of bro
 args_report.add_argument("--rows-limit",help="Specify the number of rows to be included in single file, if not specified, a single report will be generated, if specified, multiple reports with specified rows amount will be generated, useful when test consists of thousands of payloads.", type=int, metavar="200")
 args_debug.add_argument("--verbose",help="Use this switch to enable HTTP request/response output being printed on console and STDLOG file.", action="store_true",default=False)
 args_debug.add_argument("--debug",help="Use this switch to print the Stack Trace messages in case of the error!",action="store_true")
+args_help.add_argument("--help-manual",help="Print the Usage Exapmles",action="store_true")
 
 # Getting the arguments in args variable
 args = argParser.parse_args()
 
+# If user has enter --manual then print the manual and exit
+if args.help_manual:
+    print(usage_examples)
+    sys.exit(0)
+
 # Check if all required arguments are given and threads are not more than 5
 if ((args.payloads is None or args.elements is None) and (args.elements_payloads is None)) or args.target is None or args.button is None or args.attack is None:
-	print(f"\n\n{RED}++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\nERROR: {RESET}Please Enter all required arguments --attack, --target, --button, --payloads, --elements or --elements-payloads\n{RED}++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++{RESET}")
+	print(f"\n\n{RED}[+]--------------------------------------------------------------------------------------------------------------------------[+]\nERROR: {RESET}Please Enter all required arguments --attack, --target, --button, --payloads, --elements or --elements-payloads or --help for help.\n{RED}[+]--------------------------------------------------------------------------------------------------------------------------[+]{RESET}")
 	sys.exit(0)
 elif args.threads > 5 or args.threads < 0:
-	print(f"\n\n{RED}++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\nERROR: {RESET}Value of threads must less than 6 and more than 0\n{RED}++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++{RESET}")
+	print(f"\n\n{RED}[+]--------------------------------------------------------------------------------------------------------------------------[+]\nERROR: {RESET}Value of threads must less than 6 and more than 0\n{RED}[+]--------------------------------------------------------------------------------------------------------------------------[+]{RESET}")
 	sys.exit(0)
 elif (args.elements and args.elements_payloads):
-    print(f"\n\n{RED}++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\nERROR: {RESET}--elements and --elements--payloads can't be used together\n{RED}++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++{RESET}")
+    print(f"\n\n{RED}[+]--------------------------------------------------------------------------------------------------------------------------[+]\nERROR: {RESET}--elements and --elements--payloads can't be used together\n{RED}[+]--------------------------------------------------------------------------------------------------------------------------[+]{RESET}")
     sys.exit(0)
 # if force-cookie argument is present withouth --cookie option then throw error 
 elif args.force_cookie:
 	if args.cookie is None:
-		print(f"\n\n{RED}++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\nERROR: {RESET}You can not use --forceCookie without --cookie option\n{RED}++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++{RESET}")
+		print(f"\n\n{RED}[+]--------------------------------------------------------------------------------------------------------------------------[+]\nERROR: {RESET}You can not use --forceCookie without --cookie option\n{RED}[+]--------------------------------------------------------------------------------------------------------------------------[+]{RESET}")
 		sys.exit(0)
 
 ### DEFINING AND PARSING COMMAND LINE ARGUMENTS ENDS ###
@@ -382,18 +415,16 @@ if args.javascript:
     javascript_to_execute = args.javascript
 elif args.javascript_file:
     if args.javascript:	
-        print(f"\n\n{RED}++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\nERROR: {RESET}The --javascript-file option can not be used with --javascript option\n{RED}++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++{RESET}")
+        print(f"\n\n{RED}[+]--------------------------------------------------------------------------------------------------------------------------[+]\nERROR: {RESET}The --javascript-file option can not be used with --javascript option\n{RED}[+]--------------------------------------------------------------------------------------------------------------------------[+]{RESET}")
         sys.exit(0)
     try:
         with open(args.javascript_file, 'rb') as file:
-            print(f"\n\n{YELLOW}++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\nINFO: {RESET}Trying to read the replacement file.\n{YELLOW}++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++{RESET}")
+            print(f"\n\n{YELLOW}[+]--------------------------------------------------------------------------------------------------------------------------[+]\nINFO: {RESET}Trying to read the replacement file.\n{YELLOW}[+]--------------------------------------------------------------------------------------------------------------------------[+]{RESET}")
             javascript_to_execute = file.read()
             javascript_to_execute = javascript_to_execute.decode('utf-8')
     except FileNotFoundError:
-        print(f"\n\n{RED}++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\nERROR: {RESET}The specified replacement file '{args.replace_files}' does not exist.\n{RED}++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++{RESET}")
+        print(f"\n\n{RED}[+]--------------------------------------------------------------------------------------------------------------------------[+]\nERROR: {RESET}The specified replacement file '{args.replace_files}' does not exist.\n{RED}[+]--------------------------------------------------------------------------------------------------------------------------[+]{RESET}")
         sys.exit(0)
-# Get current working directory to set path for chrome executables
-#current_working_directory = os.getcwd()
 # Setting flag which indicates threads to run or stop
 terminate = False
 # Pause event will be used to pause the threads when user presses the ENTER KEY
@@ -426,7 +457,7 @@ if args.attack in (1, 2):
                 line = line.strip()
                 payloads.append(line)
     except FileNotFoundError:
-        print(f"\n\n{RED}++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\nERROR: {RESET}The specified payloads file '{args.payloads}' does not exist.\n{RED}++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++{RESET}")
+        print(f"\n\n{RED}[+]--------------------------------------------------------------------------------------------------------------------------[+]\nERROR: {RESET}The specified payloads file '{args.payloads}' does not exist.\n{RED}[+]--------------------------------------------------------------------------------------------------------------------------[+]{RESET}")
         sys.exit(0)
 elif args.attack in (3, 4):
     try:
@@ -458,7 +489,7 @@ elif args.attack in (3, 4):
                         # Update the dictionary with the extended list
                         elements_payloads[element] = extended_list
     except FileNotFoundError:
-        print(f"\n\n{RED}++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\nERROR: {RESET}The specified payloads file '{args.payloads}' does not exist.\n{RED}++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++{RESET}")
+        print(f"\n\n{RED}[+]--------------------------------------------------------------------------------------------------------------------------[+]\nERROR: {RESET}The specified payloads file '{args.payloads}' does not exist.\n{RED}[+]--------------------------------------------------------------------------------------------------------------------------[+]{RESET}")
         sys.exit(0)
 
 # Get the content, Replace the response body with the content of the file provided by the user
@@ -469,10 +500,10 @@ if args.replace_files:
         for replace_file in replace_files:
             file_name, file_url = replace_file.split('++')
             with open(file_name, 'r') as file:
-                print(f"\n\n{YELLOW}++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\nINFO: {RESET}Trying to read the replacement file. -> {file_name}\n{YELLOW}++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++{RESET}")
+                print(f"\n\n{YELLOW}[+]--------------------------------------------------------------------------------------------------------------------------[+]\nINFO: {RESET}Trying to read the replacement file. -> {file_name}\n{YELLOW}[+]--------------------------------------------------------------------------------------------------------------------------[+]{RESET}")
                 file_contents[file_name] = file.read()
     except FileNotFoundError:
-        print(f"\n\n{RED}++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\nERROR: {RESET}The specified replacement file '{file_name}' does not exist.\n{RED}++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++{RESET}")
+        print(f"\n\n{RED}[+]--------------------------------------------------------------------------------------------------------------------------[+]\nERROR: {RESET}The specified replacement file '{file_name}' does not exist.\n{RED}[+]--------------------------------------------------------------------------------------------------------------------------[+]{RESET}")
         sys.exit(0)
 
 # Creating Reports directory in current directory to store reports
@@ -516,13 +547,13 @@ if args.fill_values:
         with open(args.fill_values, 'r') as values_file:
             attribute_values = json.load(values_file)
     except FileNotFoundError:
-        print(f"\n\n{RED}++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\nERROR: {RESET}The specified values file '{args.values}' does not exist.\n{RED}++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++{RESET}")
+        print(f"\n\n{RED}[+]--------------------------------------------------------------------------------------------------------------------------[+]\nERROR: {RESET}The specified values file '{args.values}' does not exist.\n{RED}[+]--------------------------------------------------------------------------------------------------------------------------[+]{RESET}")
         sys.exit(0)
     except json.JSONDecodeError:
-        print(f"\n\n{RED}++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\nERROR: {RESET}Invalid JSON format in the specified values file '{args.values}'.\n{RED}++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++{RESET}")
+        print(f"\n\n{RED}[+]--------------------------------------------------------------------------------------------------------------------------[+]\nERROR: {RESET}Invalid JSON format in the specified values file '{args.values}'.\n{RED}[+]--------------------------------------------------------------------------------------------------------------------------[+]{RESET}")
         if args.debug:
             print_exc()
-            print(f"\n\n{RED}++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\nERROR: {RESET}Refer Above Stack Trace\n{RED}++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++{RESET}")
+            print(f"\n\n{RED}[+]--------------------------------------------------------------------------------------------------------------------------[+]\nERROR: {RESET}Refer Above Stack Trace\n{RED}[+]--------------------------------------------------------------------------------------------------------------------------[+]{RESET}")
         sys.exit(0)
 # Supress the http encoding and bs prettify warnings
 warnings.filterwarnings("ignore", category=MarkupResemblesLocatorWarning)
@@ -546,16 +577,16 @@ def wait_and_handle_popup(driver):
             except NoAlertPresentException:
                 pass
         else:
-            print(f"\n{YELLOW}++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\nINFO: {RESET}Alert Pupup please interact with popup or use --ignore-popup option\n{YELLOW}++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++{RESET}")
-            input(f"\n{YELLOW}++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\nINFO: {RESET}press ENTER after intracting with popup\n{YELLOW}++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++{RESET}")
+            print(f"\n{YELLOW}[+]--------------------------------------------------------------------------------------------------------------------------[+]\nINFO: {RESET}Alert Pupup please interact with popup or use --ignore-popup option\n{YELLOW}[+]--------------------------------------------------------------------------------------------------------------------------[+]{RESET}")
+            input(f"\n{YELLOW}[+]--------------------------------------------------------------------------------------------------------------------------[+]\nINFO: {RESET}press ENTER after intracting with popup\n{YELLOW}[+]--------------------------------------------------------------------------------------------------------------------------[+]{RESET}")
 
 # Handle Unknown Exception
 def handle_unknown_exception(exception):
     if args.debug:
         print_exc()
-        print(f"\n\n{RED}++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\nERROR: {RESET}An unknown error has been occured, Please open issue request at https://github.com/netsquare/BrowserBruter/issues and paste above message there, we are glad to help\n{RED}++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++{RESET}")
+        print(f"\n\n{RED}[+]--------------------------------------------------------------------------------------------------------------------------[+]\nERROR: {RESET}An unknown error has been occured, Please open issue request at https://github.com/netsquare/BrowserBruter/issues and paste above message there, we are glad to help\n{RED}[+]--------------------------------------------------------------------------------------------------------------------------[+]{RESET}")
     else:
-        print(f"\n\n{RED}++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\nERROR: {RESET}An unknown error has been occured, Please refer logs/Error.txt or use --debug flag.\n{RED}++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++{RESET}")
+        print(f"\n\n{RED}[+]--------------------------------------------------------------------------------------------------------------------------[+]\nERROR: {RESET}An unknown error has been occured, Please refer logs/Error.txt or use --debug flag.\n{RED}[+]--------------------------------------------------------------------------------------------------------------------------[+]{RESET}")
     log_error(format_exc(exception))
     sys.exit(0)
 
@@ -599,14 +630,14 @@ def read_file(file_path):
         with open(file_path,'r') as file:
               return file.read().splitlines()
     except FileNotFoundError as e:
-        print(f"\n\n{RED}++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\nERROR: {RESET}The specified payloads file '{file_path}' does not exist.\n{RED}++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++{RESET}")
+        print(f"\n\n{RED}[+]--------------------------------------------------------------------------------------------------------------------------[+]\nERROR: {RESET}The specified payloads file '{file_path}' does not exist.\n{RED}[+]--------------------------------------------------------------------------------------------------------------------------[+]{RESET}")
         log_error(format_exc())
         sys.exit(0)
 
 # Function to Handle CTRL+C
 def signal_handler(signal, frame):
     sleep(3)
-    print(f"\n\n{RED}++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\nINFO: {RESET}CTRL+C pressed. Waiting for remaining request/response to stop. Exiting...\n{RED}++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++{RESET}")
+    print(f"\n\n{RED}[+]--------------------------------------------------------------------------------------------------------------------------[+]\nINFO: {RESET}CTRL+C pressed. Waiting for remaining request/response to stop. Exiting...\n{RED}[+]--------------------------------------------------------------------------------------------------------------------------[+]{RESET}")
     # Set the global termination flag to True so all threads can stop gracefully
     global terminate
     terminate = True
@@ -619,14 +650,14 @@ def pause_resume():
             userText, timeout = timedKey(prompt="", timeout=-1, resetOnInput=True)
             if not (timeout):
                 pause_event.set()  # Set the pause event
-                print(f"\n\n{RED}++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\nWARNING: {RESET}BROWSERBRUTER IS PAUSED\npress ENTER to resume\nPress y to Enter Interactive Mode\nPress n to Exit Interactive Mode\n{RED}++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++{RESET}")
+                print(f"\n\n{RED}[+]--------------------------------------------------------------------------------------------------------------------------[+]\nWARNING: {RESET}BROWSERBRUTER IS PAUSED\npress ENTER to resume\nPress y to Enter Interactive Mode\nPress n to Exit Interactive Mode\n{RED}[+]--------------------------------------------------------------------------------------------------------------------------[+]{RESET}")
                 k = input()
                 if k == 'Y' or k == 'y':
                     args.interactive = True
                 elif k == 'N' or k == 'n':
                     args.interactive = False
                 pause_event.clear()  # Clear the pause event 
-                print(f"\n\n{RED}++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\nWARNING: {RESET}Resuming BROWSERBRUTER\n{RED}++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++{RESET}")
+                print(f"\n\n{RED}[+]--------------------------------------------------------------------------------------------------------------------------[+]\nWARNING: {RESET}Resuming BROWSERBRUTER\n{RED}[+]--------------------------------------------------------------------------------------------------------------------------[+]{RESET}")
     except KeyboardInterrupt as e:
         signal_handler(signal.SIGINT, None)
         log_error(format_exc())
@@ -639,7 +670,7 @@ def get_browser_options():
         # NOTE for contributors, the chrome executable is not present at github repo for the sake of repo size limit, it is included in releases, with each new release, the appropriate chrome will be shipped along with the tool
         options.binary_location = "res/chrome/chrome"
     except FileNotFoundError:
-        print(f"\n\n{RED}++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\nERROR: {RESET}Please download The Browser-Bruter from releases.\n{RED}++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++{RESET}")
+        print(f"\n\n{RED}[+]--------------------------------------------------------------------------------------------------------------------------[+]\nERROR: {RESET}Please download The Browser-Bruter from releases.\n{RED}[+]--------------------------------------------------------------------------------------------------------------------------[+]{RESET}")
     if args.chrome_options:
         list_of_options = args.chrome_options.split(',')
         for option in list_of_options:
@@ -712,10 +743,10 @@ def add_cookies(driver):
             else:
                 handle_unknown_exception(e)
     except InvalidCookieDomainException as e:
-        print(f"\n\n{RED}++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\nError:{RESET} Cookie Domain is invalid -> {cookie_dict} -> Skipping\n{RED}++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++{RESET}")
+        print(f"\n\n{RED}[+]--------------------------------------------------------------------------------------------------------------------------[+]\nError:{RESET} Cookie Domain is invalid -> {cookie_dict} -> Skipping\n{RED}[+]--------------------------------------------------------------------------------------------------------------------------[+]{RESET}")
         log_error(format_exc())                
     except ValueError as e:
-        print(f"\n\n{RED}++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\nError:{RESET} You have entered arguments in invalid format -> {args.cookie} please read help message for valid format of passing cookies. Closing the Fuzzing process\n{RED}++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++{RESET}")
+        print(f"\n\n{RED}[+]--------------------------------------------------------------------------------------------------------------------------[+]\nError:{RESET} You have entered arguments in invalid format -> {args.cookie} please read help message for valid format of passing cookies. Closing the Fuzzing process\n{RED}[+]--------------------------------------------------------------------------------------------------------------------------[+]{RESET}")
         driver.quit()
         log_error(format_exc())
         sys.exit(0)
@@ -787,7 +818,7 @@ def get_and_initialize_chrome_driver():
                 # Update header_overrides with all custom headers
                 driver.header_overrides = custom_headers
         except ValueError:
-            print(f"\n\n{RED}++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\nERROR:{RESET} Error setting headers. Please provide headers in valid format.\n{RED}++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++{RESET}")
+            print(f"\n\n{RED}[+]--------------------------------------------------------------------------------------------------------------------------[+]\nERROR:{RESET} Error setting headers. Please provide headers in valid format.\n{RED}[+]--------------------------------------------------------------------------------------------------------------------------[+]{RESET}")
             driver.quit()
             log_error(format_exc())
             sys.exit(0)
@@ -814,9 +845,9 @@ def log_error(error):
         with open("logs/Error.txt","a") as error_log_file:
             error_time = datetime.datetime.now()
             error_time = error_time.strftime("%Y-%m-%d_%H-%M-%S")
-            error_log_file.write(f"\n++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\n")
+            error_log_file.write(f"\n[+]--------------------------------------------------------------------------------------------------------------------------[+]\n")
             error_log_file.write(f"Error Time - {error_time}")
-            error_log_file.write("\n++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\n")
+            error_log_file.write("\n[+]--------------------------------------------------------------------------------------------------------------------------[+]\n")
             error_log_file.write(error)
     except FileNotFoundError as e:
         print("Error: Logging file not found.")
@@ -882,10 +913,10 @@ def press_button(driver,button,from_buttons_to_press):
         else:
             button.click()
     except ElementClickInterceptedException as e:
-        print(f"\n\n{RED}++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\nERROR: {RESET}The button -> {button} is not clickable or click has been intercepted by some other element, there might be some javascript being executed on web page which is preventing the click. Please remove the code intercepting the click.\n{RED}++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++{RESET}")
+        print(f"\n\n{RED}[+]--------------------------------------------------------------------------------------------------------------------------[+]\nERROR: {RESET}The button -> {button} is not clickable or click has been intercepted by some other element, there might be some javascript being executed on web page which is preventing the click. Please remove the code intercepting the click.\n{RED}[+]--------------------------------------------------------------------------------------------------------------------------[+]{RESET}")
         if args.debug:
             print_exc()
-            print(f"\n\n{RED}++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\nERROR: {RESET}Refer Above Stack Trace\n{RED}++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++{RESET}")
+            print(f"\n\n{RED}[+]--------------------------------------------------------------------------------------------------------------------------[+]\nERROR: {RESET}Refer Above Stack Trace\n{RED}[+]--------------------------------------------------------------------------------------------------------------------------[+]{RESET}")
         log_error(format_exc())
         driver.quit()
         sys.exit(0)
@@ -904,7 +935,7 @@ def initial_operations_before_filling_the_form(driver):
         try:
             driver.get(args.target)
         except TimeoutException as e:
-            print(f"\n\n{RED}++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\nERROR: {RESET}HTTP Response Timeout has been reached. Do you want to wait for server to response? Press ENTER to continue to wait, press CTRL+C to stop the process and generate the report.\n{RED}++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++{RESET}")
+            print(f"\n\n{RED}[+]--------------------------------------------------------------------------------------------------------------------------[+]\nERROR: {RESET}HTTP Response Timeout has been reached. Do you want to wait for server to response? Press ENTER to continue to wait, press CTRL+C to stop the process and generate the report.\n{RED}[+]--------------------------------------------------------------------------------------------------------------------------[+]{RESET}")
             pause_event.set()
             sleep_while_pause()
     if args.delay_before:
@@ -1005,7 +1036,7 @@ def fill_the_form(driver):
                                                 arguments[0].parentNode.replaceChild(inputElement, arguments[0]);
                                               """,field,fieldValue)
         except ElementNotInteractableException:
-            print(f"\n\n{RED}++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\nERROR: {RESET}Specified Element is not interactable -> {input_field}\nFollowings are the possible reason:\n 1. Either tool is running too fast, make it slow using --delay-* options\n 2. May be the {input_field} requires some action like clicking on button to make it interactable, in such case, provide a javascript using --javascript option to execute javascript.\n Skipping filling this {input_field}\n{RED}++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++{RESET}")
+            print(f"\n\n{RED}[+]--------------------------------------------------------------------------------------------------------------------------[+]\nERROR: {RESET}Specified Element is not interactable -> {input_field}\nFollowings are the possible reason:\n 1. Either tool is running too fast, make it slow using --delay-* options\n 2. May be the {input_field} requires some action like clicking on button to make it interactable, in such case, provide a javascript using --javascript option to execute javascript.\n Skipping filling this {input_field}\n{RED}[+]--------------------------------------------------------------------------------------------------------------------------[+]{RESET}")
             
 def write_http_request_response(element, this_threads_file, driver, payload, webpage_before, webpage_after):
     with open(this_threads_file, 'a', newline='') as report:
@@ -1015,7 +1046,7 @@ def write_http_request_response(element, this_threads_file, driver, payload, web
                      urlparse(single_request.url).hostname == hostname or
                      any(urlparse(single_request.url).hostname == scope_hostname for scope_hostname in scope_hostnames)]
         filtered_requests = [single_request for single_request in filtered_requests if all(extension not in single_request.url for extension in forbidden_extensions)]
-        filtered_requests = [single_request for single_request in filtered_requests if all(extension not in single_request.url for extension in ['.js', '.css', '.txt'])]
+        filtered_requests = [single_request for single_request in filtered_requests if all(extension not in single_request.url for extension in ['.js', '.css', '.txt','.woff2','.woff'])]
         writer = csv.writer(report)
         for request in filtered_requests:
             try:
@@ -1064,12 +1095,12 @@ def write_http_request_response(element, this_threads_file, driver, payload, web
                         )
                     print(request.response.headers)
                     print(response_body)
-                    print(f"{GREEN}++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\n\nTIME: {cycle_time_in_milliseconds} MilliSeconds \n\n++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++{RESET}")
+                    print(f"{GREEN}[+]--------------------------------------------------------------------------------------------------------------------------[+]\n\nTIME: {cycle_time_in_milliseconds} MilliSeconds \n\n[+]--------------------------------------------------------------------------------------------------------------------------[+]{RESET}")
   
             except AttributeError as e:
                 # Code to handle if no request has been made and there is no response
                 if args.verbose:
-                    print(f"\n\n{YELLOW}++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\nINFO:{RESET} No response is received not skipping report row!\n{YELLOW}++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++{RESET}")
+                    print(f"\n\n{YELLOW}[+]--------------------------------------------------------------------------------------------------------------------------[+]\nINFO:{RESET} No response is received not skipping report row!\n{YELLOW}[+]--------------------------------------------------------------------------------------------------------------------------[+]{RESET}")
                 row = [value if value else ' ' for value in
                     [request_time.strftime('%Y-%m-%d %H:%M:%S'), str(element), str(payload), request.method, request.url, request.headers, request_body, request_time.strftime('%Y-%m-%d %H:%M:%S'), 
                     '0', '0', "N/A", "N/A", "N/A",
@@ -1081,7 +1112,7 @@ def write_http_request_response(element, this_threads_file, driver, payload, web
 def generate_final_report():
     # Increase the field size limit
     csv.field_size_limit(sys.maxsize)
-    print(f"\n\n{YELLOW}++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\nINFO:{RESET} Generating Final Report\n{YELLOW}++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++{RESET}")
+    print(f"\n\n{YELLOW}[+]--------------------------------------------------------------------------------------------------------------------------[+]\nINFO:{RESET} Generating Final Report\n{YELLOW}[+]--------------------------------------------------------------------------------------------------------------------------[+]{RESET}")
     directory = f"BrowserBruter_Reports/{hostname}/{start_time}"
     final_report = f"BrowserBruter_Reports/{hostname}/{start_time}/{hostname}-{start_time}.csv"
     try:
@@ -1112,7 +1143,7 @@ def generate_final_report():
                             index_counter += 1
                     except csv.Error as e:
                         if "field larger than field limit" in str(e):
-                            print(f"\n\n{RED}++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\nWARNING:{RESET} Field size is too large to handle, replacing field with 'BROWSER-BRUTER-DISCARDED-EXTREMELY-LARGE' - Skipping row {index_counter} in file {csv_file}: {str(e)}\n{YELLOW}++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++{RESET}")
+                            print(f"\n\n{RED}[+]--------------------------------------------------------------------------------------------------------------------------[+]\nWARNING:{RESET} Field size is too large to handle, replacing field with 'BROWSER-BRUTER-DISCARDED-EXTREMELY-LARGE' - Skipping row {index_counter} in file {csv_file}: {str(e)}\n{YELLOW}[+]--------------------------------------------------------------------------------------------------------------------------[+]{RESET}")
                             # If a row exceeds the field limit, skip writing that row and write a placeholder value instead
                             log_error(f"Skipping row {index_counter} in file {csv_file}: {str(e)}")
                             writer.writerow(['BROWSER-BRUTER-DISCARDED-EXTREMELY-LARGE'])
@@ -1150,12 +1181,12 @@ def generate_final_report():
             with open(remaining_payloads, 'w', newline='') as remaining_payloads_file:
                 for payload in payloads:
                     remaining_payloads_file.write(payload + '\n')
-            print(f"\n\n{YELLOW}++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\nINFO:{RESET} Remaining Payloads (if any) have been stored -> {remaining_payloads}\n{YELLOW}++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++{RESET}")
-        print(f"\n\n{YELLOW}++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\nINFO: {RESET}Processed Payloads (if any) have been stored -> {processed_payloads}\n{YELLOW}++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++{RESET}")
-        print(f"\n\n{YELLOW}++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\nINFO:{RESET} Report Generated -> {final_report}\n{YELLOW}++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++{RESET}")
+            print(f"\n\n{YELLOW}[+]--------------------------------------------------------------------------------------------------------------------------[+]\nINFO:{RESET} Remaining Payloads (if any) have been stored -> {remaining_payloads}\n{YELLOW}[+]--------------------------------------------------------------------------------------------------------------------------[+]{RESET}")
+        print(f"\n\n{YELLOW}[+]--------------------------------------------------------------------------------------------------------------------------[+]\nINFO: {RESET}Processed Payloads (if any) have been stored -> {processed_payloads}\n{YELLOW}[+]--------------------------------------------------------------------------------------------------------------------------[+]{RESET}")
+        print(f"\n\n{YELLOW}[+]--------------------------------------------------------------------------------------------------------------------------[+]\nINFO:{RESET} Report Generated -> {final_report}\n{YELLOW}[+]--------------------------------------------------------------------------------------------------------------------------[+]{RESET}")
     except ConnectionRefusedError as e:
         log_error(format_exc())
-        print(f"\n\n{YELLOW}++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\nINFO: {RESET}Browser's window has been closed, closing the BrowserBruter, check error log if this is unintentional\n{YELLOW}++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++{RESET}")
+        print(f"\n\n{YELLOW}[+]--------------------------------------------------------------------------------------------------------------------------[+]\nINFO: {RESET}Browser's window has been closed, closing the BrowserBruter, check error log if this is unintentional\n{YELLOW}[+]--------------------------------------------------------------------------------------------------------------------------[+]{RESET}")
     except FileNotFoundError:
         log_error(format_exc())
         sys.exit(0)
@@ -1171,10 +1202,10 @@ def get_form(driver,form):
             try:
                 return driver.find_element(By.CLASS_NAME, form)
             except NoSuchElementException as e:
-                print(f"\n\n{RED}++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\nError:{RESET} Specified element {element} is not found. Please verify the name of the element. For more information, check Error.txt or use --debug flag.\n{RED}++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++{RESET}")
+                print(f"\n\n{RED}[+]--------------------------------------------------------------------------------------------------------------------------[+]\nError:{RESET} Specified element {element} is not found. Please verify the name of the element. For more information, check Error.txt or use --debug flag.\n{RED}[+]--------------------------------------------------------------------------------------------------------------------------[+]{RESET}")
                 if args.debug:
                     print_exc()
-                    print(f"\n\n{RED}++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\nERROR: {RESET}Refer Above Stack Trace\n{RED}++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++{RESET}")
+                    print(f"\n\n{RED}[+]--------------------------------------------------------------------------------------------------------------------------[+]\nERROR: {RESET}Refer Above Stack Trace\n{RED}[+]--------------------------------------------------------------------------------------------------------------------------[+]{RESET}")
                 driver.quit()
                 log_error(format_exc())
                 sys.exit(0)
@@ -1209,10 +1240,10 @@ def get_element(driver,element,coming_from_initial_operations_method):
                                 try:
                                     element = selector.find_element(By.XPATH,f"//button[@Type='{element}']")
                                 except NoSuchElementException as e:
-                                    print(f"\n\n{RED}++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\nError:{RESET} Specified element {element} is not found. Please verify the name of the element. For more information, check Error.txt or use --debug flag.\n{RED}++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++{RESET}")
+                                    print(f"\n\n{RED}[+]--------------------------------------------------------------------------------------------------------------------------[+]\nError:{RESET} Specified element {element} is not found. Please verify the name of the element. For more information, check Error.txt or use --debug flag.\n{RED}[+]--------------------------------------------------------------------------------------------------------------------------[+]{RESET}")
                                     if args.debug:
                                         print_exc()
-                                        print(f"\n\n{RED}++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\nERROR: {RESET}Refer Above Stack Trace\n{RED}++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++{RESET}")
+                                        print(f"\n\n{RED}[+]--------------------------------------------------------------------------------------------------------------------------[+]\nERROR: {RESET}Refer Above Stack Trace\n{RED}[+]--------------------------------------------------------------------------------------------------------------------------[+]{RESET}")
                                     driver.quit()
                                     log_error(format_exc())
                                     sys.exit(0)
@@ -1264,7 +1295,7 @@ def fill_payload_in_element(driver,element_being_fuzzed,payload):
                     else:
                         raise
     except ElementNotInteractableException:
-        print(f"\n\n{RED}++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\nERROR: {RESET}Specified Element is not interactable -> {element_being_fuzzed}\nFollowings are the possible reason:\n 1. Either tool is running too fast, make it slow using --delay-* options\n 2. May be the {element_being_fuzzed} requires some action like clicking on button to make it interactable, in such case, provide a javascript using --javascript option to execute javascript.\n Skipping filling this {element_being_fuzzed}\n{RED}++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++{RESET}")
+        print(f"\n\n{RED}[+]--------------------------------------------------------------------------------------------------------------------------[+]\nERROR: {RESET}Specified Element is not interactable -> {element_being_fuzzed}\nFollowings are the possible reason:\n 1. Either tool is running too fast, make it slow using --delay-* options\n 2. May be the {element_being_fuzzed} requires some action like clicking on button to make it interactable, in such case, provide a javascript using --javascript option to execute javascript.\n Skipping filling this {element_being_fuzzed}\n{RED}[+]--------------------------------------------------------------------------------------------------------------------------[+]{RESET}")
 
 # Function to Run Single Browser instance
 def run_browser_instance(payloads, instance_number):
@@ -1281,7 +1312,7 @@ def run_browser_instance(payloads, instance_number):
                     driver.get(args.target)
                     add_cookies(driver)
                 except TimeoutException as e:
-                    print(f"\n\n{RED}++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\nERROR: {RESET}HTTP Response Timeout has been reached. Do you want to wait for server to response? Press ENTER to continue to wait, press CTRL+C to stop the process and generate the report.\n{RED}++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++{RESET}")
+                    print(f"\n\n{RED}[+]--------------------------------------------------------------------------------------------------------------------------[+]\nERROR: {RESET}HTTP Response Timeout has been reached. Do you want to wait for server to response? Press ENTER to continue to wait, press CTRL+C to stop the process and generate the report.\n{RED}[+]--------------------------------------------------------------------------------------------------------------------------[+]{RESET}")
                     pause_event.set()
                     sleep_while_pause()
                 except Exception as e:
@@ -1307,26 +1338,26 @@ def run_browser_instance(payloads, instance_number):
         # Handle the exceptions which are specific to this thread and do not affect other threads
         except NoSuchWindowException as e:
             log_error(format_exc())
-            print(f"\n\n{YELLOW}++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\nINFO: {RESET}Browser's window has been closed, closing the BrowserBruter, check error log if this is unintentional\n{YELLOW}++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++{RESET}")
+            print(f"\n\n{YELLOW}[+]--------------------------------------------------------------------------------------------------------------------------[+]\nINFO: {RESET}Browser's window has been closed, closing the BrowserBruter, check error log if this is unintentional\n{YELLOW}[+]--------------------------------------------------------------------------------------------------------------------------[+]{RESET}")
         except ConnectionRefusedError as e:
             log_error(format_exc())
-            print(f"\n\n{YELLOW}++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\nINFO: {RESET}Browser's window has been closed, closing the BrowserBruter, check error log if this is unintentional\n{YELLOW}++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++{RESET}")
+            print(f"\n\n{YELLOW}[+]--------------------------------------------------------------------------------------------------------------------------[+]\nINFO: {RESET}Browser's window has been closed, closing the BrowserBruter, check error log if this is unintentional\n{YELLOW}[+]--------------------------------------------------------------------------------------------------------------------------[+]{RESET}")
         except RemoteDisconnected as e:
             log_error(format_exc())
             # This exception can be arrived when the user closes the browser window
-            print(f"\n\n{YELLOW}++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\nINFO: {RESET}Browser's window has been closed or Remote connection lost, check error log if this is unintentional\n{YELLOW}++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++{RESET}")
+            print(f"\n\n{YELLOW}[+]--------------------------------------------------------------------------------------------------------------------------[+]\nINFO: {RESET}Browser's window has been closed or Remote connection lost, check error log if this is unintentional\n{YELLOW}[+]--------------------------------------------------------------------------------------------------------------------------[+]{RESET}")
         except ProtocolError as e:
             log_error(format_exc())
             # This exception can be arrived when the user closes the browser window
-            print(f"\n\n{YELLOW}++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\nINFO: {RESET}Browser's window has been closed or Remote connection lost, check error log if this is unintentional\n{YELLOW}++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++{RESET}")
+            print(f"\n\n{YELLOW}[+]--------------------------------------------------------------------------------------------------------------------------[+]\nINFO: {RESET}Browser's window has been closed or Remote connection lost, check error log if this is unintentional\n{YELLOW}[+]--------------------------------------------------------------------------------------------------------------------------[+]{RESET}")
         except MaxRetryError as e:
             log_error(format_exc())
             # This exception can be arrived when the user closes the browser window
-            print(f"\n\n{YELLOW}++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\nINFO: {RESET}Browser's window has been closed or Browsers has reached maximum retries, if you have closed BrowserBruter ignore this else report the issue, check error log if this is unintentional\n{YELLOW}++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++{RESET}")
+            print(f"\n\n{YELLOW}[+]--------------------------------------------------------------------------------------------------------------------------[+]\nINFO: {RESET}Browser's window has been closed or Browsers has reached maximum retries, if you have closed BrowserBruter ignore this else report the issue, check error log if this is unintentional\n{YELLOW}[+]--------------------------------------------------------------------------------------------------------------------------[+]{RESET}")
         except WebDriverException as e:
             log_error(format_exc())
             # This exception can be arrived when the user closes the browser window
-            print(f"\n\n{YELLOW}++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\nINFO: {RESET}Browser's window has been closed or Remote connection lost with following message\n{YELLOW}++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++{RESET}")
+            print(f"\n\n{YELLOW}[+]--------------------------------------------------------------------------------------------------------------------------[+]\nINFO: {RESET}Browser's window has been closed or Remote connection lost with following message\n{YELLOW}[+]--------------------------------------------------------------------------------------------------------------------------[+]{RESET}")
         except SystemExit as e:
             log_error(format_exc())
         except Exception as e:
@@ -1562,9 +1593,30 @@ if __name__ == "__main__":
         sys.stdout = tee_instance
         # Get the number of threads or in other words number of browsers instances to use
         num_threads = args.threads
-        # Print legal disclaimer
-        print(f"\n\n{YELLOW}++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\nLegal Warning:{RESET} This Browser-Bruter open-source penetration testing tool is provided for educational and ethical purposes only. Users are solely responsible for ensuring compliance with all applicable laws and regulations, and the developer(s) disclaim any liability for misuse or damage caused by the tool.\n{YELLOW}++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++{RESET}")
-        print(f"\n\n{YELLOW}++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\nINFO:{RESET} press ENTER to puase the attack.\n{YELLOW}++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++{RESET}")
+        # Print legal disclaimer and general info about target and payloads
+        print(f"\n\n{YELLOW}[+]--------------------------------------------------------------------------------------------------------------------------[+]\nLegal Warning:{RESET} This Browser-Bruter open-source penetration testing tool is provided for educational and ethical purposes only. Users are solely responsible for ensuring compliance with all applicable laws and regulations, and the developer(s) disclaim any liability for misuse or damage caused by the tool.\n{YELLOW}[+]--------------------------------------------------------------------------------------------------------------------------[+]\n{RESET}")
+        print(f"{YELLOW}[+]--------------------------------------------------------------------------------------------------------------------------[+]")
+        print(f"{BLUE}[+] Target URL:  {RESET}{args.target}")
+        if args.attack == 1:
+            print(f"{BLUE}[+] Attack Mode: {RESET}SNIPER")
+            print(f"{BLUE}[+] Elements   : {RESET}{args.elements}")
+            print(f"{BLUE}[+] Payloads   : {RESET}{args.payloads}")
+        if args.attack == 2:
+            print(f"{BLUE}[+] Attack Mode: {RESET}BATTERING RAM")
+            print(f"{BLUE}[+] Elements   : {RESET}{args.elements}")
+            print(f"{BLUE}[+] Payloads   : {RESET}{args.payloads}")
+        if args.attack == 3:
+            print(f"{BLUE}[+] Attack Mode: {RESET}PITCH FORK")
+            for element_payload in args.elements_payloads.split(','):
+                element, payload_file_path = element_payload.split(':')
+                print(f"{BLUE}[+] Elements:Payloads: {RESET}{element}:{payload_file_path}")
+        if args.attack == 4:
+            print(f"{BLUE}[+] Attack Mode: {RESET}CLUSTER BOMB")
+            for element_payload in args.elements_payloads.split(','):
+                element, payload_file_path = element_payload.split(':')
+                print(f"{BLUE}[+] Elements:Payloads: {RESET}{element}:{payload_file_path}")
+        print(f"{YELLOW}[+]--------------------------------------------------------------------------------------------------------------------------[+]")
+        print(f"\n\n{YELLOW}[+]--------------------------------------------------------------------------------------------------------------------------[+]\nINFO:{RESET} Press ENTER to puase the attack.\n{YELLOW}[+]--------------------------------------------------------------------------------------------------------------------------[+]\n{RESET}")
         # Create and start the threads
         threads = []
         start = 0
@@ -1642,7 +1694,7 @@ if __name__ == "__main__":
         sys.exit(0)
     except ConnectionRefusedError as e:
         log_error(format_exc())
-        print(f"\n\n{YELLOW}++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\nINFO: {RESET}Browser's window has been closed, closing the BrowserBruter, check error log if this is unintentional\n{YELLOW}++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++{RESET}")
+        print(f"\n\n{YELLOW}[+]--------------------------------------------------------------------------------------------------------------------------[+]\nINFO: {RESET}Browser's window has been closed, closing the BrowserBruter, check error log if this is unintentional\n{YELLOW}[+]--------------------------------------------------------------------------------------------------------------------------[+]{RESET}")
     except SystemExit:
         log_error(format_exc())
         print("")
@@ -1655,9 +1707,9 @@ if __name__ == "__main__":
         sys.stdout = sys.__stdout__
         sys.exit(0)      
 else:
-    print(f"\n\n{RED}++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\nError:{RESET} Please run the script again using python3 BrowserBruter.py, closing the BrowserBruter\n{RED}++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++{RESET}")
+    print(f"\n\n{RED}[+]--------------------------------------------------------------------------------------------------------------------------[+]\nError:{RESET} Please run the script again using python3 BrowserBruter.py, closing the BrowserBruter\n{RED}[+]--------------------------------------------------------------------------------------------------------------------------[+]{RESET}")
     if args.debug:
         print_exc()
-        print(f"\n\n{RED}++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\nERROR: {RESET}Refer Above Stack Trace\n{RED}++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++{RESET}")
+        print(f"\n\n{RED}[+]--------------------------------------------------------------------------------------------------------------------------[+]\nERROR: {RESET}Refer Above Stack Trace\n{RED}[+]--------------------------------------------------------------------------------------------------------------------------[+]{RESET}")
 
 ### MAIN EXECUTION BLOCK ENDS ###
