@@ -1,0 +1,61 @@
+1. fuzz login page:
+	python3 BrowserBruter.py --target http://10.13.37.3:8080/webgoat/login.mvc --attack 1 --elements exampleInputEmail1,exampleInputPassword1 --payloads 	fuzz.txt --button "btn.btn-large.btn-primary" --threads 7 --fill exampleInputEmail1,exampleInputPassword1
+	python3 BrowserBruter.py --target http://10.13.37.3:8080/webgoat/login.mvc --attack 4 --elements-payloads exampleInputEmail1:username.txt,exampleInputPassword1:passwords.txt --button "btn.btn-large.btn-primary" --remove-session --threads 7
+	
+2. lesson 1: 
+	python3 BrowserBruter.py --target http://10.13.37.3:8080/webgoat/start.mvc#attack/1869022003/100 --elements person --payloads fuzz.txt --button SUBMIT --attack 1 --cookie ASP.NET_SessionId:fawx1oxcfm0fd4gvzmej5oco,JSESSIONID:1F0E3B20ECEDDF29235853F55C60FC17
+
+3. lesson 1 exluding urls:
+python3 BrowserBruter.py --target http://10.13.37.3:8080/webgoat/start.mvc#attack/1869022003/100 --elements person --payloads fuzz.txt --button SUBMIT --attack 1 --cookie ASP.NET_SessionId:fawx1oxcfm0fd4gvzmej5oco,JSESSIONID:1F0E3B20ECEDDF29235853F55C60FC17 --proxy http://127.0.0.1:8080/ --delay-before 1 --exclude-urls urls.txt
+
+4. lesson 1 excluding urls:
+python3 BrowserBruter.py --target http://10.13.37.3:8080/webgoat/start.mvc#attack/1869022003/100 --elements person --payloads fuzz.txt --button SUBMIT --attack 1 --cookie ASP.NET_SessionId:fawx1oxcfm0fd4gvzmej5oco,JSESSIONID:1F0E3B20ECEDDF29235853F55C60FC17 --proxy http://127.0.0.1:8080/ --delay-before 1 --exclude-urls "http://10.13.37.3:8080/webgoat/service/solution.mvc","http://10.13.37.3:8080/webgoat/service/lessonprogress.mvc","http://10.13.37.3:8080/webgoat/service/lessonmenu.mvc","http://10.13.37.3:8080/webgoat/service/solution.mvc"
+
+5. lesson 1 including urls:
+python3 BrowserBruter.py --target http://10.13.37.3:8080/webgoat/start.mvc#attack/1869022003/100 --elements person --payloads fuzz.txt --button SUBMIT --attack 1 --cookie ASP.NET_SessionId:fawx1oxcfm0fd4gvzmej5oco,JSESSIONID:1F0E3B20ECEDDF29235853F55C60FC17 --proxy http://127.0.0.1:8080/ --delay-before 1 --include-urls "http://10.13.37.3:8080/webgoat/attack?Screen=1869022003&menu=100"
+
+6. lesson 1 including urls:
+python3 BrowserBruter.py --target http://10.13.37.3:8080/webgoat/start.mvc#attack/1869022003/100 --elements person --payloads fuzz.txt --button SUBMIT --attack 1 --cookie ASP.NET_SessionId:fawx1oxcfm0fd4gvzmej5oco,JSESSIONID:1F0E3B20ECEDDF29235853F55C60FC17 --proxy http://127.0.0.1:8080/ --delay-before 1 --include-urls urls.txt
+
+7. lesson 2 Using an Access Control Matrix:
+python3 BrowserBruter.py --target http://10.13.37.3:8080/webgoat/start.mvc#attack/1708534694/200 --elements User,Resource --fill User,Resource --button SUBMIT --attack 1 --cookie ASP.NET_SessionId:fawx1oxcfm0fd4gvzmej5oco,JSESSIONID:1F0E3B20ECEDDF29235853F55C60FC17 --proxy http://127.0.0.1:8080/ --include-urls "http://10.13.37.3:8080/webgoat/attack?Screen=1708534694&menu=200" --payloads fuzz.txt --delay-before 0.3
+
+8. lesson 3 Bypass a Path Based Access Control Scheme:
+python3 BrowserBruter.py --target http://10.13.37.3:8080/webgoat/start.mvc#attack/231255157/200 --elements File --button SUBMIT --attack 1 --cookie ASP.NET_SessionId:fawx1oxcfm0fd4gvzmej5oco,JSESSIONID:1F0E3B20ECEDDF29235853F55C60FC17 --proxy http://127.0.0.1:8080/ --include-urls "http://10.13.37.3:8080/webgoat/attack?Screen=231255157&menu=200" --payloads fuzz.txt --delay-before 0.7 --delay-after 0.7 --reload-page
+
+9. lesson 4 LAB: Role Based Access Control : Stage 1,2,3,4: Bypass Presentational Layer Access Control.:
+python3 BrowserBruter.py --target http://10.13.37.3:8080/webgoat/start.mvc#attack/160587164/200 --elements employee_id,password --button submit --attack 1 --cookie ASP.NET_SessionId:fawx1oxcfm0fd4gvzmej5oco,JSESSIONID:1F0E3B20ECEDDF29235853F55C60FC17 --proxy http://127.0.0.1:8080/ --include-urls "http://10.13.37.3:8080/webgoat/attack?Screen=160587164&menu=200" --payloads fuzz.txt --delay-before 1 --delay-after 1 --debug --fill employee_id,password --reload-page
+
+python3 BrowserBruter.py --target http://10.13.37.3:8080/webgoat/start.mvc#attack/160587164/200 --elements employee_id,password --button submit --attack 1 --cookie ASP.NET_SessionId:fawx1oxcfm0fd4gvzmej5oco,JSESSIONID:1F0E3B20ECEDDF29235853F55C60FC17 --include-urls "http://10.13.37.3:8080/webgoat/attack?Screen=160587164&menu=200" --payloads fuzz.txt  --debug --fill employee_id,password --reload-page --threads 10 --proxy http://127.0.0.1:8080/
+
+10. lesson 5 LAB: Client Side Filtering:
+ python3 BrowserBruter.py --target http://10.13.37.3:8080/webgoat/start.mvc#attack/330535848/400 --elements userID,answer --fill answer --button SUBMIT --attack 1 --payloads fuzz.txt --include-url "http://10.13.37.3:8080/webgoat/attack?Screen=330535848&menu=400" --cookie ASP.NET_SessionId:fawx1oxcfm0fd4gvzmej5oco,JSESSIONID:1F0E3B20ECEDDF29235853F55C60FC17 --threads 10
+
+
+11. lesson 6 LAB: DOM-Based cross-site scripting:
+python3 BrowserBruter.py --target http://10.13.37.3:8080/webgoat/start.mvc#attack/330535848/400 --elements userID,answer --fill answer --button SUBMIT --attack 1 --payloads fuzz.txt --include-url "http://10.13.37.3:8080/webgoat/attack?Screen=330535848&menu=400" --cookie ASP.NET_SessionId:fawx1oxcfm0fd4gvzmej5oco,JSESSIONID:1F0E3B20ECEDDF29235853F55C60FC17 --reload-page
+
+12. lesson 7 LAB DOM Injection:
+python3 BrowserBruter.py --target http://10.13.37.3:8080/webgoat/start.mvc#attack/76122667/400 --elements key --button SUBMIT --attack 1 --payloads fuzz.txt --include-url "http://10.13.37.3:8080/webgoat/attack?Screen=76122667&menu=400" --cookie ASP.NET_SessionId:fawx1oxcfm0fd4gvzmej5oco,JSESSIONID:1F0E3B20ECEDDF29235853F55C60FC17 --threads 5 --reload-page --delay-before 0.3 --delay-after 0.3 --headless
+
+13. Lesson 8 LAB XML Injection:
+python3 BrowserBruter.py --target http://10.13.37.3:8080/webgoat/start.mvc#attack/2000980640/400 --elements accountID --button SUBMIT --attack 1 --payloads fuzz.txt --include-url "http://10.13.37.3:8080/webgoat/attack?Screen=2000980640&menu=400" --cookie ASP.NET_SessionId:fawx1oxcfm0fd4gvzmej5oco,JSESSIONID:1F0E3B20ECEDDF29235853F55C60FC17 --threads 10 --reload-page --delay-before 0.3 --delay-after 0.3 --headless
+
+14. Lesson 9 Lab JSON Injection:
+python3 BrowserBruter.py --target http://10.13.37.3:8080/webgoat/start.mvc#attack/1426618575/400 --elements travelFrom,travelTo,radio0,price2Submit --button SUBMIT --attack 1 --payloads fuzz.txt --include-url "http://10.13.37.3:8080/webgoat/attack?Screen=1426618575&menu=400" --cookie ASP.NET_SessionId:fawx1oxcfm0fd4gvzmej5oco,JSESSIONID:1F0E3B20ECEDDF29235853F55C60FC17 --reload-page --javascript "document.querySelector('#travelFrom').value = 'BOS';
+   document.querySelector('#travelTo').value = 'SEA';getFlights('http://10.13.37.3:8080/webgoat/attack?Screen=1426618575&menu=400');" --fill radio0 --replace-code "return check()","return true" --delay-before 0.5 --delay-after 0.5
+
+15. Lesson 10 Silent Transactions Attacks:
+python3 BrowserBruter.py --target http://10.13.37.3:8080/webgoat/start.mvc#attack/218322538/400 --elements newAccount,amount,url --fill newAccount,amount --button confirm --attack 1 --payloads fuzz.txt --include-url "http://10.13.37.3:8080/webgoat/attack?Screen=218322538&menu=400" --cookie ASP.NET_SessionId:fawx1oxcfm0fd4gvzmej5oco,JSESSIONID:1F0E3B20ECEDDF29235853F55C60FC17 --reload-page
+
+16. Lesson 11 Insecure Client Storage:
+python3 BrowserBruter.py --target http://10.13.37.3:8080/webgoat/start.mvc#attack/1129417221/400 --elements QTY1,QTY2,QTY3,QTY4,field2,field1 --fill QTY1,QTY2,QTY3,QTY4,field1 --fill-values res/samples/values.json --button SUBMIT --attack 1 --payloads fuzz.txt --include-url "http://10.13.37.3:8080/webgoat/attack?Screen=1129417221&menu=400" --cookie ASP.NET_SessionId:fawx1oxcfm0fd4gvzmej5oco,JSESSIONID:1F0E3B20ECEDDF29235853F55C60FC17 --reload-page
+
+17. Lesson 12 Dangerous Use of Eval:
+python3 BrowserBruter.py --target http://10.13.37.3:8080/webgoat/start.mvc#attack/136634854/400 --elements QTY1,QTY2,QTY3,QTY4,field2,field1 --fill QTY1,QTY2,QTY3,QTY4,field1 --fill-values res/samples/values.json --button SUBMIT --attack 1 --payloads fuzz.txt --include-url "http://10.13.37.3:8080/webgoat/attack?Screen=136634854&menu=400" --cookie ASP.NET_SessionId:fawx1oxcfm0fd4gvzmej5oco,JSESSIONID:1F0E3B20ECEDDF29235853F55C60FC17 --reload-page
+
+18. Lesson 13 Same Origin Policy Protection:
+python3 BrowserBruter.py --target http://10.13.37.3:8080/webgoat/start.mvc#attack/1750680855/400 --elements requestedURL,testedURL --fill requestedURL --button SUBMIT --attack 1 --payloads fuzz.txt --include-url "http://10.13.37.3:8080/webgoat/attack?Screen=1750680855&menu=400" --cookie ASP.NET_SessionId:fawx1oxcfm0fd4gvzmej5oco,JSESSIONID:1F0E3B20ECEDDF29235853F55C60FC17 --reload-page
+
+19. Lesson 14 Password Strength:
+python3 BrowserBruter.py --target http://10.13.37.3:8080/webgoat/start.mvc#attack/1778575388/500 --elements pass1,pass2,pass3,pass4,pass5,pass6 --fill pass1,pass2,pass3,pass4,pass5,pass6 --button SUBMIT --attack 1 --payloads fuzz.txt --include-url "http://10.13.37.3:8080/webgoat/attack?Screen=1778575388&menu=500" --cookie ASP.NET_SessionId:fawx1oxcfm0fd4gvzmej5oco,JSESSIONID:1F0E3B20ECEDDF29235853F55C60FC17 --reload-page

@@ -15,7 +15,6 @@ from itertools import product
 from tqdm import tqdm
 from pytimedinput import timedKey
 from traceback import format_exc, print_exc
-from res.tee import Tee
 from time import sleep
 from seleniumwire.undetected_chromedriver.v2 import Chrome, ChromeOptions
 from seleniumwire import webdriver
@@ -34,14 +33,23 @@ from selenium.common.exceptions import ElementClickInterceptedException
 from selenium.common.exceptions import InvalidElementStateException
 from selenium.common.exceptions import InvalidCookieDomainException
 from selenium.common.exceptions import InvalidArgumentException
+from selenium.common.exceptions import StaleElementReferenceException
+from selenium.common.exceptions import JavascriptException
 from http.client import RemoteDisconnected
 from urllib3.exceptions import ProtocolError
 from urllib3.exceptions import MaxRetryError
+from urllib3.util import Retry
+from threading import Lock
 from bs4 import BeautifulSoup as bs
 from bs4 import MarkupResemblesLocatorWarning
 from bs4 import XMLParsedAsHTMLWarning
 from urllib.parse import urlparse
+import urllib.parse
 from colorama import Fore
+
+# Custom python files
+from res.tee import Tee
+from res.usage_manual import print_manual
 
 ### VARIOUS IMPORTS ENDS ###
 
@@ -98,228 +106,7 @@ print(f"""
 ### DEFINING AND PARSING COMMAND LINE ARGUMENTS START ###
 # Getting argument parser to parse and process arguments
 argParser = argparse.ArgumentParser(description="BrowserBruter is a python3 script, utilizing power of selenium and selenium-wire to automate fuzzing of various input fields of webpages to test their security against malicious inputs. For contact and more information about project please visit https://github.com/netsquare/BrowserBruter",formatter_class=argparse.RawTextHelpFormatter)
-# Defining the epilog message which will be displayed with help message
-usage_examples = f'''
-Usage Examples:
-    1. Perform Bruteforce(ClusterBomb) on login page:
-        {YELLOW}BrowserBruter{GREEN} --elements-payloads{RESET} username:username.txt,password:passwords.txt {GREEN}--target{RESET} http://localhost/login.php {GREEN}--button{RESET} Login {GREEN}--attack{RESET} 4 {GREEN}--remove-session{RESET}
 
-    2. Perform PitchFork on login page:
-        {YELLOW}BrowserBruter{GREEN} --elements-payloads{RESET} username:username.txt,password:passwords.txt {GREEN}--target{RESET} http://localhost/login.php {GREEN}--button{RESET} Login {GREEN}--attack{RESET} 3
-
-    3. Perform BatteringRam on login page:
-        {YELLOW}BrowserBruter{GREEN} --elements{RESET} username,password {GREEN}--payloads{RESET} sqli.txt {GREEN}--target{RESET} http://localhost/login.php {GREEN}--button{RESET} Login {GREEN}--verbose{RESET} {GREEN}--attack{RESET} 2{RESET}
-
-    4. Fuzz on login page and make it verbose:
-        {YELLOW}BrowserBruter{GREEN} --elements{RESET} username,password {GREEN}--fill{RESET} username,password {GREEN}--payloads{RESET} sqli.txt {GREEN}--target{RESET} http://localhost/login.php {GREEN}--button{RESET} Login {GREEN}--verbose{RESET} {GREEN}--attack{RESET} 1{RESET}
-
-    5. Fuzz on registration page with two cookies 1)'difficulty' and 2)'hint':
-        {YELLOW}BrowserBruter{GREEN} --elements{RESET} name,age,address,phone {GREEN}--fill{RESET} name,age,address,phone {GREEN}--payloads{RESET} payloads.txt {GREEN}--target{RESET} http://localhost/register {GREEN}--button{RESET} register {GREEN}--cookie{RESET} difficulty:high,hint:no {GREEN}--attack{RESET} 1{RESET}
-	
-    6. Fuzz on registration page with two cookies 1)'difficulty' and 2)'hint' and sent them forcefully on each request becuase the initial cookies might be overridden by new cookies values:
-        {YELLOW}BrowserBruter{GREEN} --elements{RESET} name,age,address,phone {GREEN}--fill{RESET} name,age,address,phone {GREEN}--payloads{RESET} payloads.txt {GREEN}--target{RESET} http://localhost/register {GREEN}--button{RESET} register {GREEN}--cookie{RESET} difficulty:high,hint:no {GREEN}--force-cookie {GREEN}--attack{RESET} 1{RESET}
-	
-    7. Fuzz registration page with two cookies 1)'difficulty' and 2)'hint' and sent them forcefully on each request and remove session data and cookie after each request-response cycle [this is useful against Authentication pages when you don't want redirection in case of successful login]:
-        {YELLOW}BrowserBruter{GREEN} --elements{RESET} name,age,address,phone {GREEN}--fill{RESET} name,age,address,phone {GREEN}--payloads{RESET} payloads.txt {GREEN}--target{RESET} http://localhost/register {GREEN}--button{RESET} register {GREEN}--cookie{RESET} difficulty:high,hint:no {GREEN}--force-cookie {GREEN}--remove-session {GREEN}--attack{RESET} 1{RESET}
-	
-    8. Fuzz registration page with two cookies 1)'difficulty' and 2)'hint' and sent them forcefully on each request and remove session data and cookie after each request-response cycle and run browser in headless mode:
-        {YELLOW}BrowserBruter{GREEN} --elements{RESET} name,age,address,phone {GREEN}--fill{RESET} name,age,address,phone {GREEN}--payloads{RESET} payloads.txt {GREEN}--target{RESET} http://localhost/register {GREEN}--button{RESET} register {GREEN}--cookie{RESET} difficulty:high,hint:no {GREEN}--force-cookie {GREEN}--remove-session {GREEN}--headless {GREEN}--attack{RESET} 1{RESET}
-	
-    9. Fuzz registration page with two cookies 1)'difficulty' and 2)'hint' and sent them forcefully on each request and remove session data and cookie after each request-response cycle and run browser in headless mode and run 5 instances of browser parallely:
-        {YELLOW}BrowserBruter{GREEN} --elements{RESET} name,age,address,phone {GREEN}--fill{RESET} name,age,address,phone {GREEN}--payloads{RESET} payloads.txt {GREEN}--target{RESET} http://localhost/register {GREEN}--button{RESET} register {GREEN}--cookie{RESET} difficulty:high,hint:no {GREEN}--force-cookie {GREEN}--remove-session {GREEN}--headless {GREEN}--threads{RESET} 5 {GREEN}--attack{RESET} 1{RESET}
-   
-    10. Fuzz CheckBox for example '<input type="checkbox" name="hobbies" value="reading" /> <input type="checkbox" name="hobbies" value="writing" />':
-        {YELLOW}BrowserBruter{GREEN} --elements{RESET} hobbies {GREEN}--payloads{RESET} paylods.txt {GREEN}--target{RESET} http://localhost/register {GREEN}--button{RESET} register {GREEN}--attack{RESET} 1{RESET}
-   
-    11. Fuzz Radio Button for example '<input type="radio" name="yesno" id="yes" value="yes" required/> <input type="radio" name="yesno" id="no" value="no" required/>':
-        {YELLOW}BrowserBruter{GREEN} --elements{RESET} yesno {GREEN}--payloads{RESET} payloads.txt {GREEN}--target{RESET} http://localhost/register {GREEN}--button{RESET} register {GREEN}--attack{RESET} 1{RESET}
-    OR
-        {YELLOW}BrowserBruter{GREEN} --elements{RESET} no {GREEN}--payloads{RESET} payloads.txt {GREEN}--target{RESET} http://localhost/register {GREEN}--button{RESET} register {GREEN}--attack{RESET} 1{RESET}
-   
-    12. Fuzz <select> element - for example <select name="selectElement" required> <option value="">Select an option</option> <option value="option1">Option 1</option> </select>:
-        {YELLOW}BrowserBruter{GREEN} --elements{RESET} selectElement {GREEN}--payloads{RESET} payloads.txt {GREEN}--target{RESET} http://localhost/selection {GREEN}--button{RESET} submit {GREEN}--attack{RESET} 1{RESET}
-    
-    13. Fuzz <textarea> element - for example <textarea name="textareaElement" placeholder="Enter text" required></textarea>:
-        {YELLOW}BrowserBruter{GREEN} --elements{RESET} textareaElement {GREEN}--payloads{RESET} payloads.txt {GREEN}--target{RESET} http://localhost/registration {GREEN}--button{RESET} submit {GREEN}--attack{RESET} 1{RESET}
-   
-    14. Fuzz colorpicker, datepicker, timepicker - for example <input type="color" name="colorElement" required/> <input type="date" name="dateElement" required/> <input type="time" name="timeElement" required/>:
-        {YELLOW}BrowserBruter{GREEN} --elements{RESET} colorElement,dateElement,timeElement {GREEN}--fill{RESET} colorElement,dateElement,timeElement {GREEN}--payloads{RESET} payloads.txt {GREEN}--target{RESET} http://localhost/ {GREEN}--button{RESET} submit {GREEN}--attack{RESET} 1{RESET}
-
-    15. Define API domain in scope for proper report generation and logging:
-        {YELLOW}BrowserBruter{GREEN} --elements{RESET} username,password {GREEN}--fill{RESET} username,password {GREEN}--button{RESET} button {GREEN}--target{RESET} http://net-square.com/login {GREEN}--payloads{RESET} payloads.txt {GREEN}--attack{RESET} 1 {GREEN}--scope{RESET} api.net-square.com,dev.api.net-square.com{RESET}
-
-    16. Add Authorization headers with bearer token for valid authorization:
-        {YELLOW}BrowserBruter{GREEN} --elements{RESET} username,password {GREEN}--fill{RESET} username,password {GREEN}--button{RESET} button {GREEN}--target{RESET} http://net-square.com/login {GREEN}--payloads{RESET} payloads.txt {GREEN}--header{RESET} "Auth: 123","Auth1: Bearer emluamFjb2Rlcgo=" {RESET}
-	   
-    17. Provide custom values for each form field types, content of the file should be in JSON format and it should contain all of the field types, see example values.json for better understanding:
-        {YELLOW}BrowserBruter{GREEN} --elements{RESET} username,password {GREEN}--fill{RESET} username,password {GREEN}--fill-values{RESET} fields.json {GREEN}--button{RESET} button {GREEN}--target{RESET} http://net-square.com/login {GREEN}--payloads{RESET} payloads.txt" {RESET}
-
-    18. Pause the BrowserBruter on each iteration of fuzzing, so user can manually perform any task, complete captcha before BrowserBruter fuzzes the form, press ENTER two times to continue:
-        {YELLOW}BrowserBruter{GREEN} --elements{RESET} textarea,select,yesno,hobbies,phone,data,time,calendar,color {GREEN}--fill{RESET} textarea,select,yesno,hobbies,phone,data,time,calendar,color {GREEN}--button{RESET} submit {GREEN}--payloads{RESET} payloads.txt {GREEN}--target{RESET} http://localhost:3000/ {GREEN}--threads{RESET} 5 {GREEN}--fill-values{RESET} values.json {GREEN}--interacitve {GREEN}--attack{RESET} 1{RESET}
-
-    19. Replace the content of a file in HTTP responses and specify the replacement file URL:
-        {YELLOW}BrowserBruter{GREEN} --elements{RESET} username,password {GREEN}--fill{RESET} username,password {GREEN}--button{RESET} login {GREEN}--target{RESET} http://localhost/login {GREEN}--payloads{RESET} payloads.txt {GREEN}--replace-files{RESET} "input-validation.js"++"http://localhost/assets/js/input-validation.js" {GREEN}--attack{RESET} 1{RESET}
-
-    20. Replace the content of a file in HTTP responses and run JavaScript:
-        {YELLOW}BrowserBruter{GREEN} --elements{RESET} username,password {GREEN}--fill{RESET} username,password {GREEN}--button{RESET} login {GREEN}--target{RESET} http://localhost/login {GREEN}--payloads{RESET} payloads.txt {GREEN}--replace-files{RESET} "input-validation.js"++"http://localhost/assets/js/input-validation.js" {GREEN}--javascript{RESET} "var elmnt = document.getElementById('ClickMe'); elmnt.click();" {GREEN}--attack{RESET} 1{RESET}
-
-    21. Replace the content of a file in HTTP responses and run JavaScript code by providing the code in file:
-        {YELLOW}BrowserBruter{GREEN} --elements{RESET} username,password {GREEN}--fill{RESET} username,password {GREEN}--button{RESET} login {GREEN}--target{RESET} http://localhost/login {GREEN}--payloads{RESET} payloads.txt {GREEN}--replace-files{RESET} "input-validation.js"++"http://localhost/assets/js/input-validation.js" {GREEN}--javascript-file{RESET} element-click.js {GREEN}--attack{RESET} 1{RESET}
-    
-    22. Replace every "return false" statement with "return true" and replace every "alert(0)" with "alert(1)":
-        {YELLOW}BrowserBruter{GREEN} --elements{RESET} username,password {GREEN}--fill{RESET} username,password {GREEN}--button{RESET} login {GREEN}--target{RESET} http://localhost/login {GREEN}--payloads{RESET} payloads.txt {GREEN}--replace-code{RESET} "return false","return true","alert(0)","alert(1)" {GREEN}--javascript{RESET} "var elmnt = document.getElementById('ClickMe'); elmnt.click();" {GREEN}--attack{RESET} 1{RESET}
-    
-    23. Replace bunch of javascript code into return true:
-        {YELLOW}BrowserBruter{GREEN} --elements-payloads{RESET} textarea:sqli.txt,data:sqli.txt {GREEN}--button{RESET} submit {GREEN}--target{RESET} http://localhost:3000/index.html {GREEN}--attack{RESET} 3 {GREEN}--replace-code{RESET} "return false","return true","return regex.test(dateString)","return true","return regex.test(timeString)","return true","return regex.test(colorString)","return true"{RESET}
-
-    24. Fuzz the search box, when user have to press enter to submit the search query, the user has to click on search icon to make search box appear:
-        {YELLOW}BrowserBruter{GREEN} --elements{RESET} search-bar {GREEN}--button{RESET} search-bar {GREEN}--attack{RESET} 1 {GREEN}--target{RESET} http://localhost:3000/#/ {GREEN}--payloads{RESET} fuzz.txt {GREEN}--buttons-to-press-before-fuzz searchQuery {GREEN}--press-enter-no-click{RESET}
-    
-    25. Tell Browser Bruter to remove commong javascript input validation:
-        {YELLOW}BrowserBruter{GREEN} --elements{RESET} search-bar {GREEN}--button{RESET} search-bar {GREEN}--attack{RESET} 1 {GREEN}--target{RESET} http://localhost:3000/#/ {GREEN}--payloads{RESET} fuzz.txt {GREEN}--buttons-to-press-before-fuzz searchQuery {GREEN}--press-enter-no-click{RESET} {GREEN}--auto-remove-javascript-validation{RESET}
-        
-    26. Tell Browser Bruter to ignore pop ups like alert() box:
-        {YELLOW}BrowserBruter{GREEN} --elements{RESET} search-bar {GREEN}--button{RESET} search-bar {GREEN}--attack{RESET} 1 {GREEN}--target{RESET} http://localhost:3000/#/ {GREEN}--payloads{RESET} fuzz.txt {GREEN}--buttons-to-press-before-fuzz searchQuery {GREEN}--press-enter-no-click{RESET} {GREEN}--auto-remove-javascript-validation {GREEN}--ignore-popups{RESET}
-
-    27. Tell Browser Bruter to select the elements under the specified form only, in case there are two forms and multiple elements have same name and ids:
-        {YELLOW}BrowserBruter{GREEN} --form{RESET} changePasswordForm {GREEN}--elements{RESET} username,password {GREEN}--fill{RESET} username,password {GREEN}--button{RESET} login {GREEN}--target{RESET} http://localhost/login {GREEN}--payloads{RESET} payloads.txt {GREEN}--attack{RESET} 1{RESET}
-
-    28. Pause the Browser Bruter on startup to manually login to the application:
-        {YELLOW}BrowserBruter{GREEN} --pause {GREEN}--elements{RESET} textarea,select,yesno,hobbies,phone,data,time,calendar,color {GREEN}--fill{RESET} textarea,select,yesno,hobbies,phone,data,time,calendar,color {GREEN}--button{RESET} submit {GREEN}--payloads{RESET} payloads.txt {GREEN}--target{RESET} http://localhost:3000/ {GREEN}--attack{RESET} 1{RESET}
-
-    29. Pause the Browser Bruter on startup to manually login to the application then run Browser Bruter in interactive mode to solve the captcha before inserting the payloads:
-        {YELLOW}BrowserBruter{GREEN} --pause {GREEN}--interactive {GREEN}--elements{RESET} textarea,select,yesno,hobbies,phone,data,time,calendar,color {GREEN}--fill{RESET} textarea,select,yesno,hobbies,phone,data,time,calendar,color {GREEN}--button{RESET} submit {GREEN}--payloads{RESET} payloads.txt {GREEN}--target{RESET} http://localhost:3000/ {GREEN}--attack{RESET} 1{RESET}
-        
-    30. Pause the Browser Bruter on startup to manually login to the application then run Browser Bruter in interactive mode to solve the captcha before inserting the payloads, pause the Browser Bruter after submitting the form to perform some manual human interaction:
-        {YELLOW}BrowserBruter{GREEN} --pause {GREEN}--interactive {GREEN}--pause-after-submit {GREEN}--elements{RESET} textarea,select,yesno,hobbies,phone,data,time,calendar,color {GREEN}--fill{RESET} textarea,select,yesno,hobbies,phone,data,time,calendar,color {GREEN}--button{RESET} submit {GREEN}--payloads{RESET} payloads.txt {GREEN}--target{RESET} http://localhost:3000/ {GREEN}--attack{RESET} 1{RESET}
-    
-    31. Wait for 1 seconds before and after submission of the form:
-        {YELLOW}BrowserBruter{GREEN} --delay-before{RESET} 1 {GREEN}--delay-after{RESET} 1 {GREEN}--elements{RESET} textarea,select,yesno,hobbies,phone,data,time,calendar,color {GREEN}--fill{RESET} textarea,select,yesno,hobbies,phone,data,time,calendar,color {GREEN}--button{RESET} submit {GREEN}--payloads{RESET} payloads.txt {GREEN}--target{RESET} http://localhost:3000/ {GREEN}--attack{RESET} 1{RESET}
-
-    32. Route traffic via proxy i.e. BurpSuite and load the static media like images:
-        {YELLOW}BrowserBruter{GREEN} --proxy{RESET} http://127.0.0.1:8080/ {GREEN}--elements{RESET} textarea,select,yesno,hobbies,phone,data,time,calendar,color {GREEN}--fill{RESET} textarea,select,yesno,hobbies,phone,data,time,calendar,color {GREEN}--button{RESET} submit {GREEN}--payloads{RESET} payloads.txt {GREEN}--target{RESET} http://localhost:3000/ {GREEN}--attack{RESET} 1 {GREEN}--load-static-media{RESET}
-
-    33. Add custom chrome options which will be passed to chrome browser:
-        {YELLOW}BrowserBruter{GREEN} --elements{RESET} id {GREEN}--button{RESET} Submit {GREEN}--payloads{RESET} sqli.txt {GREEN}--target{RESET} http://localhost/ {GREEN}--attack{RESET} 1 {GREEN}--chrome-options{RESET} ignore-certificate-errors,disable-dev-shm-usage{RESET}
-
-    34. Override all chrome options and use raw anti bot detection evasions:
-        {YELLOW}BrowserBruter{GREEN} --elements{RESET} id {GREEN}--button{RESET} Submit {GREEN}--payloads{RESET} sqli.txt {GREEN}--target{RESET} http://localhost/ {GREEN}--attack{RESET} 1 {GREEN}--anti-bot{RESET}
-
-    35. Brute force login page and try to bypass authentication and also do not try to evade anti bot defences and route traffic via proxy:
-        {YELLOW}BrowserBruter{GREEN} --elements-payloads{RESET} username:userid.txt,password:passwords.txt {GREEN}--button{RESET} Login {GREEN}--target{RESET} http://localhost/login.php {GREEN}--attack{RESET} 4 {GREEN}--proxy{RESET} http://127.0.0.1:8080/ {GREEN}--no-anti-bot {GREEN}--remove-session{RESET}
-
-    36. Perform BatteringRam attack on web page which has invisible captcha so start each payload insertion on new fresh instance of browser:
-        {YELLOW}BrowserBruter{GREEN} --elements{RESET} name,email,phone {GREEN}--payloads{RESET} payloads.txt {GREEN}--target{RESET} http://example.com/signup {GREEN}--button{RESET} submit {GREEN}--attack{RESET} 2 {GREEN}--new-instance{RESET}
-
-    37. Perform BatteringRam attack on web page which has invisible captcha so start each payload insertion on new fresh instance of browser and force restore the cookie:
-        {YELLOW}BrowserBruter{GREEN} --elements{RESET} name,email,phone {GREEN}--payloads{RESET} payloads.txt {GREEN}--target{RESET} http://example.com/signup {GREEN}--button{RESET} submit {GREEN}--attack{RESET} 2 {GREEN}--new-instance {GREEN}--force-cookie{RESET}
-	
-    38. There is field called name that you don't want to fuzz but it requires to be filled while submitting the form:
-        {YELLOW}BrowserBruter{GREEN} --elements{RESET} email,phone {GREEN}--fill{RESET} name {GREEN}--payloads{RESET} payloads.txt {GREEN}--target{RESET} http://example.com/signup {GREEN}--button{RESET} submit {GREEN}--attack{RESET} 1{RESET}
-          
-    39. There is input validation that is preventing the payloads, try to remove the class attribute from these elements to see if payloads are correctly inserted:
-        {YELLOW}BrowserBruter{GREEN} --elements{RESET} email,phone {GREEN}--fill{RESET} name {GREEN}--remove-class{RESET} email,phone {GREEN}--payloads{RESET} payloads.txt {GREEN}--target{RESET} http://example.com/signup {GREEN}--button{RESET} submit {GREEN}--attack{RESET} 1{RESET}
-
-    40. Split the final report into smaller chunks by specifying the rows limit in each report to make report review process faster in ReportExplorer:
-        {YELLOW}BrowserBruter{GREEN} --elements{RESET} email,phone {GREEN}--fill{RESET} name {GREEN}--remove-class{RESET} email,phone {GREEN}--payloads{RESET} payloads.txt {GREEN}--target{RESET} http://example.com/signup {GREEN}--button{RESET} submit {GREEN}--attack{RESET} 1 {GREEN}--rows-limit{RESET} 200{RESET}
-
-    41. Print the stack trace for debugging purpose:
-        {YELLOW}BrowserBruter{GREEN} --target{RESET} http://localhost:13066/ {GREEN}--elements-payloads{RESET} username:username.txt,password:passwords.txt {GREEN}--button{RESET} btn-default {GREEN}--attack{RESET} 4 {GREEN}--debug{RESET}
-
-    {RED}DVWA Usage Examples:{RESET}
-
-    1. Fuzz the Command Injection page of DVWA, Pause BrowserBruter on startup to manually login and manually set cookies, press ENTER two times to continue:
-        {YELLOW}BrowserBruter{GREEN} --elements{RESET} ip {GREEN}--button{RESET} Submit {GREEN}--payloads{RESET} payloads.txt {GREEN}--target{RESET} http://localhost/vulnerabilities/exec/ {GREEN}--pause {GREEN}--attack{RESET} 1{RESET}    
-    
-    2. Fuzz the Command Injection page of DVWA, set two cookies, force reuse of these cookies, reset session data each time:
-        {YELLOW}BrowserBruter{GREEN} --elements{RESET} ip {GREEN}--button{RESET} Submit {GREEN}--payloads{RESET} payloads.txt {GREEN}--target{RESET} http://localhost/vulnerabilities/exec/ {GREEN}--cookie{RESET} PHPSESSID:jtq7r9fbgf90h2qm9915qk6551,security:low {GREEN}--force-cookie {GREEN}--remove-session {GREEN}--attack{RESET} 1{RESET}
-
-    {RED}jsdebugging lab - https://hub.docker.com/r/bhattsameer/jsdebugginglab Usage Examples:{RESET}
-        
-    1. Perform BruteForce attack on login page:
-        {YELLOW}BrowserBruter{GREEN} --elements-payloads{RESET} email:username.txt,password:passwords.txt {GREEN}--target{RESET} http://172.17.0.2/Lab3/login.php {GREEN}--attack{RESET} 4 {GREEN}--button{RESET} btn-secondary {GREEN}--remove-session{RESET}
-        
-    2. Perform bruteforce attack on otp page, but otp is being checked on frontend client side, so there are no http request-response from server, so perform brute force attack on client side only:
-        {YELLOW}BrowserBruter{GREEN} --elements{RESET} otp {GREEN}--payloads{RESET} otps.txt {GREEN}--target{RESET} http://localhost/Lab3/OTP.php {GREEN}--button{RESET} button {GREEN}--attack{RESET} 1 {GREEN}--delay-after{RESET} 0.3 {GREEN}--cookie{RESET} PHPSESSID:9u593rhl797n3v6aa5vu8mjj20{RESET}
-
-    {RED}Stock Management System Lab Usage Examples:{RESET}
-
-    1. Perform brute force attack on login page to bypass authentication:
-        {YELLOW}BrowserBruter{GREEN} --elements-payloads{RESET} username:username.txt,password:passwords.txt {GREEN}--button{RESET} btn-default {GREEN}--target{RESET} http://localhost:13066/ {GREEN}--attack{RESET} 4 {GREEN}--remove-session
-{RESET}
-
-    2. Perform Sniper attack on form page which is hidden, and requires pressing a button to be revealed, so use --interactive option to manually press the button:
-        {YELLOW}BrowserBruter{GREEN} --elements{RESET} editBrandStatus,editBrandName,brandId {GREEN}--payloads{RESET} sqli.txt {GREEN}--button{RESET} editBrandBtn {GREEN}--target{RESET} http://localhost:13066/brand.php {GREEN}--cookie{RESET} PHPSESSID:lqiqsdi8trjfeijdf8i2s2qru1 {GREEN}--attack{RESET} 1 {GREEN}--interactive {GREEN}--delay-after{RESET} 0.5 {GREEN}--fill{RESET} editBrandName,brandId,editBrandStatus
-
-    3. Further automate the script by locating and clickng the buttons which enables the form:
-        {YELLOW}BrowserBruter{GREEN} --elements{RESET} editBrandStatus,editBrandName,brandId {GREEN}--payloads{RESET} sqli.txt {GREEN}--button{RESET} editBrandBtn {GREEN}--target{RESET} http://localhost:13066/brand.php {GREEN}--cookie{RESET} PHPSESSID:lqiqsdi8trjfeijdf8i2s2qru1 {GREEN}--attack{RESET} 1 {GREEN}--delay-before{RESET} 0.3 {GREEN}--fill{RESET} editBrandName {GREEN}--javascript{RESET} "document.querySelector('button.btn.btn-default.dropdown-toggle').click(); document.querySelector('a[data-target=\"#editBrandModel\"]').click();" {GREEN}--delay-after{RESET} 0.3{RESET}
-
-    4. Provide above javascript code in file:    
-        {YELLOW}BrowserBruter{GREEN} --elements{RESET} editBrandStatus,editBrandName,brandId {GREEN}--payloads{RESET} sqli.txt {GREEN}--button{RESET} editBrandBtn {GREEN}--target{RESET} http://localhost:13066/brand.php {GREEN}--cookie{RESET} PHPSESSID:lqiqsdi8trjfeijdf8i2s2qru1 {GREEN}--attack{RESET} 1 {GREEN}--delay-before{RESET} 1 {GREEN}--fill{RESET} editBrandName {GREEN}--javascript-file{RESET} click.js{RESET}
-
-    5. Remove input validations form bootstrap.min.js file and press two buttons on web page using --javascript which will enable the web form:
-        {YELLOW}BrowserBruter{GREEN} --elements{RESET} editBrandStatus,editBrandName {GREEN}--payloads{RESET} fuzz.txt {GREEN}--button{RESET} editBrandBtn {GREEN}--target{RESET} http://localhost:13066/brand.php {GREEN}--cookie{RESET} PHPSESSID:lqiqsdi8trjfeijdf8i2s2qru1 {GREEN}--attack{RESET} 1 {GREEN}--delay-before{RESET} 0.7 {GREEN}--fill{RESET} editBrandName {GREEN}--javascript{RESET} "document.querySelector('button.btn.btn-default.dropdown-toggle').click();document.querySelector('a[data-target=\"#editBrandModel\"]').click();" {GREEN}--delay-after{RESET} 0.5 {GREEN}--replace-files{RESET} "./res/samples/js-files-with-no-input-validation/bootstrap.min.js"++"http://localhost:13066/assests/bootstrap/js/bootstrap.min.js"{RESET}
-
-    6. Brute force change password form with submit button's class name is 'btn btn-primary':
-        {YELLOW}BrowserBruter{GREEN} --elements-payloads{RESET} user_id:username.txt,password:passwords.txt,npassword:passwords.txt,cpassword:passwords.txt {GREEN}--target{RESET} http://localhost:13066/setting.php {GREEN}--attack{RESET} 4 {GREEN}--cookie{RESET} PHPSESSID:lqiqsdi8trjfeijdf8i2s2qru1 {GREEN}--button{RESET} 'btn-primary'{RESET}
-
-    7. Brute force change password form by selecting the specific form, because there is other form with same elements:
-        {YELLOW}BrowserBruter{GREEN} --elements-payloads{RESET} user_id:username.txt,password:passwords.txt,npassword:passwords.txt,cpassword:passwords.txt {GREEN}--target{RESET} http://localhost:13066/setting.php {GREEN}--attack{RESET} 4 {GREEN}--cookie{RESET} PHPSESSID:lqiqsdi8trjfeijdf8i2s2qru1 {GREEN}--button{RESET} 'btn-primary' {GREEN}--form{RESET} changePasswordForm{RESET}
- 
-    8. Brute force add user form but first press one using --buttons-to-press-before-fuzz to enable this form:
-        {YELLOW}BrowserBruter{GREEN} --elements-payloads{RESET} userName:fuzz.txt,upassword:fuzz.txt,uemail:fuzz.txt {GREEN}--button{RESET} createUserBtn {GREEN}--target{RESET} http://localhost:13066/user.php {GREEN}--attack{RESET} 4 {GREEN}--cookie{RESET} PHPSESSID:lqiqsdi8trjfeijdf8i2s2qru1 {GREEN}--buttons-to-press-before-fuzz{RESET} addUserModalBtn{RESET}
-
-    9. Audit an complex form, replacing jquery-ui with no input validation jquery-ui and replacing bootstrap.min.js too, running 5 threads:
-        {YELLOW}BrowserBruter{GREEN} --form{RESET} createOrderForm {GREEN}--elements{RESET} orderDate,clientName,clientContact,productName1,rate1,rateValue1,quantity1,total1,totalValue1,subTotal,subTotalValue,totalAmount,totalAmountValue,discount,grandTotal,grandTotalValue,vat,vatValue,paid,due,dueValue,paymentType,paymentStatus,paymentPlace {GREEN}--fill{RESET} orderDate,clientName,clientContact,productName1,rate1,rateValue1,quantity1,total1,totalValue1,subTotal,subTotalValue,totalAmount,totalAmountValue,discount,grandTotal,grandTotalValue,vat,vatValue,paid,due,dueValue,paymentType,paymentStatus,paymentPlace {GREEN}--payloads{RESET} fuzz.txt {GREEN}--cookie{RESET} PHPSESSID:lqiqsdi8trjfeijdf8i2s2qru1 {GREEN}--button{RESET} createOrderBtn {GREEN}--attack{RESET} 1 {GREEN}--replace-file{RESET} ./res/samples/js-files-with-no-input-validation/bootstrap.min.js++http//localhost:13066/assests/bootstrap/bootstrap.min.js,"./res/samples/js-files-with-no-input-validation/jquery-ui.min.js"++"http://localhost:13066/assests/jquery-ui/jquery-ui.min.js" {GREEN}--attack{RESET} 1 {GREEN}--target{RESET} "http://localhost:13066/orders.php?o=add" {GREEN}--threads{RESET} 5{RESET}
-
-    {RED}OWASP JuiceShop Usage Examples:{RESET}
-         
-    1. Testing SQLi on OWASP JuiceShop's login page by clusterbombing the payloads:
-        {YELLOW}BrowserBruter{GREEN} --elements-payloads{RESET} email:sqli.txt,password:sqli.txt {GREEN}--target{RESET} http://localhost:3000/#/login {GREEN}--attack{RESET} 4 {GREEN}--button{RESET} loginButton {GREEN}--cookie{RESET} welcomebanner_status:dismiss {GREEN}--remove-session{RESET}
-
-    2. Fuzzing registration page of OWASP JuiceShop:
-        {YELLOW}BrowserBruter{GREEN} --elements{RESET} emailControl,passwordControl,repeatPasswordControl,mat-slide-toggle-1-input,securityAnswerControl {GREEN}--button{RESET} registerButton {GREEN}--attack{RESET} 1 {GREEN}--fill{RESET} emailControl,passwordControl,repeatPasswordControl,mat-slide-toggle-1-input,securityAnswerControl {GREEN}--payloads{RESET} fuzz.txt {GREEN}--target{RESET} http://localhost:3000/#/register {GREEN}--cookie{RESET} welcomebanner_status:dismiss
-
-    3. Fuzz the email field for various vulnerabilities of OWASP JuiceShop and split the final report into 100 rows of multiples reports:
-        {YELLOW}BrowserBruter{GREEN} --elements{RESET} emailControl {GREEN}--button{RESET} registerButton {GREEN}--attack{RESET} 1 {GREEN}--fill{RESET} emailControl,passwordControl,repeatPasswordControl,mat-slide-toggle-1-input,securityAnswerControl {GREEN}--payloads{RESET} sqli.txt {GREEN}--target{RESET} http://localhost:3000/#/register {GREEN}--cookie{RESET} welcomebanner_status:dismiss {GREEN}--rows-limit{RESET} 100{RESET}
-
-    4. Fuzz the file upload functionality of OWASP JuiceShop's complaint page:
-        {YELLOW}BrowserBruter{GREEN} --elements{RESET} cdk-text-field-autofill-monitored,complaintMessage,file {GREEN}--button{RESET} submitButton {GREEN}--attack{RESET} 1 {GREEN}--target{RESET} http://localhost:3000/#/complain {GREEN}--cookie{RESET} welcomebanner_status:dismiss {GREEN}--payloads{RESET} fuzz.txt {GREEN}--fill{RESET} cdk-text-field-autofill-monitored,complaintMessage,file{RESET}
-
-    5. Fuzz the file upload functionality of OWASP JuiceShop's complain page and remove the class attribute from the email field to make it intractable:
-        {YELLOW}BrowserBruter{GREEN} --elements{RESET} cdk-text-field-autofill-monitored,complaintMessage,file {GREEN}--button{RESET} submitButton {GREEN}--attack{RESET} 1 {GREEN}--target{RESET} http://localhost:3000/#/complain {GREEN}--cookie{RESET} welcomebanner_status:dismiss {GREEN}--payloads{RESET} fuzz.txt {GREEN}--fill{RESET} cdk-text-field-autofill-monitored,complaintMessage,file {GREEN}--remove-class{RESET} cdk-text-field-autofill-monitored{RESET}
-
-    6. Fuzz the file upload functionality of OWASP JuiceShop's complain page and remove the class attribute from the email field to make it intractable and include the auth cookies and Authorization header to be able fuzz while being authenticated:
-        {YELLOW}BrowserBruter{GREEN} --elements{RESET} cdk-text-field-autofill-monitored,complaintMessage,file {GREEN}--button{RESET} submitButton {GREEN}--attack{RESET} 1 {GREEN}--target{RESET} http://localhost:3000/#/complain {GREEN}--cookie{RESET} welcomebanner_status:dismiss {GREEN}--payloads{RESET} fuzz.txt {GREEN}--fill{RESET} cdk-text-field-autofill-monitored,complaintMessage,file {GREEN}--remove-class{RESET} cdk-text-field-autofill-monitored {GREEN}--header{RESET} "Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJzdGF0dXMiOiJzdWNjZXNzIiwiZGF0YSI6eyJpZCI6MTI3LCJ1c2VybmFtZSI6IiIsImVtYWlsIjoiemluamFAMTIzLmNvbSIsInBhc3N3b3JkIjoiZjViYjBjOGRlMTQ2YzY3YjQ0YmFiYmY0ZTY1ODRjYzAiLCJyb2xlIjoiY3VzdG9tZXIiLCJkZWx1eGVUb2tlbiI6IiIsImxhc3RMb2dpbklwIjoiMC4wLjAuMCIsInByb2ZpbGVJbWFnZSI6Ii9hc3NldHMvcHVibGljL2ltYWdlcy91cGxvYWRzL2RlZmF1bHQuc3ZnIiwidG90cFNlY3JldCI6IiIsImlzQWN0aXZlIjp0cnVlLCJjcmVhdGVkQXQiOiIyMDI0LTAzLTA0IDE0OjEzOjIzLjQ2NCArMDA6MDAiLCJ1cGRhdGVkQXQiOiIyMDI0LTAzLTA0IDE0OjEzOjIzLjQ2NCArMDA6MDAiLCJkZWxldGVkQXQiOm51bGx9LCJpYXQiOjE3MDk1NjE2MTV9.oWlMbKjqEk2kxamx5lIgIrnFyXd4vV01xZXPUWLywB-FEfVk6SIx7NA9iNSCjCAwqjKcbKOZIqevIGdvkgiGQw6TpjZhs8_fGtlGIfU7Ud3kjk0MyoXauws9mC1LT9Zn5V2ik2GcuEi-xLgrWi6fNM34F6PQA2c1naeQ_mHkqVI"
-{RESET}
-
-    7. Fuzz the file upload functionality of OWASP JuiceShop's complain page and remove the class attribute from the email field to make it intractable and include the auth cookies and Authorization header to be able fuzz while being authenticated and split the final report into smaller reports containing 200 rows each:
-        {YELLOW}BrowserBruter{GREEN} --elements{RESET} cdk-text-field-autofill-monitored,complaintMessage,file {GREEN}--button{RESET} submitButton {GREEN}--attack{RESET} 1 {GREEN}--target{RESET} http://localhost:3000/#/complain {GREEN}--cookie{RESET} welcomebanner_status:dismiss {GREEN}--payloads{RESET} fuzz.txt {GREEN}--fill{RESET} cdk-text-field-autofill-monitored,complaintMessage,file {GREEN}--remove-class{RESET} cdk-text-field-autofill-monitored {GREEN}--header{RESET} "Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJzdGF0dXMiOiJzdWNjZXNzIiwiZGF0YSI6eyJpZCI6MTI3LCJ1c2VybmFtZSI6IiIsImVtYWlsIjoiemluamFAMTIzLmNvbSIsInBhc3N3b3JkIjoiZjViYjBjOGRlMTQ2YzY3YjQ0YmFiYmY0ZTY1ODRjYzAiLCJyb2xlIjoiY3VzdG9tZXIiLCJkZWx1eGVUb2tlbiI6IiIsImxhc3RMb2dpbklwIjoiMC4wLjAuMCIsInByb2ZpbGVJbWFnZSI6Ii9hc3NldHMvcHVibGljL2ltYWdlcy91cGxvYWRzL2RlZmF1bHQuc3ZnIiwidG90cFNlY3JldCI6IiIsImlzQWN0aXZlIjp0cnVlLCJjcmVhdGVkQXQiOiIyMDI0LTAzLTA0IDE0OjEzOjIzLjQ2NCArMDA6MDAiLCJ1cGRhdGVkQXQiOiIyMDI0LTAzLTA0IDE0OjEzOjIzLjQ2NCArMDA6MDAiLCJkZWxldGVkQXQiOm51bGx9LCJpYXQiOjE3MDk1NjE2MTV9.oWlMbKjqEk2kxamx5lIgIrnFyXd4vV01xZXPUWLywB-FEfVk6SIx7NA9iNSCjCAwqjKcbKOZIqevIGdvkgiGQw6TpjZhs8_fGtlGIfU7Ud3kjk0MyoXauws9mC1LT9Zn5V2ik2GcuEi-xLgrWi6fNM34F6PQA2c1naeQ_mHkqVI"
-{RESET}
-
-    8. Fuzz the global search functionality of the OWASP JuiceShop while authenticated by sending ENTER key instead of click:
-        {YELLOW}BrowserBruter{GREEN} --elements{RESET} mat-input-0 {GREEN}--button{RESET} mat-input-0 {GREEN}--attack{RESET} 1 {GREEN}--target{RESET} http://localhost:3000/#/ {GREEN}--cookie{RESET} welcomebanner_status:dismiss {GREEN}--payloads{RESET} fuzz.txt {GREEN}--header{RESET} "Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJzdGF0dXMiOiJzdWNjZXNzIiwiZGF0YSI6eyJpZCI6MTI3LCJ1c2VybmFtZSI6IiIsImVtYWlsIjoiemluamFAMTIzLmNvbSIsInBhc3N3b3JkIjoiZjViYjBjOGRlMTQ2YzY3YjQ0YmFiYmY0ZTY1ODRjYzAiLCJyb2xlIjoiY3VzdG9tZXIiLCJkZWx1eGVUb2tlbiI6IiIsImxhc3RMb2dpbklwIjoiMC4wLjAuMCIsInByb2ZpbGVJbWFnZSI6Ii9hc3NldHMvcHVibGljL2ltYWdlcy91cGxvYWRzL2RlZmF1bHQuc3ZnIiwidG90cFNlY3JldCI6IiIsImlzQWN0aXZlIjp0cnVlLCJjcmVhdGVkQXQiOiIyMDI0LTAzLTA0IDE0OjEzOjIzLjQ2NCArMDA6MDAiLCJ1cGRhdGVkQXQiOiIyMDI0LTAzLTA0IDE0OjEzOjIzLjQ2NCArMDA6MDAiLCJkZWxldGVkQXQiOm51bGx9LCJpYXQiOjE3MDk1NjE2MTV9.oWlMbKjqEk2kxamx5lIgIrnFyXd4vV01xZXPUWLywB-FEfVk6SIx7NA9iNSCjCAwqjKcbKOZIqevIGdvkgiGQw6TpjZhs8_fGtlGIfU7Ud3kjk0MyoXauws9mC1LT9Zn5V2ik2GcuEi-xLgrWi6fNM34F6PQA2c1naeQ_mHkqVI" {GREEN}--buttons-to-press-before-fuzz{RESET} searchQuery {GREEN}--press-enter-no-click{RESET} 
-{RESET}
-
-        OR -> following removes class attribute so the script does no throw element not intreactable error:
-        {YELLOW}BrowserBruter{GREEN} --elements{RESET} mat-input-0 {GREEN}--button{RESET} mat-input-0 {GREEN}--attack{RESET} 1 {GREEN}--target{RESET} http://localhost:3000/#/ {GREEN}--cookie{RESET} welcomebanner_status:dismiss {GREEN}--payloads{RESET} fuzz.txt {GREEN}--header{RESET} "Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJzdGF0dXMiOiJzdWNjZXNzIiwiZGF0YSI6eyJpZCI6MTI3LCJ1c2VybmFtZSI6IiIsImVtYWlsIjoiemluamFAMTIzLmNvbSIsInBhc3N3b3JkIjoiZjViYjBjOGRlMTQ2YzY3YjQ0YmFiYmY0ZTY1ODRjYzAiLCJyb2xlIjoiY3VzdG9tZXIiLCJkZWx1eGVUb2tlbiI6IiIsImxhc3RMb2dpbklwIjoiMC4wLjAuMCIsInByb2ZpbGVJbWFnZSI6Ii9hc3NldHMvcHVibGljL2ltYWdlcy91cGxvYWRzL2RlZmF1bHQuc3ZnIiwidG90cFNlY3JldCI6IiIsImlzQWN0aXZlIjp0cnVlLCJjcmVhdGVkQXQiOiIyMDI0LTAzLTA0IDE0OjEzOjIzLjQ2NCArMDA6MDAiLCJ1cGRhdGVkQXQiOiIyMDI0LTAzLTA0IDE0OjEzOjIzLjQ2NCArMDA6MDAiLCJkZWxldGVkQXQiOm51bGx9LCJpYXQiOjE3MDk1NjE2MTV9.oWlMbKjqEk2kxamx5lIgIrnFyXd4vV01xZXPUWLywB-FEfVk6SIx7NA9iNSCjCAwqjKcbKOZIqevIGdvkgiGQw6TpjZhs8_fGtlGIfU7Ud3kjk0MyoXauws9mC1LT9Zn5V2ik2GcuEi-xLgrWi6fNM34F6PQA2c1naeQ_mHkqVI" {GREEN}--buttons-to-press-before-fuzz{RESET} searchQuery {GREEN}--press-enter-no-click{RESET} {GREEN}--remove-class{RESET} mat-input-0
-{RESET}
-
-    9. Fuzz the Customer Feedback form of OWASP JuiceShop:
-        {YELLOW}BrowserBruter{GREEN} --button{RESET} submitButton {GREEN}--target{RESET} http://localhost:3000/#/contact {GREEN}--cookie{RESET} welcomebanner_status:dismiss {GREEN}--payloads{RESET} fuzz.txt {GREEN}--attack{RESET} 1 {GREEN}--elements{RESET} userId,cdk-text-field-autofill-monitored,comment,rating {GREEN}--fill{RESET} cdk-text-field-autofill-monitored,comment,rating {GREEN}--remove-class{RESET} userId,cdk-text-field-autofill-monitored,comment,rating {GREEN}--interactive {GREEN}--rows-limit{RESET} 200{RESET}
-
-        OR -> Fuzz the captcha field too:
-        {YELLOW}BrowserBruter{GREEN} --button{RESET} submitButton {GREEN}--target{RESET} http://localhost:3000/#/contact {GREEN}--cookie{RESET} welcomebanner_status:dismiss {GREEN}--payloads{RESET} fuzz.txt {GREEN}--attack{RESET} 1 {GREEN}--elements{RESET} userId,cdk-text-field-autofill-monitored,comment,rating,captchaControl {GREEN}--fill{RESET} cdk-text-field-autofill-monitored,comment,rating {GREEN}--remove-class{RESET} userId,cdk-text-field-autofill-monitored,comment,rating,captchaControl {GREEN}--interactive {GREEN}--rows-limit{RESET} 200{RESET}
-
-        OR -> Fuzz the captcha field and auto fill too:
-        {YELLOW}BrowserBruter{GREEN} --button{RESET} submitButton {GREEN}--target{RESET} http://localhost:3000/#/contact {GREEN}--cookie{RESET} welcomebanner_status:dismiss {GREEN}--header{RESET} "Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJzdGF0dXMiOiJzdWNjZXNzIiwiZGF0YSI6eyJpZCI6MTI3LCJ1c2VybmFtZSI6IiIsImVtYWlsIjoiemluamFAMTIzLmNvbSIsInBhc3N3b3JkIjoiZjViYjBjOGRlMTQ2YzY3YjQ0YmFiYmY0ZTY1ODRjYzAiLCJyb2xlIjoiY3VzdG9tZXIiLCJkZWx1eGVUb2tlbiI6IiIsImxhc3RMb2dpbklwIjoiMC4wLjAuMCIsInByb2ZpbGVJbWFnZSI6Ii9hc3NldHMvcHVibGljL2ltYWdlcy91cGxvYWRzL2RlZmF1bHQuc3ZnIiwidG90cFNlY3JldCI6IiIsImlzQWN0aXZlIjp0cnVlLCJjcmVhdGVkQXQiOiIyMDI0LTAzLTA0IDE0OjEzOjIzLjQ2NCArMDA6MDAiLCJ1cGRhdGVkQXQiOiIyMDI0LTAzLTA0IDE0OjEzOjIzLjQ2NCArMDA6MDAiLCJkZWxldGVkQXQiOm51bGx9LCJpYXQiOjE3MDk1NjE2MTV9.oWlMbKjqEk2kxamx5lIgIrnFyXd4vV01xZXPUWLywB-FEfVk6SIx7NA9iNSCjCAwqjKcbKOZIqevIGdvkgiGQw6TpjZhs8_fGtlGIfU7Ud3kjk0MyoXauws9mC1LT9Zn5V2ik2GcuEi-xLgrWi6fNM34F6PQA2c1naeQ_mHkqVI" {GREEN}--payloads{RESET} fuzz.txt {GREEN}--attack{RESET} 1 {GREEN}--elements{RESET} userId,cdk-text-field-autofill-monitored,comment,rating,captchaControl {GREEN}--fill{RESET} cdk-text-field-autofill-monitored,comment,rating,captchaControl {GREEN}--remove-class{RESET} userId,cdk-text-field-autofill-monitored,comment,rating,captchaControl {GREEN}--rows-limit{RESET} 200{RESET}
-
-    10. Fuzz the chatbot of OWASP JuiceShop by first manually sign-in into the application:
-        {YELLOW}BrowserBruter{GREEN} --button{RESET} message-input {GREEN}--elements{RESET} message-input {GREEN}--press-enter-no-click --target{RESET} http://localhost:3000/#/chatbot {GREEN}--cookie{RESET} test:working,welcomebanner_status:dismiss,language:en {GREEN}--pause {GREEN}--payloads{RESET} fuzz.txt {GREEN}--attack{RESET} 1 {GREEN}--rows-limit{RESET} 200{RESET}
-
-    11. Fuzz the write review form of product by first manually login to the application, then automatically click on the image of product to make produc review menu appear:
-        {YELLOW}BrowserBruter{GREEN} --buttons-to-press-before-fuzz{RESET} img-container {GREEN}--elements{RESET} "cdk-text-field-autofill-monitored" {GREEN}--button{RESET} submitButton {GREEN}--target{RESET} http://localhost:3000/#/ {GREEN}--cookie{RESET} cookieconsent_status:dismiss,language:en,welcomebanner_status:dismiss {GREEN}--attack{RESET} 1 {GREEN}--payloads{RESET} fuzz.txt {GREEN}--remove-class{RESET} cdk-text-field-autofill-monitored {GREEN}--pause{RESET}
-'''
 # Adding various command line arguments
 args_basic = argParser.add_argument_group("Basic")
 args_attack1n2 = argParser.add_argument_group("Sniper and Battering Ram")
@@ -331,6 +118,7 @@ args_browser = argParser.add_argument_group("Browser Options")
 args_debug = argParser.add_argument_group("Debug Option")
 args_report = argParser.add_argument_group("Report Generation")
 args_help = argParser.add_argument_group("Help")
+
 # Adding CLI arguments
 args_basic.add_argument("--target",help="Target's url: https://zinja-coder.github.io/jafarpathan", metavar="TARGET_URL")
 args_basic.add_argument("--button",help="Button element which will submit form data.", metavar="submit")
@@ -343,13 +131,13 @@ args_fuzz.add_argument("--fill-values", help="[Optional] Path to User provided e
 args_fuzz.add_argument("--buttons-to-press-before-fuzz",help="Supply list of buttons to be pressed in sequence before filling the form, useful if form submission requires some action or form is invisible until some button is pressed.[Note if the button is not pressable elment, then use --javascript and suppy javascript to click the element.]",metavar="visibleform,ok,confirm,pressthis")
 args_fuzz.add_argument("--press-enter-no-click",help="This switch will force the Browser Bruter to send ENTER key instead of clicking the button, useful when form is submitted when pressing entering on text field and there are no buttons to click.", action="store_true")
 args_fuzz.add_argument("--proxy",help="Set proxy for traffic, for example give IP:PORT of Burpsuite to send traffic to burpsuite.",metavar="http://proxyaddress:port/")
-args_fuzz.add_argument("--scope",help="Comma-separated list of in-scope domains.", metavar="api1.example.com,bak.example.com")
 args_fuzz.add_argument("--delay-before",help="Delay before fuzz attempt.",metavar="0.2", type=float, default=0.2)
 args_fuzz.add_argument("--delay-after",help="Delay after fuzz attempt.",metavar="0.2", type=float, default=0.2)
 args_fuzz.add_argument("--threads",help="Specifies number of browsers instances to be run, max value is 5, default is 1, lower the instances slower the fuzzing process, more instances - faster fuzzing process.",metavar="3",default=1, type=int)
 args_fuzz.add_argument("--pause", help="Pause the BrowserBruter instances on startup, press ENTER to resume.",action="store_true",default=False)
 args_fuzz.add_argument("--interactive",help="Pause the BrowserBruter before fuzzing any element at each payload and wait for user to continue.",action="store_true",default=False)
 args_fuzz.add_argument("--pause-after-submit",help="Pause the script after pressing the submit button to allow pentester to interact with the web application.",action="store_true")
+args_fuzz.add_argument("--reload-page",help="This switch tells The Browser Bruter to reload the page before fuzzing the form on each iteration, usefull when result of previous iteration causes the web elements to disappear or which leads to elements not found error, in such case this switch helps to keep browser bruter running.", action="store_true")
 args_fuzz.add_argument("--form",help="Specy id,name,class of form to fuzz in case of muliple forms",metavar="changePasswordForm")
 args_fuzz.add_argument("--ignore-popups",help="Ignore alert and other pop up menus",action="store_true",default=False)
 args_fuzz.add_argument("--remove-class",help="Provide a list of elements from which you want to remove the class attribute, extremely useful when element is linked to some class with extreme javascript input validation or makes the element not interactable, you can still select this element by providing it's class name.", metavar="cdk-text-field-autofill-monitored")
@@ -359,18 +147,23 @@ args_session.add_argument("--force-cookie",help="Use this switch to force settin
 args_session.add_argument("--remove-session",help="Use this switch to remove session data and cookies after each request-response cycle.", action="store_true")
 args_javascript.add_argument("--auto-remove-javascript-validation",help="This switch will tell The Browser-Bruter to not remove common javascript input validations mechanisms. Useful if removing of javacript validaiton breaks the web app.", action="store_true",default=False)
 args_javascript.add_argument("--javascript",help="Javascript code to run on browser", metavar="\"alert(1);\"")
+args_javascript.add_argument("--javascript-after",help="Javascriptc code to run on browser after pressing and submitting the button.")
 args_javascript.add_argument("--javascript-file",help="Javascritp file containing javascript code to execute", metavar="/path/to/javascript/file.js")
 args_javascript.add_argument("--replace-code",help="Replaces the code in response body with the code provided by user in following format - \"CODE_TO_REPLACE1\",\"REPLACEMENT_CODE1\",\"CODE_TO_REPLACE2\",\"REPLACEMENT_CODE2\"",metavar="\"alert(1);\",\"alert(0);\"")
 args_javascript.add_argument("--replace-files", help="Replace the content of a file in HTTP responses.", metavar="/path/to/validation_file.js")
 args_browser.add_argument("--headless",help="Use this switch to run browser in headless mode (No GUI).", action="store_true")
+args_browser.add_argument("--no-css",help="This switch will tell Browser Bruter to drop the requests to .css files and it will load .css files",action="store_true")
 args_browser.add_argument("--load-static-media",help="This switch tells BrowserBruter to load audio, video and image (.png, .img, .ico, .mp4, .gif, .mp3 etc) files. By default it discards these files to save time and load pages faster.",action="store_true",default=False)
 args_browser.add_argument("--chrome-options",help="Custom comma separated list of options which will be passed to chrome. [This will override in-built options in Browser-Bruter that are passed to chrome]",metavar="blink-settings=imagesEnabled=false,disable-notifications")
 args_browser.add_argument("--anti-bot",help="This switch tells BrowserBruter to use avoid any chrome options and use raw undetected chrome driver to avoid bot detection, by default Browser-Bruter uses custom Chrome options along with undetected chrome driver like disabling xss protection along with undeteced chrome driver",action="store_true",default=False)
 args_browser.add_argument("--no-anti-bot",help="Completely removes any anti bot detection evasions.",action="store_true",default=False)
 args_browser.add_argument("--new-instance",help="Start new fresh instance of browser for each new payload [Fuzzing process's iteration] usefull in bypassing the invisible captchas.",action="store_true")
 args_report.add_argument("--rows-limit",help="Specify the number of rows to be included in single file, if not specified, a single report will be generated, if specified, multiple reports with specified rows amount will be generated, useful when test consists of thousands of payloads.", type=int, metavar="200")
+args_report.add_argument("--scope",help="Comma separated list of hostnames in scope",metavar="api1.example.com,bak.example.com")
+args_report.add_argument("--include-urls",help="Comma-separated list of urls or file containing urls in-scope", metavar="/path/to/file OR \"https://api1.example.com/v2/getData\",\"https://bak.example.com/v2/signin\"")
+args_report.add_argument("--exclude-urls",help="Comma separated list of urls or file containing urls which are to be excluded from final report", metavar="/path/to/file OR \"http://10.13.37.3:8080/webgoat/service/hint.mvc\",\"http://10.13.37.3:8080/webgoat/service/solution.mvc\"")
 args_debug.add_argument("--verbose",help="Use this switch to enable HTTP request/response output being printed on console and STDLOG file.", action="store_true",default=False)
-args_debug.add_argument("--debug",help="Use this switch to print the Stack Trace messages in case of the error!",action="store_true")
+args_debug.add_argument("--debug",help="Use this switch to print the Stack Trace messages in case of the error! and keep the logs in log file.",action="store_true")
 args_help.add_argument("--help-manual",help="Print the Usage Exapmles",action="store_true")
 
 # Getting the arguments in args variable
@@ -378,15 +171,15 @@ args = argParser.parse_args()
 
 # If user has enter --manual then print the manual and exit
 if args.help_manual:
-    print(usage_examples)
+    print_manual()
     sys.exit(0)
 
 # Check if all required arguments are given and threads are not more than 5
 if ((args.payloads is None or args.elements is None) and (args.elements_payloads is None)) or args.target is None or args.button is None or args.attack is None:
 	print(f"\n\n{RED}[+]--------------------------------------------------------------------------------------------------------------------------[+]\nERROR: {RESET}Please Enter all required arguments --attack, --target, --button, --payloads, --elements or --elements-payloads or --help for help.\n{RED}[+]--------------------------------------------------------------------------------------------------------------------------[+]{RESET}")
 	sys.exit(0)
-elif args.threads > 5 or args.threads < 0:
-	print(f"\n\n{RED}[+]--------------------------------------------------------------------------------------------------------------------------[+]\nERROR: {RESET}Value of threads must less than 6 and more than 0\n{RED}[+]--------------------------------------------------------------------------------------------------------------------------[+]{RESET}")
+elif args.threads > 20 or args.threads < 0:
+	print(f"\n\n{RED}[+]--------------------------------------------------------------------------------------------------------------------------[+]\nERROR: {RESET}Value of threads must less than 8 and more than 0\n{RED}[+]--------------------------------------------------------------------------------------------------------------------------[+]{RESET}")
 	sys.exit(0)
 elif (args.elements and args.elements_payloads):
     print(f"\n\n{RED}[+]--------------------------------------------------------------------------------------------------------------------------[+]\nERROR: {RESET}--elements and --elements--payloads can't be used together\n{RED}[+]--------------------------------------------------------------------------------------------------------------------------[+]{RESET}")
@@ -406,9 +199,43 @@ target_url = urlparse(args.target)
 hostname = target_url.hostname
 # Get the scope hostnames from the command-line arguments
 scope_hostnames = args.scope.split(',') if args.scope else []
+# Get the urls to be excluded from final report
+list_of_urls_to_be_excluded_from_final_report = []
+if args.exclude_urls:
+    try:
+        with open(args.exclude_urls,"r") as urls_excluded_file:
+                for line in urls_excluded_file:
+                    line = line.strip()
+                    list_of_urls_to_be_excluded_from_final_report.append(line)
+    except FileNotFoundError:
+        list_of_urls_to_be_excluded_from_final_report = args.exclude_urls.split(',')
+    except Exception as e:
+        print(f"\n\n{RED}[+]--------------------------------------------------------------------------------------------------------------------------[+]\nERROR: {RESET}There is a problem with -> {args.exclude_urls}\n{RED}[+]--------------------------------------------------------------------------------------------------------------------------[+]{RESET}")
+        if args.debug:
+            print(f"\n\n{RED}[+]--------------------------------------------------------------------------------------------------------------------------[+]\nERROR: {RESET}{print_exc()}\n{RED}[+]--------------------------------------------------------------------------------------------------------------------------[+]{RESET}")
+        sys.exit(0)
+# Get the urls in scope
+list_of_urls_to_be_included_in_final_report = []
+if args.include_urls:
+    try:
+        with open(args.include_urls,"r") as urls_included_file:
+                for line in urls_included_file:
+                    line = line.strip()
+                    list_of_urls_to_be_included_in_final_report.append(line)
+    except FileNotFoundError:
+        list_of_urls_to_be_included_in_final_report = args.include_urls.split(',')
+    except Exception as e:
+        print(f"\n\n{RED}[+]--------------------------------------------------------------------------------------------------------------------------[+]\nERROR: {RESET}There is a problem with -> {args.exclude_urls}\n{RED}[+]--------------------------------------------------------------------------------------------------------------------------[+]{RESET}")
+        if args.debug:
+            print(f"\n\n{RED}[+]--------------------------------------------------------------------------------------------------------------------------[+]\nERROR: {RESET}{print_exc()}\n{RED}[+]--------------------------------------------------------------------------------------------------------------------------[+]{RESET}")
+        sys.exit(0)
+# Set the urllib max retry count to 50 to make this script stable as f
+max_retry = Retry(total=50, backoff_factor=1)
+# Creating chrome driver synchronization lock for multithreading
+driver_lock = Lock()
 # Getting time when script started to name the final report
-start_time = datetime.datetime.now()
-start_time = start_time.strftime("%Y-%m-%d_%H-%M-%S")
+start_time_int = datetime.datetime.now()
+start_time = start_time_int.strftime("%Y-%m-%d_%H-%M-%S")
 # Get the javascript code to be executed
 javascript_to_execute = '\0'
 if args.javascript:
@@ -443,7 +270,9 @@ if args.replace_code:
             replacement_pairs.append((to_be_replaced, to_be_replaced_with))
         i += 2
 # Abort request with following extensions
-forbidden_extensions = ('.ico', '.png', '.img', '.jpg', '.svg', '.jpeg', '.jfif', '.pjpeg', '.pjp', '.gif', '.apng', '.avif', '.webp', '.bmp', '.cur', '.tif', '.tiff', '.mp3', '.mp4', '.avi', '.mkv', '.webm', 'ogv')
+forbidden_extensions = ['.ico', '.png', '.img', '.jpg', '.svg', '.jpeg', '.jfif', '.pjpeg', '.pjp', '.gif', '.apng', '.avif', '.webp', '.bmp', '.cur', '.tif', '.tiff', '.mp3', '.mp4', '.avi', '.mkv', '.webm', 'ogv']
+if args.no_css:
+    forbidden_extensions.append('.css')
 # Get the payloads
 payloads = []
 elements_payloads = {}
@@ -570,15 +399,15 @@ def wait_and_handle_popup(driver):
     try:
         wait.until(EC.presence_of_all_elements_located(("xpath", '//body')))
     except UnexpectedAlertPresentException:
-        if args.ignore_popups:
+        #if args.ignore_popups:
             try:
                 alert = driver.switch_to.alert
                 alert.accept()
             except NoAlertPresentException:
                 pass
-        else:
-            print(f"\n{YELLOW}[+]--------------------------------------------------------------------------------------------------------------------------[+]\nINFO: {RESET}Alert Pupup please interact with popup or use --ignore-popup option\n{YELLOW}[+]--------------------------------------------------------------------------------------------------------------------------[+]{RESET}")
-            input(f"\n{YELLOW}[+]--------------------------------------------------------------------------------------------------------------------------[+]\nINFO: {RESET}press ENTER after intracting with popup\n{YELLOW}[+]--------------------------------------------------------------------------------------------------------------------------[+]{RESET}")
+        #else:
+        #    print(f"\n{YELLOW}[+]--------------------------------------------------------------------------------------------------------------------------[+]\nINFO: {RESET}Alert Pupup please interact with popup or use --ignore-popup option\n{YELLOW}[+]--------------------------------------------------------------------------------------------------------------------------[+]{RESET}")
+        #    input(f"\n{YELLOW}[+]--------------------------------------------------------------------------------------------------------------------------[+]\nINFO: {RESET}press ENTER after intracting with popup\n{YELLOW}[+]--------------------------------------------------------------------------------------------------------------------------[+]{RESET}")
 
 # Handle Unknown Exception
 def handle_unknown_exception(exception):
@@ -743,7 +572,12 @@ def add_cookies(driver):
             else:
                 handle_unknown_exception(e)
     except InvalidCookieDomainException as e:
-        print(f"\n\n{RED}[+]--------------------------------------------------------------------------------------------------------------------------[+]\nError:{RESET} Cookie Domain is invalid -> {cookie_dict} -> Skipping\n{RED}[+]--------------------------------------------------------------------------------------------------------------------------[+]{RESET}")
+        print(f"\n\n{RED}[+]--------------------------------------------------------------------------------------------------------------------------[+]\nError:{RESET} Cookie Domain is invalid -> {cookie_dict} -> Skipping adding domain\n{RED}[+]--------------------------------------------------------------------------------------------------------------------------[+]{RESET}")
+        cookie_dict = {
+                    "name": name,
+                    "value": value
+                }
+        driver.add_cookie(cookie_dict)
         log_error(format_exc())                
     except ValueError as e:
         print(f"\n\n{RED}[+]--------------------------------------------------------------------------------------------------------------------------[+]\nError:{RESET} You have entered arguments in invalid format -> {args.cookie} please read help message for valid format of passing cookies. Closing the Fuzzing process\n{RED}[+]--------------------------------------------------------------------------------------------------------------------------[+]{RESET}")
@@ -768,10 +602,12 @@ def replace_response_content(request, response):
             response_body_encoding = request.response.headers['Content-Encoding']
         except KeyError:
             response_body_encoding = 'utf-8'
-        if response_body_encoding.lower() == 'gzip':
+        if response_body_encoding and response_body_encoding.lower() == 'gzip':
             response_body_str = gzip.decompress(request.response.body)
-        else:
+        elif response_body_encoding:
             response_body_str = request.response.body.decode(response_body_encoding,errors='ignore')
+        else:
+            response_body_str = request.response.body.decode('utf-8',errors='ignore')
         for to_be_replaced, to_be_replaced_with in replacement_pairs:
             # Replace bytes in response body
             new_response_body_str = response_body_str.replace(to_be_replaced, to_be_replaced_with)
@@ -793,50 +629,96 @@ def replace_response_content(request, response):
 
 # Function to get and initialize the driver
 def get_and_initialize_chrome_driver():
-    options = get_browser_options()
-    if args.no_anti_bot:
-        service = Service(executable_path="res/chrome/chromedriver")
-        driver = webdriver.Chrome(service=service, options=options, seleniumwire_options={'proxy': {'http': args.proxy, 'https': args.proxy}} if args.proxy else {})
-    else:
-        driver = Chrome(executable_path="res/chrome/chromedriver", version_main=122, options=options, seleniumwire_options={'proxy': {'http': args.proxy, 'https': args.proxy}} if args.proxy else {})
-    # Set request interceptor
-    if not args.load_static_media:
-        driver.request_interceptor = intercept_request
-    if args.replace_code or args.replace_files:
-    # Intercept HTTP responses to modify the http response body if required
-        driver.response_interceptor = replace_response_content
-    # Set the timeout limit to 5 minutes
-    driver.set_page_load_timeout(300)
-    # Set custom headers
-    if args.headers:
-        custom_headers = {}
+    with driver_lock:
+        options = get_browser_options()
+        # try to get chrome driver and retry this three times, in case of exceptions, increases the stablility in case of multiples threads
         try:
-        # Split the raw string into headers and set each one
-            for header in args.headers.split(','):
-                key, value = map(str.strip, header.split(':'))
-                custom_headers[key] = value
-                # Update header_overrides with all custom headers
-                driver.header_overrides = custom_headers
-        except ValueError:
-            print(f"\n\n{RED}[+]--------------------------------------------------------------------------------------------------------------------------[+]\nERROR:{RESET} Error setting headers. Please provide headers in valid format.\n{RED}[+]--------------------------------------------------------------------------------------------------------------------------[+]{RESET}")
-            driver.quit()
-            log_error(format_exc())
-            sys.exit(0)
-    return driver
+            if args.no_anti_bot:
+                service = Service(executable_path="res/chrome/chromedriver")
+                driver = webdriver.Chrome(service=service, options=options, retries=max_retry, seleniumwire_options={'proxy': {'http': args.proxy, 'https': args.proxy}} if args.proxy else {})
+            else:
+                driver = Chrome(executable_path="res/chrome/chromedriver", version_main=122, options=options, retries=max_retry, seleniumwire_options={'proxy': {'http': args.proxy, 'https': args.proxy}} if args.proxy else {})
+        except:
+            sleep(10)
+            options = get_browser_options()
+            try:
+                if args.no_anti_bot:
+                    service = Service(executable_path="res/chrome/chromedriver")
+                    driver = webdriver.Chrome(service=service, options=options, retries=max_retry, seleniumwire_options={'proxy': {'http': args.proxy, 'https': args.proxy}} if args.proxy else {})
+                else:
+                    driver = Chrome(executable_path="res/chrome/chromedriver", version_main=122, options=options, retries=max_retry, seleniumwire_options={'proxy': {'http': args.proxy, 'https': args.proxy}} if args.proxy else {})
+            except:
+                sleep(10)
+                options = get_browser_options()
+                try:
+                    if args.no_anti_bot:
+                        service = Service(executable_path="res/chrome/chromedriver")
+                        driver = webdriver.Chrome(service=service, options=options, retries=max_retry, seleniumwire_options={'proxy': {'http': args.proxy, 'https': args.proxy}} if args.proxy else {})
+                    else:
+                        driver = Chrome(executable_path="res/chrome/chromedriver", version_main=122, options=options, retries=max_retry, seleniumwire_options={'proxy': {'http': args.proxy, 'https': args.proxy}} if args.proxy else {})
+                except:
+                    sleep(10)
+                    options = get_browser_options()
+                    if args.no_anti_bot:
+                        service = Service(executable_path="res/chrome/chromedriver")
+                        driver = webdriver.Chrome(service=service, options=options, seleniumwire_options={'proxy': {'http': args.proxy, 'https': args.proxy}} if args.proxy else {})
+                    else:
+                        driver = Chrome(executable_path="res/chrome/chromedriver", version_main=122, options=options, seleniumwire_options={'proxy': {'http': args.proxy, 'https': args.proxy}} if args.proxy else {})
+        # Set request interceptor
+        if not args.load_static_media:
+            driver.request_interceptor = intercept_request
+        if args.replace_code or args.replace_files:
+        # Intercept HTTP responses to modify the http response body if required
+            driver.response_interceptor = replace_response_content
+        # Set the timeout limit to 5 minutes
+        driver.set_page_load_timeout(300)
+        # Set custom headers
+        if args.headers:
+            custom_headers = {}
+            try:
+            # Split the raw string into headers and set each one
+                for header in args.headers.split(','):
+                    key, value = map(str.strip, header.split(':'))
+                    custom_headers[key] = value
+                    # Update header_overrides with all custom headers
+                    driver.header_overrides = custom_headers
+            except ValueError:
+                print(f"\n\n{RED}[+]--------------------------------------------------------------------------------------------------------------------------[+]\nERROR:{RESET} Error setting headers. Please provide headers in valid format.\n{RED}[+]--------------------------------------------------------------------------------------------------------------------------[+]{RESET}")
+                driver.quit()
+                log_error(format_exc())
+                sys.exit(0)
+        return driver
             
 # Function to Remove attributes this is created to reduce code in attempt function
 def remove_attributes_and_get_focus(driver, element):
-    driver.execute_script("arguments[0].removeAttribute('pattern');",element)
-    driver.execute_script("arguments[0].removeAttribute('min');",element)
-    driver.execute_script("arguments[0].removeAttribute('max');",element)
-    driver.execute_script("arguments[0].removeAttribute('maxlength');",element)
-    driver.execute_script("arguments[0].removeAttribute('minlength');",element)
-    driver.execute_script("arguments[0].removeAttribute('readonly');",element)
-    driver.execute_script("arguments[0].removeAttribute('autocomplete');",element)
-    driver.execute_script("arguments[0].removeAttribute('disabled');",element)
-    driver.execute_script("arguments[0].removeAttribute('hidden');",element)
-    driver.execute_script("arguments[0].scrollIntoView(true);", element)
-    driver.execute_script("arguments[0].focus();", element)
+    try:
+        driver.execute_script("arguments[0].removeAttribute('pattern');",element)
+        driver.execute_script("arguments[0].removeAttribute('min');",element)
+        driver.execute_script("arguments[0].removeAttribute('max');",element)
+        driver.execute_script("arguments[0].removeAttribute('maxlength');",element)
+        driver.execute_script("arguments[0].removeAttribute('minlength');",element)
+        driver.execute_script("arguments[0].removeAttribute('readonly');",element)
+        driver.execute_script("arguments[0].removeAttribute('autocomplete');",element)
+        driver.execute_script("arguments[0].removeAttribute('disabled');",element)
+        driver.execute_script("arguments[0].removeAttribute('hidden');",element)
+        driver.execute_script("arguments[0].scrollIntoView(true);", element)
+        driver.execute_script("arguments[0].focus();", element)
+    except StaleElementReferenceException:
+        sleep(2)
+        try:
+            driver.execute_script("arguments[0].removeAttribute('pattern');",element)
+            driver.execute_script("arguments[0].removeAttribute('min');",element)
+            driver.execute_script("arguments[0].removeAttribute('max');",element)
+            driver.execute_script("arguments[0].removeAttribute('maxlength');",element)
+            driver.execute_script("arguments[0].removeAttribute('minlength');",element)
+            driver.execute_script("arguments[0].removeAttribute('readonly');",element)
+            driver.execute_script("arguments[0].removeAttribute('autocomplete');",element)
+            driver.execute_script("arguments[0].removeAttribute('disabled');",element)
+            driver.execute_script("arguments[0].removeAttribute('hidden');",element)
+            driver.execute_script("arguments[0].scrollIntoView(true);", element)
+            driver.execute_script("arguments[0].focus();", element)
+        except StaleElementReferenceException:
+            pass
 
 # Function to log errors 
 def log_error(error):
@@ -913,13 +795,27 @@ def press_button(driver,button,from_buttons_to_press):
         else:
             button.click()
     except ElementClickInterceptedException as e:
-        print(f"\n\n{RED}[+]--------------------------------------------------------------------------------------------------------------------------[+]\nERROR: {RESET}The button -> {button} is not clickable or click has been intercepted by some other element, there might be some javascript being executed on web page which is preventing the click. Please remove the code intercepting the click.\n{RED}[+]--------------------------------------------------------------------------------------------------------------------------[+]{RESET}")
-        if args.debug:
-            print_exc()
-            print(f"\n\n{RED}[+]--------------------------------------------------------------------------------------------------------------------------[+]\nERROR: {RESET}Refer Above Stack Trace\n{RED}[+]--------------------------------------------------------------------------------------------------------------------------[+]{RESET}")
-        log_error(format_exc())
-        driver.quit()
-        sys.exit(0)
+        sleep(3)
+        try:
+            if args.press_enter_no_click and not from_buttons_to_press:
+                button.send_keys("\n")
+            else:
+                button.click()
+        except ElementClickInterceptedException as e:
+            sleep(6)
+            try:
+                if args.press_enter_no_click and not from_buttons_to_press:
+                    button.send_keys("\n")
+                else:
+                    button.click()
+            except ElementClickInterceptedException as e:
+                print(f"\n\n{RED}[+]--------------------------------------------------------------------------------------------------------------------------[+]\nERROR: {RESET}The button -> {button} is not clickable or click has been intercepted by some other element, there might be some javascript being executed on web page which is preventing the click. Please remove the code intercepting the click.\n{RED}[+]--------------------------------------------------------------------------------------------------------------------------[+]{RESET}")
+                if args.debug:
+                    print_exc()
+                    print(f"\n\n{RED}[+]--------------------------------------------------------------------------------------------------------------------------[+]\nERROR: {RESET}Refer Above Stack Trace\n{RED}[+]--------------------------------------------------------------------------------------------------------------------------[+]{RESET}")
+                log_error(format_exc())
+                driver.quit()
+                sys.exit(0)
 
 # Function to perform generic initial operations before filling the form
 def initial_operations_before_filling_the_form(driver):
@@ -927,7 +823,13 @@ def initial_operations_before_filling_the_form(driver):
     if args.force_cookie:
         add_cookies(driver)
     # Wait for body to be loaded in case of slow response
-    wait_and_handle_popup(driver) 
+    wait_and_handle_popup(driver)
+    # if args.reload_page then reload the current page
+    if args.reload_page:
+        # Force reload the page
+        driver.execute_script("location.reload(true);")
+        wait_and_handle_popup(driver)
+        sleep(0.5)
     # Clear previous requests
     del driver.requests
     # Go to the target website
@@ -950,7 +852,15 @@ def initial_operations_before_filling_the_form(driver):
     # Execute custom javascript code
     if not javascript_to_execute == '\0':
         sleep(0.3)
-        driver.execute_script(javascript_to_execute)
+        try:
+            driver.execute_script(javascript_to_execute)
+        except JavascriptException:
+            sleep(5)
+            try:
+                driver.execute_script(javascript_to_execute)
+            except JavascriptException:
+                sleep(7)
+                driver.execute_script(javascript_to_execute)
     # Handle alert if it is present
     try:
         alert = driver.switch_to.alert
@@ -969,6 +879,9 @@ def operations_after_pressing_the_button(element,driver,webpage_before,this_thre
         sleep(args.delay_after)
     # Wait for all requests to be completed
     wait_and_handle_popup(driver)
+    if args.javascript_after:
+        sleep(0.2)
+        driver.execute_script(args.javascript_after)
     # Get web page content after making the response
     webpage_after = driver.page_source
     write_http_request_response(element,this_threads_file,driver,payload,webpage_before,webpage_after)
@@ -1042,17 +955,21 @@ def write_http_request_response(element, this_threads_file, driver, payload, web
     with open(this_threads_file, 'a', newline='') as report:
         # Filtering requests that are in scope
         captured_requests = driver.requests
-        filtered_requests = [single_request for single_request in captured_requests if
-                     urlparse(single_request.url).hostname == hostname or
-                     any(urlparse(single_request.url).hostname == scope_hostname for scope_hostname in scope_hostnames)]
-        filtered_requests = [single_request for single_request in filtered_requests if all(extension not in single_request.url for extension in forbidden_extensions)]
-        filtered_requests = [single_request for single_request in filtered_requests if all(extension not in single_request.url for extension in ['.js', '.css', '.txt','.woff2','.woff'])]
+        if args.include_urls:
+            filtered_requests = [single_request for single_request in captured_requests if any([single_request.url in list_of_urls_to_be_included_in_final_report])]    
+        else:
+            filtered_requests = [single_request for single_request in captured_requests if
+                         urlparse(single_request.url).hostname == hostname or
+                         any(urlparse(single_request.url).hostname == scope_hostname for scope_hostname in scope_hostnames)]
+            filtered_requests = [single_request for single_request in filtered_requests if all(extension not in single_request.url for extension in forbidden_extensions)]
+            filtered_requests = [single_request for single_request in filtered_requests if all(extension not in single_request.url for extension in ['.js', '.css', '.txt','.woff2','.woff'])]
+            filtered_requests = [single_request for single_request in filtered_requests if all([single_request.url not in list_of_urls_to_be_excluded_from_final_report])]
         writer = csv.writer(report)
         for request in filtered_requests:
             try:
                 request_body = request.body.decode("UTF-8")
             except UnicodeDecodeError:
-                request_body = request.body
+                request_body = request.body#.body
             try:
                 # Get request response time
                 request_time = request.date
@@ -1066,11 +983,18 @@ def write_http_request_response(element, this_threads_file, driver, payload, web
                     raw = gzip.decompress(raw)
                 else:
                     raw = raw.decode(encoding, errors='replace')
+                # URL Decode the request and response bodies
+                request_body = urllib.parse.unquote(request_body)
+                try:
+                    raw = urllib.parse.unquote(raw)
+                except Exception as e:
+                    log_error(format_exc())
+                    pass
                 soup = bs(raw, features="html.parser")
                 response_body = soup.prettify() if hasattr(soup, 'prettify') else raw.decode("UTF-8", errors="replace")
                 # After printing on the display, write it to the report
                 row = [value if value else ' ' for value in
-                    [request_time.strftime('%Y-%m-%d %H:%M:%S'), str(element), str(payload), request.method, request.url, request.headers, request_body, response_time.strftime('%Y-%m-%d %H:%M:%S'), 
+                    [request_time.strftime('%Y-%m-%d %H:%M:%S'), str(element), str(payload), request.method, urllib.parse.unquote(request.url), request.headers, request_body, response_time.strftime('%Y-%m-%d %H:%M:%S'), 
                     cycle_time_in_milliseconds, request.response.status_code, request.response.reason, request.response.headers, response_body,
                     len(request.response.body), bs(webpage_before,features="html.parser").prettify(), 
                     bs(webpage_after,features="html.parser").prettify()]]
@@ -1078,15 +1002,15 @@ def write_http_request_response(element, this_threads_file, driver, payload, web
                 # Check whether the output should be printed on the console or not
                 if args.verbose:
                     # Print the request
-                    print(f'\n{GREEN}---------------------Single Request/Response Cycle-------------------')
+                    print(f'\n{GREEN}[+]---------------------Single Request/Response Cycle-------------------[+]')
                     print(f"Fuzzing - " + str(element))
                     print(f"Payload - " + str(payload))
-                    print(f'----------------------REQUEST---------------------{RESET}')
-                    print('Time - ' + request_time.strftime('%Y-%m-%d %H:%M:%S') + '\n', request.method, request.url)
+                    print(f'[+]----------------------REQUEST---------------------[+]{RESET}')
+                    print('Time - ' + request_time.strftime('%Y-%m-%d %H:%M:%S') + '\n', request.method, urllib.parse.unquote(request.url))
                     # Print in a new line
                     print(request.headers, request_body)
                     # Print the response
-                    print(f'{GREEN}----------------------RESPONSE--------------------{RESET}')
+                    print(f'{GREEN}[+]----------------------RESPONSE--------------------[+]{RESET}')
                     if request.response:
                         print(
                             'Time - ' + response_time.strftime('%Y-%m-%d %H:%M:%S') + '\n',
@@ -1100,19 +1024,21 @@ def write_http_request_response(element, this_threads_file, driver, payload, web
             except AttributeError as e:
                 # Code to handle if no request has been made and there is no response
                 if args.verbose:
-                    print(f"\n\n{YELLOW}[+]--------------------------------------------------------------------------------------------------------------------------[+]\nINFO:{RESET} No response is received not skipping report row!\n{YELLOW}[+]--------------------------------------------------------------------------------------------------------------------------[+]{RESET}")
+                    print(f"\n\n{YELLOW}[+]--------------------------------------------------------------------------------------------------------------------------[+]\nINFO:{RESET} No response is received skipping report row!\n{YELLOW}[+]--------------------------------------------------------------------------------------------------------------------------[+]{RESET}")
                 row = [value if value else ' ' for value in
-                    [request_time.strftime('%Y-%m-%d %H:%M:%S'), str(element), str(payload), request.method, request.url, request.headers, request_body, request_time.strftime('%Y-%m-%d %H:%M:%S'), 
+                    [request_time.strftime('%Y-%m-%d %H:%M:%S'), str(element), str(payload), request.method, urllib.parse.unquote(request.url), request.headers, request_body, request_time.strftime('%Y-%m-%d %H:%M:%S'), 
                     '0', '0', "N/A", "N/A", "N/A",
-                    "N/A", bs(webpage_before,features="html.parser").prettify(), 
+                    '0', bs(webpage_before,features="html.parser").prettify(), 
                     bs(webpage_after,features="html.parser").prettify()]]
                 writer.writerow(row)
 
 # Function to Generate Final Report
 def generate_final_report():
+    # sleep for 3 seconds so console progress bars are properly rendered
+    #sleep(3)
     # Increase the field size limit
     csv.field_size_limit(sys.maxsize)
-    print(f"\n\n{YELLOW}[+]--------------------------------------------------------------------------------------------------------------------------[+]\nINFO:{RESET} Generating Final Report\n{YELLOW}[+]--------------------------------------------------------------------------------------------------------------------------[+]{RESET}")
+    print(f"\n\n\n{YELLOW}[+]--------------------------------------------------------------------------------------------------------------------------[+]\nINFO:{RESET} Generating Final Report\n{YELLOW}[+]--------------------------------------------------------------------------------------------------------------------------[+]{RESET}")
     directory = f"BrowserBruter_Reports/{hostname}/{start_time}"
     final_report = f"BrowserBruter_Reports/{hostname}/{start_time}/{hostname}-{start_time}.csv"
     try:
@@ -1172,7 +1098,10 @@ def generate_final_report():
                         final_processed_payloads.write(i)
                         if args.attack in (1, 2):
                             # keeping track of remaining payloads by removing processed payloads from payload[] list
-                            payloads.remove(i.strip())
+                            try:
+                                payloads.remove(i.strip())
+                            except ValueError:
+                                pass
                 # Delete the current thread's processed payloads file
                 os.remove(file_path)
         if args.attack in (1, 2):
@@ -1184,6 +1113,11 @@ def generate_final_report():
             print(f"\n\n{YELLOW}[+]--------------------------------------------------------------------------------------------------------------------------[+]\nINFO:{RESET} Remaining Payloads (if any) have been stored -> {remaining_payloads}\n{YELLOW}[+]--------------------------------------------------------------------------------------------------------------------------[+]{RESET}")
         print(f"\n\n{YELLOW}[+]--------------------------------------------------------------------------------------------------------------------------[+]\nINFO: {RESET}Processed Payloads (if any) have been stored -> {processed_payloads}\n{YELLOW}[+]--------------------------------------------------------------------------------------------------------------------------[+]{RESET}")
         print(f"\n\n{YELLOW}[+]--------------------------------------------------------------------------------------------------------------------------[+]\nINFO:{RESET} Report Generated -> {final_report}\n{YELLOW}[+]--------------------------------------------------------------------------------------------------------------------------[+]{RESET}")
+        end_time_int = datetime.datetime.now()
+        end_time_str = end_time_int.strftime("%Y-%m-%d_%H-%M-%S")
+        total_time = end_time_int - start_time_int
+        total_time_str = str(total_time).split('.')[0]
+        print(f"\n\n{YELLOW}[+]--------------------------------------------------------------------------------------------------------------------------[+]\nINFO:{RESET} Fuzzing end time ->  {end_time_str} Total Running time -> {total_time_str}\n{YELLOW}[+]--------------------------------------------------------------------------------------------------------------------------[+]{RESET}")
     except ConnectionRefusedError as e:
         log_error(format_exc())
         print(f"\n\n{YELLOW}[+]--------------------------------------------------------------------------------------------------------------------------[+]\nINFO: {RESET}Browser's window has been closed, closing the BrowserBruter, check error log if this is unintentional\n{YELLOW}[+]--------------------------------------------------------------------------------------------------------------------------[+]{RESET}")
@@ -1216,40 +1150,54 @@ def get_element(driver,element,coming_from_initial_operations_method):
         selector = get_form(driver,args.form)
     else:
         selector = driver    
-    try:
-        element = selector.find_element(By.ID, element)
-    except NoSuchElementException:
-        try:
-            element = selector.find_element(By.NAME, element)
-        except NoSuchElementException:
-            try:
-                element = selector.find_element(By.CLASS_NAME, element)
-            except NoSuchElementException:
-                try:
-                    element = selector.find_element(By.XPATH,f"//input[@value='{element}']")
-                except NoSuchElementException:
-                    try:
-                        element = selector.find_element(By.XPATH,f"//input[@Type='{element}']")
-                    except NoSuchElementException:
-                        try:
-                            element = selector.find_element(By.XPATH,f"//textarea[@value='{element}']")
-                        except NoSuchElementException:    
-                            try:
-                                element = selector.find_element(By.XPATH,f"//button[@value='{element}']")
-                            except NoSuchElementException:
-                                try:
-                                    element = selector.find_element(By.XPATH,f"//button[@Type='{element}']")
-                                except NoSuchElementException as e:
-                                    print(f"\n\n{RED}[+]--------------------------------------------------------------------------------------------------------------------------[+]\nError:{RESET} Specified element {element} is not found. Please verify the name of the element. For more information, check Error.txt or use --debug flag.\n{RED}[+]--------------------------------------------------------------------------------------------------------------------------[+]{RESET}")
-                                    if args.debug:
-                                        print_exc()
-                                        print(f"\n\n{RED}[+]--------------------------------------------------------------------------------------------------------------------------[+]\nERROR: {RESET}Refer Above Stack Trace\n{RED}[+]--------------------------------------------------------------------------------------------------------------------------[+]{RESET}")
-                                    driver.quit()
-                                    log_error(format_exc())
-                                    sys.exit(0)
+    found = False
+    for i in range(30): # retry ten times
+        # First try
+        found, element = single_find_element_try(selector,element)
+        if found:
+            break
+        else:
+            sleep(5)
+    if not found:
+        print(f"\n\n{RED}[+]--------------------------------------------------------------------------------------------------------------------------[+]\nError:{RESET} Specified element {element} is not found. Please verify the name of the element. For more information, check Error.txt or use --debug flag.\n{RED}[+]--------------------------------------------------------------------------------------------------------------------------[+]{RESET}")
+        if args.debug:
+            print_exc()
+            print(f"\n\n{RED}[+]--------------------------------------------------------------------------------------------------------------------------[+]\nERROR: {RESET}Refer Above Stack Trace\n{RED}[+]--------------------------------------------------------------------------------------------------------------------------[+]{RESET}")
+        driver.quit()
+        log_error(format_exc())
+        sys.exit(0)
     remove_attributes_and_get_focus(driver, element)
     return element
 
+# This function is created two call this two times in case of slow loading of web page
+def single_find_element_try(selector,element):
+    try:
+        element = selector.find_element(By.ID, element)
+    except (NoSuchElementException, StaleElementReferenceException):
+        try:
+            element = selector.find_element(By.NAME, element)
+        except (NoSuchElementException, StaleElementReferenceException):
+            try:
+                element = selector.find_element(By.CLASS_NAME, element)
+            except (NoSuchElementException, StaleElementReferenceException):
+                try:
+                    element = selector.find_element(By.XPATH,f"//input[@value='{element}']")
+                except (NoSuchElementException, StaleElementReferenceException):
+                    try:
+                        element = selector.find_element(By.XPATH,f"//input[@Type='{element}']")
+                    except (NoSuchElementException, StaleElementReferenceException):
+                        try:
+                            element = selector.find_element(By.XPATH,f"//textarea[@value='{element}']")
+                        except (NoSuchElementException, StaleElementReferenceException):    
+                            try:
+                                element = selector.find_element(By.XPATH,f"//button[@value='{element}']")
+                            except (NoSuchElementException, StaleElementReferenceException):
+                                try:
+                                    element = selector.find_element(By.XPATH,f"//button[@Type='{element}']")
+                                except (NoSuchElementException, StaleElementReferenceException):
+                                    return False, element
+    return True, element
+                                
 # Function to fill the payload in selected input field
 def fill_payload_in_element(driver,element_being_fuzzed,payload):
     try:
@@ -1323,18 +1271,53 @@ def run_browser_instance(payloads, instance_number):
             if args.pause:
                 driver.get(args.target)
                 pause_event.set()
-            if args.attack == 1:
-                if not terminate:
-                    sniper(payloads, elements, instance_number, this_threads_files, driver)
-            elif args.attack == 2:
-                if not terminate:
-                    battering_ram(payloads, elements, instance_number, this_threads_files, driver)
-            elif args.attack == 3:
-                if not terminate:
-                    pitchfork(payloads,instance_number,this_threads_files,driver)
-            elif args.attack == 4:
-                if not terminate:
-                    attempt_clusterbomb_fuzz(payloads,driver,this_threads_files,instance_number)
+            # Retry count = 3
+            try:
+                if args.attack == 1:
+                    if not terminate:
+                        sniper_loop(payloads, elements, instance_number, this_threads_files, driver)
+                elif args.attack == 2:
+                    if not terminate:
+                        battering_ram_loop(payloads, elements, instance_number, this_threads_files, driver)
+                elif args.attack == 3:
+                    if not terminate:
+                        pitchfork_loop(payloads,instance_number,this_threads_files,driver)
+                elif args.attack == 4:
+                    if not terminate:
+                        attempt_clusterbomb_fuzz(payloads,driver,this_threads_files,instance_number)
+            except:
+                # If there are multiple threads, then and only then retry
+                if args.threads:
+                    sleep(6)
+                    try:
+                        if args.attack == 1:
+                            if not terminate:
+                                sniper_loop(payloads, elements, instance_number, this_threads_files, driver)
+                        elif args.attack == 2:
+                            if not terminate:
+                                battering_ram_loop(payloads, elements, instance_number, this_threads_files, driver)
+                        elif args.attack == 3:
+                            if not terminate:
+                                pitchfork_loop(payloads,instance_number,this_threads_files,driver)
+                        elif args.attack == 4:
+                            if not terminate:
+                                attempt_clusterbomb_fuzz(payloads,driver,this_threads_files,instance_number)
+                    except:
+                        sleep(10)
+                        if args.attack == 1:
+                            if not terminate:
+                                sniper_loop(payloads, elements, instance_number, this_threads_files, driver)
+                        elif args.attack == 2:
+                            if not terminate:
+                                battering_ram_loop(payloads, elements, instance_number, this_threads_files, driver)
+                        elif args.attack == 3:
+                            if not terminate:
+                                pitchfork_loop(payloads,instance_number,this_threads_files,driver)
+                        elif args.attack == 4:
+                            if not terminate:
+                                attempt_clusterbomb_fuzz(payloads,driver,this_threads_files,instance_number)
+                else:
+                    raise
         # Handle the exceptions which are specific to this thread and do not affect other threads
         except NoSuchWindowException as e:
             log_error(format_exc())
@@ -1370,7 +1353,7 @@ def run_browser_instance(payloads, instance_number):
             except UnboundLocalError:
                 sys.exit(0)
 
-def sniper(payloads,elements,instance_number,this_threads_files,driver):
+def sniper_loop(payloads,elements,instance_number,this_threads_files,driver):
     progress_bar = tqdm(total=len(payloads) * len(elements), desc=f"Fuzzing Progress for Browser -> {instance_number}", unit="iteration",dynamic_ncols=True,colour='blue')
     # Start the Fuzzing process
     for i in range(len(payloads)):
@@ -1383,7 +1366,11 @@ def sniper(payloads,elements,instance_number,this_threads_files,driver):
                     pause_event.set()
                 # if pause event is set then pause the fuzzing process
                 sleep_while_pause()
-                attempt_sniper_fuzz(elements[j],payloads[i], driver, this_threads_files[0])
+                try:
+                    attempt_sniper_fuzz(elements[j],payloads[i], driver, this_threads_files[0])
+                except StaleElementReferenceException:
+                    sleep(4)
+                    attempt_sniper_fuzz(elements[j],payloads[i], driver, this_threads_files[0])
                 if args.new_instance:
                     driver = handle_new_instance(driver)
             if not terminate:
@@ -1399,19 +1386,51 @@ def sniper(payloads,elements,instance_number,this_threads_files,driver):
 # Function to attempt a single request-response cycle with payload
 def attempt_sniper_fuzz(element, payload, driver, this_threads_file):
     # Call the initial_operations_before_filling_the_form
-    initial_operations_before_filling_the_form(driver)
+    try:
+        initial_operations_before_filling_the_form(driver)
+    except StaleElementReferenceException:
+        sleep(5)
+        initial_operations_before_filling_the_form(driver)
     # Get web page content before making request
     webpage_before = driver.page_source
     # Automatically handle and fill the form
     if args.fill:
-        fill_the_form(driver)
+        try:
+            fill_the_form(driver)
+        except StaleElementReferenceException:
+            driver.get(args.target)
+            wait_and_handle_popup(driver)
+            sleep(5)
+            try:
+                fill_the_form(driver)
+            except StaleElementReferenceException:
+                driver.get(args.target)
+                wait_and_handle_popup(driver)
+                sleep(5)
+                fill_the_form(driver)
     # Fill the target field being fuzzed with the current payload
     # Finding the element either by id, name, or class
     element_being_fuzzed = get_element(driver,element,False)
     if element in remove_class_elements:
             driver.execute_script("arguments[0].removeAttribute('class');",element_being_fuzzed)
     # Fill the payload in element
-    fill_payload_in_element(driver,element_being_fuzzed,payload)
+    try:
+        fill_payload_in_element(driver,element_being_fuzzed,payload)
+    except StaleElementReferenceException:
+        sleep(6)
+        try:
+            fill_payload_in_element(driver,element_being_fuzzed,payload)
+        except StaleElementReferenceException:
+            sleep(6)
+            try:
+                fill_payload_in_element(driver,element_being_fuzzed,payload)
+            except StaleElementReferenceException:
+                sleep(10)
+                try:
+                    fill_payload_in_element(driver,element_being_fuzzed,payload)
+                except StaleElementReferenceException:
+                    sleep(20)
+                    fill_payload_in_element(driver,element_being_fuzzed,payload)
     # Press the button
     button_to_press = get_element(driver,args.button,False)
     if args.button in remove_class_elements:
@@ -1419,7 +1438,7 @@ def attempt_sniper_fuzz(element, payload, driver, this_threads_file):
     press_button(driver,button_to_press,False)
     operations_after_pressing_the_button(element,driver,webpage_before,this_threads_file,payload)
     
-def battering_ram(payloads,elements,instance_number,this_threads_files,driver):
+def battering_ram_loop(payloads,elements,instance_number,this_threads_files,driver):
     progress_bar = tqdm(total=len(payloads), desc=f"Fuzzing Progress for Browser -> {instance_number}", unit="iteration",dynamic_ncols=True,colour='blue')
     # Start the Fuzzing process
     for i in range(len(payloads)):
@@ -1430,7 +1449,11 @@ def battering_ram(payloads,elements,instance_number,this_threads_files,driver):
                 driver.get(args.target)
                 pause_event.set()
             sleep_while_pause()
-            attempt_battering_ram_fuzz(elements,payloads[i], driver, this_threads_files[0])
+            try:
+                attempt_battering_ram_fuzz(elements,payloads[i], driver, this_threads_files[0])
+            except StaleElementReferenceException:
+                sleep(4)
+                attempt_battering_ram_fuzz(elements,payloads[i], driver, this_threads_files[0])
             if args.new_instance:
                 handle_new_instance(driver)
             if not terminate:
@@ -1445,12 +1468,28 @@ def battering_ram(payloads,elements,instance_number,this_threads_files,driver):
 # Function to attempt to fuzz battering ram
 def attempt_battering_ram_fuzz(elements, payload, driver, this_threads_file):
     # Call the initial_operations_before_filling_the_form
-    initial_operations_before_filling_the_form(driver)
+    try:
+        initial_operations_before_filling_the_form(driver)
+    except StaleElementReferenceException:
+        sleep(5)
+        initial_operations_before_filling_the_form(driver)
     # Get web page content before making request
     webpage_before = driver.page_source
     # Automatically handle and fill the form
     if args.fill:
-        fill_the_form(driver)
+        try:
+            fill_the_form(driver)
+        except StaleElementReferenceException:
+            driver.get(args.target)
+            wait_and_handle_popup(driver)
+            sleep(10)
+            try:
+                fill_the_form(driver)
+            except StaleElementReferenceException:
+                driver.get(args.target)
+                wait_and_handle_popup(driver)
+                sleep(10)
+                fill_the_form(driver)
     # Fill the target field being fuzzed with the current payload
     # Finding the element either by id, name, or class
     for element in elements:
@@ -1458,7 +1497,23 @@ def attempt_battering_ram_fuzz(elements, payload, driver, this_threads_file):
         if element in remove_class_elements:
             driver.execute_script("arguments[0].removeAttribute('class');",element_being_fuzzed)
         # Fill the payload in element
-        fill_payload_in_element(driver,element_being_fuzzed,payload)
+        try:
+            fill_payload_in_element(driver,element_being_fuzzed,payload)
+        except StaleElementReferenceException:
+            sleep(6)
+            try:
+                fill_payload_in_element(driver,element_being_fuzzed,payload)
+            except StaleElementReferenceException:
+                sleep(6)
+                try:
+                    fill_payload_in_element(driver,element_being_fuzzed,payload)
+                except StaleElementReferenceException:
+                    sleep(10)
+                    try:
+                        fill_payload_in_element(driver,element_being_fuzzed,payload)
+                    except StaleElementReferenceException:
+                        sleep(20)
+                        fill_payload_in_element(driver,element_being_fuzzed,payload)
     # Press the button
     button_to_press = get_element(driver,args.button,False)
     if args.button in remove_class_elements:
@@ -1466,7 +1521,7 @@ def attempt_battering_ram_fuzz(elements, payload, driver, this_threads_file):
     press_button(driver,button_to_press,False)
     operations_after_pressing_the_button(element,driver,webpage_before,this_threads_file,payload)
 
-def pitchfork(elements_payloads,instance_number,this_threads_files,driver):
+def pitchfork_loop(elements_payloads,instance_number,this_threads_files,driver):
     # Determine the number of iterations based on the maximum length of test data files
     num_iterations = max(len(payload_list) for payload_list in elements_payloads.values())
     progress_bar = tqdm(total=num_iterations, desc=f"Fuzzing Progress for Browser -> {instance_number}", unit="iteration", dynamic_ncols=True, colour='blue')
@@ -1480,7 +1535,11 @@ def pitchfork(elements_payloads,instance_number,this_threads_files,driver):
                 pause_event.set()
             # If the pause event is set, then pause the fuzzing process
             sleep_while_pause()
-            attempt_pitchfork_fuzz(elements_payloads, i, driver, this_threads_files[0])
+            try:
+                attempt_pitchfork_fuzz(elements_payloads, i, driver, this_threads_files[0])
+            except StaleElementReferenceException:
+                sleep(4)
+                attempt_pitchfork_fuzz(elements_payloads, i, driver, this_threads_files[0])
             if args.new_instance:
                 handle_new_instance(driver)
             for element, payload_list in elements_payloads.items():
@@ -1499,12 +1558,28 @@ def attempt_pitchfork_fuzz(elements_payloads,index,driver,this_threads_file):
     for element, payload_list in elements_payloads.items():
         payloads.append(payload_list[index])
     # Call the initial_operations_before_filling_the_form
-    initial_operations_before_filling_the_form(driver)
+    try:
+        initial_operations_before_filling_the_form(driver)
+    except StaleElementReferenceException:
+        sleep(5)
+        initial_operations_before_filling_the_form(driver)
     # Get web page content before making request
     webpage_before = driver.page_source
     # Automatically handle and fill the form
     if args.fill:
-        fill_the_form(driver)
+        try:
+            fill_the_form(driver)
+        except StaleElementReferenceException:
+            driver.get(args.target)
+            wait_and_handle_popup(driver)
+            sleep(5)
+            try:
+                fill_the_form(driver)
+            except StaleElementReferenceException:
+                driver.get(args.target)
+                wait_and_handle_popup(driver)
+                sleep(5)
+                fill_the_form(driver)
     # Fill the target field being fuzzed with the current payload
     # Finding the element either by id, name, or class
     for element, payload_list in elements_payloads.items():
@@ -1512,7 +1587,23 @@ def attempt_pitchfork_fuzz(elements_payloads,index,driver,this_threads_file):
         if element in remove_class_elements:
             driver.execute_script("arguments[0].removeAttribute('class');",element_being_fuzzed)
         # Fill the payload in element
-        fill_payload_in_element(driver,element_being_fuzzed,payload_list[index])
+        try:
+            fill_payload_in_element(driver,element_being_fuzzed,payload_list[index])
+        except StaleElementReferenceException:
+            sleep(6)
+            try:
+                fill_payload_in_element(driver,element_being_fuzzed,payload_list[index])
+            except StaleElementReferenceException:
+                sleep(6)
+                try:
+                    fill_payload_in_element(driver,element_being_fuzzed,payload_list[index])
+                except StaleElementReferenceException:
+                    sleep(10)
+                    try:
+                        fill_payload_in_element(driver,element_being_fuzzed,payload_list[index])
+                    except StaleElementReferenceException:
+                        sleep(20)
+                        fill_payload_in_element(driver,element_being_fuzzed,payload_list[index])
     # Press the button
     button_to_press = get_element(driver,args.button,False)
     if args.button in remove_class_elements:
@@ -1534,14 +1625,30 @@ def attempt_clusterbomb_fuzz(payloads_combinations, driver,this_threads_files, i
                 # If the pause event is set, then pause the fuzzing process
                 sleep_while_pause()
                 # Call the initial_operations_before_filling_the_form
-                initial_operations_before_filling_the_form(driver)
+                try:
+                    initial_operations_before_filling_the_form(driver)
+                except StaleElementReferenceException:
+                    sleep(5)
+                    initial_operations_before_filling_the_form(driver)
                 # Get web page content before making request
                 webpage_before = driver.page_source
                 if terminate:
                     break
                 # Automatically handle and fill the form
                 if args.fill:
-                    fill_the_form(driver)
+                    try:
+                        fill_the_form(driver)
+                    except StaleElementReferenceException:
+                        driver.get(args.target)
+                        wait_and_handle_popup(driver)
+                        sleep(5)
+                        try:
+                            fill_the_form(driver)
+                        except StaleElementReferenceException:
+                            driver.get(args.target)
+                            wait_and_handle_popup(driver)
+                            sleep(5)
+                            fill_the_form(driver)
                 if terminate:
                     break
                 # Iterate through each element and set its value
@@ -1553,13 +1660,31 @@ def attempt_clusterbomb_fuzz(payloads_combinations, driver,this_threads_files, i
                     if element in remove_class_elements:
                         driver.execute_script("arguments[0].removeAttribute('class');",element_being_fuzzed)
                     # Fill the payload in element
-                    fill_payload_in_element(driver,element_being_fuzzed,payload)
+                    try:
+                        fill_payload_in_element(driver,element_being_fuzzed,payload)
+                    except StaleElementReferenceException:
+                        sleep(4)
+                        try:
+                            fill_payload_in_element(driver,element_being_fuzzed,payload)
+                        except StaleElementReferenceException:
+                            sleep(10)
+                            try:    
+                                fill_payload_in_element(driver,element_being_fuzzed,payload)
+                            except StaleElementReferenceException:
+                                sleep(20)
+                                fill_payload_in_element(driver,element_being_fuzzed,payload)
                 # Press the button
                 if not terminate:
                     button_to_press = get_element(driver,args.button,False)
-                    if args.button in remove_class_elements:
-                        driver.execute_script("arguments[0].removeAttribute('class');",button_to_press)
-                    press_button(driver,button_to_press,False)
+                    try:
+                        if args.button in remove_class_elements:
+                            driver.execute_script("arguments[0].removeAttribute('class');",button_to_press)
+                        press_button(driver,button_to_press,False)
+                    except StaleElementReferenceException:
+                        sleep(4)
+                        if args.button in remove_class_elements:
+                            driver.execute_script("arguments[0].removeAttribute('class');",button_to_press)
+                        press_button(driver,button_to_press,False)
                 else:
                     break
                 if not terminate:
@@ -1587,16 +1712,20 @@ if __name__ == "__main__":
         # Create and start the keyboard listener thread which will pause and resume the BrowserBruter
         keyboard_thread = threading.Thread(target=pause_resume,daemon=True) 
         keyboard_thread.start()
-        # Redirect stdout to the Tee class, the tee class redirects STDOUT to STDOUT and the log file
-        log_file = 'logs/BrowserBruterSTDOUT.txt'  # This file stores console output
-        tee_instance = Tee(log_file)
-        sys.stdout = tee_instance
+        # If only verbose or debug flag is set then track logs
+        if args.verbose or args.debug:
+            # Redirect stdout to the Tee class, the tee class redirects STDOUT to STDOUT and the log file only if --verbose flag or --debug flag is set
+            log_file = 'logs/BrowserBruterSTDOUT.txt'  # This file stores console output
+            tee_instance = Tee(log_file)
+            sys.stdout = tee_instance
+            print(f"\n\n{YELLOW}[+]--------------------------------------------------------------------------------------------------------------------------[+]\nINFO: {RESET}Either --verbose or --debug flag detected creating logs in -> {log_file}\n{YELLOW}[+]--------------------------------------------------------------------------------------------------------------------------[+]{RESET}")
         # Get the number of threads or in other words number of browsers instances to use
         num_threads = args.threads
         # Print legal disclaimer and general info about target and payloads
         print(f"\n\n{YELLOW}[+]--------------------------------------------------------------------------------------------------------------------------[+]\nLegal Warning:{RESET} This Browser-Bruter open-source penetration testing tool is provided for educational and ethical purposes only. Users are solely responsible for ensuring compliance with all applicable laws and regulations, and the developer(s) disclaim any liability for misuse or damage caused by the tool.\n{YELLOW}[+]--------------------------------------------------------------------------------------------------------------------------[+]\n{RESET}")
         print(f"{YELLOW}[+]--------------------------------------------------------------------------------------------------------------------------[+]")
-        print(f"{BLUE}[+] Target URL:  {RESET}{args.target}")
+        print(f"{BLUE}[+] Start Time : {RESET}{start_time}")
+        print(f"{BLUE}[+] Target URL : {RESET}{args.target}")
         if args.attack == 1:
             print(f"{BLUE}[+] Attack Mode: {RESET}SNIPER")
             print(f"{BLUE}[+] Elements   : {RESET}{args.elements}")
@@ -1615,11 +1744,18 @@ if __name__ == "__main__":
             for element_payload in args.elements_payloads.split(','):
                 element, payload_file_path = element_payload.split(':')
                 print(f"{BLUE}[+] Elements:Payloads: {RESET}{element}:{payload_file_path}")
+        print(f"{BLUE}[+] Button     : {RESET}{args.button}")
         print(f"{YELLOW}[+]--------------------------------------------------------------------------------------------------------------------------[+]")
         print(f"\n\n{YELLOW}[+]--------------------------------------------------------------------------------------------------------------------------[+]\nINFO:{RESET} Press ENTER to puase the attack.\n{YELLOW}[+]--------------------------------------------------------------------------------------------------------------------------[+]\n{RESET}")
         # Create and start the threads
         threads = []
         start = 0
+        threads_interval_time = 2.5
+        if args.threads:
+            if args.threads > 10:
+                threads_interval_time = 6
+            elif args.threads > 5:
+                threads_interval_time = 4
         if args.attack in (1,2):
             # Divide the payload data equally among the threads
             payloads_per_thread = len(payloads) // num_threads
@@ -1635,6 +1771,8 @@ if __name__ == "__main__":
                         thread_payloads = payloads[start:end]
                         # Create a thread with the target function and arguments
                         thread = threading.Thread(target=run_browser_instance, args=(thread_payloads,i)) #elements, i))
+                        # Sleep while puase
+                        sleep_while_pause()
                         # Start the thread
                         thread.start()
                         # Add the thread to the list of threads
@@ -1642,7 +1780,7 @@ if __name__ == "__main__":
                         # Update the starting index for the next thread
                         start = end
                         # Sleep for 2.5 seconds for proper resource management
-                        sleep(2.5)
+                        sleep(threads_interval_time)
                     except KeyboardInterrupt as e:
                         signal_handler(signal.SIGINT, None)
                         log_error(format_exc())
@@ -1679,7 +1817,7 @@ if __name__ == "__main__":
                     thread.start()
                     threads.append(thread)
                     # Sleep for 2.5 seconds for proper resource management
-                    sleep(2.5)     
+                    sleep(5)     
         # Wait for all threads to finish
         for thread in threads:
             try:
@@ -1703,8 +1841,9 @@ if __name__ == "__main__":
     finally:
         # Generate the report
         generate_final_report()
-        # Reset sys.stdout to the console at the end of your script
-        sys.stdout = sys.__stdout__
+        # Reset sys.stdout to the console at the end
+        if args.verbose or args.debug:
+            sys.stdout = sys.__stdout__
         sys.exit(0)      
 else:
     print(f"\n\n{RED}[+]--------------------------------------------------------------------------------------------------------------------------[+]\nError:{RESET} Please run the script again using python3 BrowserBruter.py, closing the BrowserBruter\n{RED}[+]--------------------------------------------------------------------------------------------------------------------------[+]{RESET}")

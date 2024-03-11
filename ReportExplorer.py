@@ -84,7 +84,7 @@ def grep_strings(greppables):
         return
 
     # Define columns to filter for text
-    filter_columns = ['Web Page Before', 'Web Page After', 'Request Body', 'Request Headers', 'Response Headers', 'Response Body']
+    filter_columns = ['Web Page Before', 'Web Page After', 'Response Headers', 'Response Body']
 
     # Add greppable columns at the last position in the DataFrame and UI
     for greppable in greppables:
@@ -159,6 +159,22 @@ def sort_treeview(column):
     except KeyError:
         pass
 
+# Copy text from notebook
+def copy_text(event, text_widget):
+    selected_text = text_widget.get(tk.SEL_FIRST, tk.SEL_LAST)
+    if selected_text:
+        root.clipboard_clear()
+        root.clipboard_append(selected_text)
+# Same function required to copy text form notebook
+def create_context_menu(text_widget):
+    context_menu = tk.Menu(root, tearoff=0)
+    context_menu.add_command(label="Copy", command=lambda: copy_text(None, text_widget))
+    return context_menu
+# show context meny for notebook to copy selected text
+def show_context_menu_notebook(event, text_widget):
+    context_menu = create_context_menu(text_widget)
+    context_menu.post(event.x_root, event.y_root)
+
 # Function to copy payload from selected row
 def copy_payload():
     selected_item = tree.selection()
@@ -200,7 +216,10 @@ def show_context_menu(event):
         # Hide the context menu when an option is selected or the user clicks somewhere else
         def hide_menu(event):
             context_menu.unpost()
-            root.unbind("<Button-1>", hide_menu)
+            try:
+                root.unbind("<Button-1>", hide_menu)
+            except TypeError:
+                pass
 
         root.bind("<Button-1>", hide_menu)
 
@@ -363,17 +382,29 @@ response_body_length_label = ttk.Label(web_page_after_tab, text="")
 response_body_length_label.pack()
 
 # Function to ignore keyboard events (used for copying text)
-def ignore_keyboard(event):
-    if event.keysym == 'c' and event.state == 4:
-        return
-    else:
-        return 'break'
+def ignore_keyboard(event, text_widget):
+    if (event.state & 4) != 0:  # Check if the Ctrl key is pressed
+        if event.keysym == 'c':
+            copy_text(None, text_widget)
+            return 'break'
+        elif event.keysym == 'a':
+            text_widget.tag_add(tk.SEL, '1.0', tk.END)
+            text_widget.mark_set(tk.INSERT, '1.0')
+            text_widget.see(tk.INSERT)
+            return 'break'
+    return
+# Bind keyboard events to notebook
+request_text.bind("<KeyPress>", lambda event: ignore_keyboard(event, request_text))
+response_text.bind("<KeyPress>", lambda event: ignore_keyboard(event, response_text))
+web_page_before_text.bind("<KeyPress>", lambda event: ignore_keyboard(event, web_page_before_text))
+web_page_after_text.bind("<KeyPress>", lambda event: ignore_keyboard(event, web_page_after_text))
 
-# Bind keyboard events to the ignore_keyboard function
-request_text.bind("<KeyPress>", ignore_keyboard)
-response_text.bind("<KeyPress>", ignore_keyboard)
-web_page_before_text.bind("<KeyPress>", ignore_keyboard)
-web_page_after_text.bind("<KeyPress>", ignore_keyboard)
+# Bind Right mouse click to copy selection
+request_text.bind("<Button-3>", lambda event: show_context_menu_notebook(event, request_text))
+response_text.bind("<Button-3>", lambda event: show_context_menu_notebook(event, response_text))
+web_page_before_text.bind("<Button-3>", lambda event: show_context_menu_notebook(event, web_page_before_text))
+web_page_after_text.bind("<Button-3>", lambda event: show_context_menu_notebook(event, web_page_after_text))
+
 
 # Bind Treeview click event to show_request_response function
 tree.bind('<ButtonRelease-1>', show_request_response)
