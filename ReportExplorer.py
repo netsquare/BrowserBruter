@@ -18,8 +18,8 @@ df = pd.DataFrame()
 # Define dictionaries and lists for sorting and managing data
 sort_order = {}
 columns = ['Index', 'Request Time', 'Fuzzing', 'Payload', 'Method', 'URL',
-           'Request Headers', 'Request Body', 'Response Time', 'Cycle Time MilliSeconds',
-           'Response Status Code', 'Response Reason', 'Response Headers', 'Response Body', 'Response Length', 'Web Page Before', 'Web Page After']
+            'Response Time', 'Cycle Time MilliSeconds',
+           'Response Status Code', 'Response Length']
 
 # Append greppable columns
 for greppable in greppables:
@@ -43,8 +43,8 @@ def load_csv():
                 # Fill 'Index' column with sequential numbers starting from 0
                 df['Index'] = range(len(df))
 
-            # Replace incorrect or null values with "N/A"
-            df.fillna("N/A", inplace=True)
+            # Replace incorrect or null values with 0
+            df.fillna(0, inplace=True)
 
             sort_order = {}
             if greppables:
