@@ -1,4 +1,5 @@
 import sys
+import argparse
 import pandas as pd
 import tkinter as tk
 from tkinter import ttk
@@ -7,10 +8,39 @@ from ttkthemes import ThemedStyle
 from tkinter.simpledialog import askstring
 from tkinter import messagebox
 
-# Get Greppable values from user
+# Getting argument parser to parse and process arguments
+argParser = argparse.ArgumentParser(description="The Report Explorer, BrowserBruter's report exploring utility.",formatter_class=argparse.RawTextHelpFormatter)
+
+args_report = argParser.add_argument_group("Options")
+
+args_report.add_argument("--report",help="Path of final report to explore",metavar="BrowserBruter_Reports/localhost/2024-03-09_13-48-24/localhost-2024-03-09_13-48-24.csv")
+args_report.add_argument("--grep",help="Comma separated list of words or strings to be grepped and display from the HTTP traffic and web page source code.",metavar="error,exception,success,admin")
+args_report.add_argument("--split-report",help="Split the large final report into smaller reports by specifying the maximum limit of rows in single file.",metavar="/path/to/file.csv,200")
+
+# Getting the arguments in args variable
+args = argParser.parse_args()
+
+# Splitting the report
+if args.split_report:
+
+    final_report, row_limit = args.split_report.split(',')
+    row_limit = int(row_limit)
+    # Read the CSV file into a pandas DataFrame
+    df = pd.read_csv(final_report)
+    #row_limit = int(sys.argv[2])
+    # Split the DataFrame into chunks
+    chunks = [df[i:i+row_limit] for i in range(0, len(df), row_limit)]
+    # Write each chunk to a new CSV file
+    for i, chunk in enumerate(chunks):
+        output_file = f"{final_report}_{i}.csv"
+        chunk.to_csv(output_file, index=False)
+    sys.exit(0)
+
 greppables = []
-if len(sys.argv) > 1:
-    greppables = sys.argv[1].split(',')
+if args.grep:
+    # Get Greppable values from user
+    #if len(sys.argv) > 1:
+    greppables = args.grep.split(',')
 
 # Create a Pandas DataFrame to store the data
 df = pd.DataFrame()
@@ -84,7 +114,7 @@ def grep_strings(greppables):
         return
 
     # Define columns to filter for text
-    filter_columns = ['Web Page Before', 'Web Page After', 'Response Headers', 'Response Body']
+    filter_columns = ['Web Page Before', 'Web Page After', 'Response Headers', 'Response Body', 'URL']
 
     # Add greppable columns at the last position in the DataFrame and UI
     for greppable in greppables:
@@ -423,5 +453,42 @@ for i in range(len(columns)):
 frame_tree_notebook.columnconfigure(0, weight=1)
 frame_tree_notebook.rowconfigure(0, weight=1)
 
+if args.report:
+    #global df, sort_order
+    # Open a file dialog to select a CSV file
+    file_path = args.report#filedialog.askopenfilename(filetypes=[("CSV Files", "*.csv")])
+    try:
+        # If a file is selected, read it into a Pandas DataFrame
+        if file_path:
+            df = pd.read_csv(file_path)
+            # Set the 'Index' column as the DataFrame index
+            df.set_index('Index', inplace=True)
+
+            # Check if 'Index' column is empty
+            if df.index.isnull().all():
+                # Fill 'Index' column with sequential numbers starting from 0
+                df['Index'] = range(len(df))
+
+            # Replace incorrect or null values with 0
+ #           df.fillna(0, inplace=True)
+
+            sort_order = {}
+            if greppables:
+                grep_strings(greppables)
+            else:
+                # Display the data in the Treeview widget
+                display_data(df)
+
+    except pd.errors.EmptyDataError:
+        # Handle empty file error
+        messagebox.showerror("Error", "The selected file is empty.")
+    except pd.errors.ParserError:
+        # Handle parsing error
+        messagebox.showerror("Error", "Error parsing the CSV file.")
+
+
 # Start the Tkinter main loop
-root.mainloop()
+try:
+    root.mainloop()
+except KeyboardInterrupt:
+    sys.exit(0)
