@@ -6,14 +6,14 @@
 
 **Handcrafted in India 🇮🇳**
 
-# Please refer official documentation of how to use.
+## Please refer official documentation for installation and usage.
 
 ## Table of Contents
 
 - [The Browser-Bruter](#the-browser-bruter)
   - [Table of Contents](#table-of-contents)
   - [Prerequisites](#prerequisites)
-  - [Installation](#installation)
+  - [Quick Installation](#installation)
   - [Contributing](#contributing)
   - [Contact](#contact)
   - [License](#license)
@@ -23,7 +23,7 @@
 - Linux
 - Python3
 
-## Installation
+## Quick Installation
 
 1. Download and install Python3
 2. Download the [latest release from releases](https://github.com/netsquare/BrowserBruter/releases/).
