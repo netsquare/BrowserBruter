@@ -6,7 +6,7 @@
 
 **Handcrafted in India 🇮🇳**
 
-## Please refer official documentation for installation and usage.
+## Please refer official documentation for installation and usage, It is highly recommended. You can find the official documentation [here](https://net-square.com/browserbruter/).
 
 ## Table of Contents
 
