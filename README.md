@@ -1,12 +1,12 @@
 # The Browser-Bruter
 
-[banner](res/img/banner.png)
+![banner](https://raw.githubusercontent.com/netsquare/BrowserBruter/main/res/img/banner.png)
 
 **The Browser-Bruter** is first ever browser based automated web pentesting tool for fuzzing **web forms** by controlling the browser it self. It automates the process of sending **payloads** to input fields of browser and sends them too server. It completely **bypasses** the need of breaking the **encryption** in order to fuzz and insert payloads in BurpSuite scanner and intruder. After fuzzing it generates a **comprehensive report** including all the data and result of the pentest along with HTTP traffic, this report can be viewed by **The Report-Explorer** tool which comes with The Browser-Bruter.
 
 **Handcrafted in India 🇮🇳**
 
-**Please refer official documentation of how to use.**
+# Please refer official documentation of how to use.
 
 ## Table of Contents
 
@@ -52,6 +52,3 @@ You can reach to **Jafar Pathan** at **[LinkedIn](https://linkedin.com/in/jafar-
 
 You can reach to **Ravi Kumar Paghdal** at **[LinkedIn](https://www.linkedin.com/in/raviramesh/)** and **[GitHub](https://github.com/RavikumarPaghdal-NS)**
 
-## License
-
-The license
