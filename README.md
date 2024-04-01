@@ -26,7 +26,10 @@
 ## Installation
 
 1. Download and install Python3
-2. Download the latest release from releases.
+2. Download the [latest release from releases](https://github.com/netsquare/BrowserBruter/releases/).
+3. Unzip the archive.
+4. Run `pip3 install -r requirements.txt`
+5. Done
 
 **Refer documentation for detailed installation guide.**
 
