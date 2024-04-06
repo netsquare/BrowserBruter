@@ -16,6 +16,7 @@
   - [Table of Contents](#table-of-contents)
   - [Prerequisites](#prerequisites)
   - [Quick Installation](#installation)
+  - [Test Lab for BrowserBruter](#test-lab-for-browserbruter)
   - [Working Flow Overview](#working-flow-overview)
   - [Features](#features) 
   - [Contributing](#contributing)
@@ -51,6 +52,16 @@ Tested on latest version (as of March 2024) of each package.
 5. Done
 
 **Refer documentation for detailed installation guide.** - https://net-square.com/browserbruter/SetupInstallation/
+
+## Test Lab for BrowserBruter
+
+The Lab shown in documentation can be setup using docker as follows- 
+
+1. Download and run the docker image - `sudo docker run --rm -p 80:80 hpandro/vims`
+2. Start the MySQL service using following - 
+   1. First copy the container id using `sudo docker container ls -a`
+   2. Then start the service using `sudo docker exec -it [containerid] service mysql start`
+Navigate to `http://localhost/` to test site.
 
 ## Working Flow Overview
 
