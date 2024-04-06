@@ -16,6 +16,8 @@
   - [Table of Contents](#table-of-contents)
   - [Prerequisites](#prerequisites)
   - [Quick Installation](#installation)
+  - [Working Flow Overview](#working-flow-overview)
+  - [Features](#features) 
   - [Contributing](#contributing)
   - [Contact](#contact)
   - [License](#license)
@@ -49,6 +51,40 @@ Tested on latest version (as of March 2024) of each package.
 5. Done
 
 **Refer documentation for detailed installation guide.** - https://net-square.com/browserbruter/SetupInstallation/
+
+## Working Flow Overview
+
+![image](https://net-square.com/browserbruter/img/work-flow-sniper.svg)
+
+## Features 
+
+- [Bypass Encryption](https://net-square.com/browserbruter/WhyWeNeedBrowserBruter/)
+- [Multiple Attack Modes](https://net-square.com/browserbruter/UsageManual/attack.html)
+    1. Sniper
+    2. Battering Ram
+    3. PitchFork
+    4. Cluster Bomb
+- [Guaranteed Report Generation even in crash](https://net-square.com/browserbruter/UsageManual/output.html)
+- [Advance In-Built Report Exploration Tool - The Report Explorer](https://net-square.com/browserbruter/ReportExplorer/)
+- [BurpSuite Support](https://net-square.com/browserbruter/UsageManual/browser.html#routing-http-traffic-through-proxy-burp-zap-using---proxy-option)
+- [Customize the Final Report](https://net-square.com/browserbruter/UsageManual/report.html)
+- [Customize the Attack Scope](https://net-square.com/browserbruter/UsageManual/report.html#extending-the-scope-using---scope-option)
+- [Completely or Partially Automate Browsers as per need using Interactive mode](https://net-square.com/browserbruter/UsageManual/fuzzing.html#the-interactive-mode-using---interactive-switch)
+- [Extremely Stealthy](https://net-square.com/browserbruter/UsageManual/browser.html#tackling-bot-detection-using---anti-bot-and---no-anti-bot-options)
+- [Session Handling](https://net-square.com/browserbruter/UsageManual/session.html)
+- [Bypass Captchas](https://net-square.com/browserbruter/UsageManual/fuzzing.html#the-interactive-mode-using---interactive-switch)
+- [Bypass Input Validation](https://net-square.com/browserbruter/UsageManual/javascript.html#altering-removing--replacing-input-validation-code-using---replace-code---replace-file---auto-remove-javascript)
+- [Log Tracking](https://net-square.com/browserbruter/UsageManual/debug.html#the-debug-options)
+- [Error Handling](https://net-square.com/browserbruter/UsageManual/debug.html#the-debug-options)
+- [Can be As fast as you want!](https://net-square.com/browserbruter/UsageManual/fuzzing.html#unleashing-the---threads)
+- [Take Full Control of the Browser](https://net-square.com/browserbruter/UsageManual/browser.html)
+- [Take Full Control of fuzzing](https://net-square.com/browserbruter/UsageManual/fuzzing.html)
+- [Get insights of the attack](https://net-square.com/browserbruter/UsageManual/debug.html#getting-http-traffic-on-runtime-using---verbose)
+- [Pause - Resume the attack in middle](https://net-square.com/browserbruter/UsageManual/basic.html#pause---resume-attack-in-the-middle-by-pressing-enter)
+- [Extendable Beyond the Core Capabilities](https://net-square.com/browserbruter/UsageManual/javascript.html#the-art-of-browser-automation-using-javascript-----javascript--javascript-after-and---javascript-file-options)
+- [Continue The Previously Crashed Attack](https://net-square.com/browserbruter/UsageManual/output.html#resuming-previous-attack)
+- [Can Fuzz various types of input elements](https://net-square.com/browserbruter/UsageManual/elements.html)
+- [Modify web pages on fly](https://net-square.com/browserbruter/UsageManual/javascript.html#altering-removing--replacing-input-validation-code-using---replace-code---replace-file---auto-remove-javascript)
 
 ## Contributing
 
