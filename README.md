@@ -14,6 +14,7 @@
 
 - [The Browser-Bruter](#the-browser-bruter)
   - [Table of Contents](#table-of-contents)
+  - [What It Does?](#what-it-does?)
   - [Prerequisites](#prerequisites)
   - [Quick Installation](#installation)
   - [Test Lab for BrowserBruter](#test-lab-for-browserbruter)
@@ -22,6 +23,20 @@
   - [Contributing](#contributing)
   - [Contact](#contact)
   - [License](#license)
+ 
+## What it does?
+
+The biggest advantage of using browser bruter for fuzzing the web application is that all of the fuzzing will take place at browser level, so all of the attack will be as they have been manually done by the user by typing payloads in the input fields of the web application on browser.
+
+This approach -
+
+- Allows Pentester to fuzz the web application forms when the HTTP body (or part of the body) is encrypted making HTTP proxy tools like ZAP and BurpSuite or SQLMap unable to insert payloads in such traffic. Learn more here.
+
+- Creates a way to bypass captchas by allowing the pentester to manually perform the required human interactions and then proceed to payload insertions.
+
+- Can fuzz front-end when there is no HTTP traffic, for example when Input is utilized on the client side, i.e. when you want to brute force OTP input which is validated on the client side, so there is no HTTP Traffic.
+
+- Removes the burden of session management, auth handling and other micro management like CSRF handling while using HTTP proxy tools.
 
 ## Prerequisites
 
