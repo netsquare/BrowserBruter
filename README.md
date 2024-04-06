@@ -6,7 +6,9 @@
 
 **Handcrafted in India 🇮🇳**
 
-## Please refer official documentation for installation and usage, It is highly recommended. You can find the official documentation [here](https://net-square.com/browserbruter/).
+#### Please refer to this for Proof of Concept of our claims - https://net-square.com/browserbruter/WhyWeNeedBrowserBruter/
+
+#### Please refer official documentation for installation and usage, It is highly recommended. You can find the official documentation - https://net-square.com/browserbruter/
 
 ## Table of Contents
 
@@ -25,13 +27,28 @@
 
 ## Quick Installation
 
+Requires following python packages:
+-  selenium
+-  selenium-wire
+-  webdriver_manager
+-  ttkthemes
+-  pytimedinput
+-  colorama
+-  beautifulsoup4
+-  undetected-chromedriver
+-  requests
+-  pandas
+-  tqdm
+
+Tested on latest version (as of March 2024) of each package.
+
 1. Download and install Python3
 2. Download the [latest release from releases](https://github.com/netsquare/BrowserBruter/releases/).
 3. Unzip the archive.
 4. Run `pip3 install -r requirements.txt`
 5. Done
 
-**Refer documentation for detailed installation guide.**
+**Refer documentation for detailed installation guide.** - https://net-square.com/browserbruter/SetupInstallation/
 
 ## Contributing
 
