@@ -55,3 +55,7 @@ You can reach to **Jafar Pathan** at **[LinkedIn](https://linkedin.com/in/jafar-
 
 You can reach to **Ravi Kumar Paghdal** at **[LinkedIn](https://www.linkedin.com/in/raviramesh/)** and **[GitHub](https://github.com/RavikumarPaghdal-NS)**
 
+## License 
+
+This project is licensed under the GNU General Public License v3.0
+
