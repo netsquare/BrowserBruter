@@ -6,9 +6,9 @@
 
 **Handcrafted in India 🇮🇳**
 
-#### Please refer to this for Proof of Concept of our claims - https://net-square.com/browserbruter/WhyWeNeedBrowserBruter/
+### Please refer to this for Proof of Concept of our claims - https://net-square.com/browserbruter/WhyWeNeedBrowserBruter/
 
-#### Please refer official documentation for installation and usage, It is highly recommended. You can find the official documentation - https://net-square.com/browserbruter/
+### Please refer official documentation for installation and to learn how to use, It is highly recommended. You can find the official documentation - https://net-square.com/browserbruter/
 
 ## Table of Contents
 
