@@ -10,6 +10,11 @@
 
 ### Please refer official documentation for installation and to learn how to use, It is highly recommended. You can find the official documentation - https://net-square.com/browserbruter/
 
+- [Download now!](https://github.com/netsquare/BrowserBruter/releases/)
+- [Jump to Installation](https://net-square.com/browserbruter/SetupInstallation/)
+- [Jump to How to use](https://net-square.com/browserbruter/UsageManual/)
+- [Click here to know Why we created The BrowserBruter](https://net-square.com/browserbruter/WhyWeNeedBrowserBruter/)
+
 ## Table of Contents
 
 - [The Browser-Bruter](#the-browser-bruter)
