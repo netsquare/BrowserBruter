@@ -26,6 +26,9 @@ Finding SQL Injection which can not be found in other tools using **The Browser 
 
 [![IMAGE ALT TEXT HERE](https://img.youtube.com/vi/ktDu9kOjwBs/0.jpg)](https://www.youtube.com/watch?v=ktDu9kOjwBs)
 
+Performing Brute Force Attack on Login Page using **The Browser Bruter** on encrypted traffic
+
+[![IMAGE ALT TEXT HERE](https://img.youtube.com/vi/Wb6i-Ckg_Qw/0.jpg)](https://www.youtube.com/watch?v=Wb6i-Ckg_Qw)
 
 ### Please refer official documentation for installation and to learn how to use, It is highly recommended. You can find the official documentation - https://net-square.com/browserbruter/
 
@@ -113,10 +116,10 @@ Navigate to `http://localhost/` to test site.
 
 - [Bypass Encryption](https://net-square.com/browserbruter/WhyWeNeedBrowserBruter/)
 - [Multiple Attack Modes](https://net-square.com/browserbruter/UsageManual/attack.html)
-    1. Sniper
-    2. Battering Ram
-    3. PitchFork
-    4. Cluster Bomb
+    [1. Sniper](https://net-square.com/browserbruter/UsageManual/attack.html#1-sniper-attack)
+    [2. Battering Ram](https://net-square.com/browserbruter/UsageManual/attack.html#2-battering-ram-attack)
+    [3. PitchFork](https://net-square.com/browserbruter/UsageManual/attack.html#3-pitchfork-attack)
+    [4. Cluster Bomb](https://net-square.com/browserbruter/UsageManual/attack.html#4-clusterbomb-attack)
 - [Guaranteed Report Generation even in crash](https://net-square.com/browserbruter/UsageManual/output.html)
 - [Advance In-Built Report Exploration Tool - The Report Explorer](https://net-square.com/browserbruter/ReportExplorer/)
 - [BurpSuite Support](https://net-square.com/browserbruter/UsageManual/browser.html#routing-http-traffic-through-proxy-burp-zap-using---proxy-option)
