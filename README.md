@@ -26,10 +26,6 @@ Finding SQL Injection which can not be found in other tools using **The Browser 
 
 [![IMAGE ALT TEXT HERE](https://img.youtube.com/vi/ktDu9kOjwBs/0.jpg)](https://www.youtube.com/watch?v=ktDu9kOjwBs)
 
-Performing Brute Force Attack on Login Page using **The Browser Bruter** on encrypted traffic
-
-[![IMAGE ALT TEXT HERE](https://img.youtube.com/vi/Wb6i-Ckg_Qw/0.jpg)](https://www.youtube.com/watch?v=Wb6i-Ckg_Qw)
-
 ### Please refer official documentation for installation and to learn how to use, It is highly recommended. You can find the official documentation - https://net-square.com/browserbruter/
 
 - [Download now!](https://github.com/netsquare/BrowserBruter/releases/)
