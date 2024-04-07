@@ -12,7 +12,7 @@
 
 Trying to find SQLInjection using **SQLMAP**
 
-[![IMAGE ALT TEXT HERE](https://img.youtube.com/vi/5WrbRTMc4nQ/0.jpg)](https://www.youtube.com/watch?v=Y5WrbRTMc4nQ)
+[![IMAGE ALT TEXT HERE](https://img.youtube.com/vi/5WrbRTMc4nQ/0.jpg)](https://www.youtube.com/watch?v=5WrbRTMc4nQ)
 
 Finding SQL Injection which can not be found in other tools using **The Browser Bruter**
 
