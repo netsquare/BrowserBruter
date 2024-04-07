@@ -1,15 +1,23 @@
 # The Browser-Bruter
 
 ![banner](https://raw.githubusercontent.com/netsquare/BrowserBruter/main/res/img/banner.png)
-BurpSuite Scanner | The Browser Bruter
-:-: | :-:
-<video src='https://net-square.com/browserbruter/img/burp-scan.mp4' type='video/mp4' width=180/> | <video src='https://net-square.com/browserbruter/img/sql-injection.mp4' type='video/mp4' width=180/>
 
 **The Browser-Bruter** is first ever browser based automated web pentesting tool for fuzzing **web forms** by controlling the browser it self. It automates the process of sending **payloads** to input fields of browser and sends them too server. It completely **bypasses** the need of breaking the **encryption** in order to fuzz and insert payloads in BurpSuite scanner and intruder. After fuzzing it generates a **comprehensive report** including all the data and result of the pentest along with HTTP traffic, this report can be viewed by **The Report-Explorer** tool which comes with The Browser-Bruter.
 
 **Handcrafted in India 🇮🇳**
 
 ### Please refer to this for Proof of Concept of our claims - https://net-square.com/browserbruter/WhyWeNeedBrowserBruter/
+
+**Proof Of Concept**
+
+Trying to find SQLInjection using **SQLMAP**
+
+[![IMAGE ALT TEXT HERE](https://img.youtube.com/vi/5WrbRTMc4nQ/0.jpg)](https://www.youtube.com/watch?v=Y5WrbRTMc4nQ)
+
+Finding SQL Injection which can not be found in other tools using **The Browser Bruter**
+
+[![IMAGE ALT TEXT HERE](https://img.youtube.com/vi/ktDu9kOjwBs/0.jpg)](https://www.youtube.com/watch?v=ktDu9kOjwBs)
+
 
 ### Please refer official documentation for installation and to learn how to use, It is highly recommended. You can find the official documentation - https://net-square.com/browserbruter/
 
