@@ -8,7 +8,7 @@
 
 ### Please refer to this for Proof of Concept of our claims - https://net-square.com/browserbruter/WhyWeNeedBrowserBruter/
 
-**Proof Of Concept**
+## Proof Of Concept
 
 HTTP Manipulation ineffective due to **Encryption**
 
