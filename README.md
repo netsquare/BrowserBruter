@@ -12,19 +12,27 @@
 
 HTTP Manipulation ineffective due to **Encryption**
 
-[![IMAGE ALT TEXT HERE](https://img.youtube.com/vi/akNEaGWG1eo/0.jpg)](https://www.youtube.com/watch?v=akNEaGWG1eo)
+**https://net-square.com/browserbruter/img/need-1.mp4**
 
 Trying to find SQLInjection using **SQLMAP**
 
-[![IMAGE ALT TEXT HERE](https://img.youtube.com/vi/5WrbRTMc4nQ/0.jpg)](https://www.youtube.com/watch?v=5WrbRTMc4nQ)
+**https://net-square.com/browserbruter/img/sqlmap.mp4**
 
 Trying to find SQLInjection using **BurpSuite**
 
-[![IMAGE ALT TEXT HERE](https://img.youtube.com/vi/UfhS8xtuLCk/0.jpg)](https://www.youtube.com/watch?v=UfhS8xtuLCk)
+**https://net-square.com/browserbruter/img/burp-scan.mp4**
+
+BruteForcing login page using **FFUF**
+
+**https://net-square.com/browserbruter/img/ffuf-1-video.mp4**
 
 Finding SQL Injection which can not be found in other tools using **The Browser Bruter**
 
-[![IMAGE ALT TEXT HERE](https://img.youtube.com/vi/ktDu9kOjwBs/0.jpg)](https://www.youtube.com/watch?v=ktDu9kOjwBs)
+**https://net-square.com/browserbruter/img/sql-injection.mp4**
+
+BruteForcing Login page using **The Browser Bruter**
+
+**https://net-square.com/browserbruter/img/brute-force-login-1.mp4**
 
 ### Please refer official documentation for installation and to learn how to use, It is highly recommended. You can find the official documentation - https://net-square.com/browserbruter/
 
