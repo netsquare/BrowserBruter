@@ -172,3 +172,6 @@ You can reach to **Ravi Kumar Paghdal** at **[LinkedIn](https://www.linkedin.com
 
 This project is licensed under the GNU General Public License v3.0
 
+## Legal Warning
+
+This Browser-Bruter open-source penetration testing tool is provided for educational and ethical purposes only. Users are solely responsible for ensuring compliance with all applicable laws and regulations, and the developer(s) disclaim any liability for misuse or damage caused by the tool.
