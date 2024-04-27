@@ -175,3 +175,7 @@ This project is licensed under the GNU General Public License v3.0
 ## Legal Warning
 
 This Browser-Bruter open-source penetration testing tool is provided for educational and ethical purposes only. Users are solely responsible for ensuring compliance with all applicable laws and regulations, and the developer(s) disclaim any liability for misuse or damage caused by the tool.
+
+## My Other Project 
+
+[**Damn Vulnerable Android Components**](https://github.com/zinja-coder/Damn-Vulnerable-Android-Components): Damn Vulnerable Android Components (DVAC) is an educational Android application intentionally designed to expose and demonstrate vulnerabilities related to various Android components such as Activities, Intents, Content Providers, and Broadcast Receivers. It is structured as a password manager application to manage and store passwords securely (LOL).
