@@ -6,6 +6,8 @@
 
 **Handcrafted in India 🇮🇳**
 
+![pse2](https://github.com/netsquare/BrowserBruter/assets/65374935/380dbfa0-ffc3-4327-8e60-ac00a8a6f914)
+
 ### Please refer to this for Proof of Concept of our claims - https://net-square.com/browserbruter/WhyWeNeedBrowserBruter/
 
 ## Proof Of Concept
