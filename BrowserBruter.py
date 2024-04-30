@@ -8,11 +8,14 @@ import sys
 import threading
 import os
 import json
-import gzip
+#import gzip
+import zlib
+import brotli
+import zstandard
 import warnings
 import pandas as pd
 from itertools import product
-from tqdm import tqdm
+from tqdm import tqdm  
 from pytimedinput import timedKey
 from traceback import format_exc, print_exc
 from time import sleep
@@ -74,8 +77,8 @@ print(f"""
 {GREEN}###                                                                                   {YELLOW}by Jafar Pathan(@github/zinja-coder)  {GREEN}###
 {GREEN}###                                                                                                                         {GREEN}###
 {GREEN}###                                                                                                                         {GREEN}###
-{GREEN}### 	                   {YELLOW}The First-Ever! Advance Browser Based Automated Web Form Fuzzing Tool                             {GREEN}###
-{GREEN}### 	                   {YELLOW}Version: {BLUE} v2024.3.1                                                                              {GREEN}###
+{GREEN}### 	                   {YELLOW}The First-Ever! Advance Browser Based Automated Web Form Fuzzing Tool                            {GREEN}###
+{GREEN}### 	                   {YELLOW}Version: {BLUE} v2024.5                                                                              {GREEN}###
 {GREEN}###                        {YELLOW}Github : {BLUE} https://github.com/netsquare/BrowserBruter                                             {GREEN}###
 {GREEN}###                                                                                                                         {GREEN}###
 {GREEN}###        {RED}     ..,:dOkxl:.                                                                                                 {GREEN}###
@@ -113,6 +116,7 @@ args_attack1n2 = argParser.add_argument_group("Sniper and Battering Ram")
 args_attack3n4 = argParser.add_argument_group("PitchFork and Cluster Bomb")
 args_fuzz = argParser.add_argument_group("Fuzzing Options")
 args_session = argParser.add_argument_group("Session")
+args_python = argParser.add_argument_group("Python Scripting Engine")
 args_javascript = argParser.add_argument_group("JavaScript and Navigation Handling")
 args_browser = argParser.add_argument_group("Browser Options")
 args_debug = argParser.add_argument_group("Debug Option")
@@ -143,6 +147,9 @@ args_session.add_argument("--headers", help="Comma-separated list of custom head
 args_session.add_argument("--cookie",help="Use it to define cookies to be used while sending initial request, cookies should be in name:value:domain comma separated format.", metavar="name:value,name2:value2")
 args_session.add_argument("--force-cookie",help="Use this switch to force setting of cookies given as argument using --cookie flag regardless of cookies being sent by server.",action="store_true")
 args_session.add_argument("--remove-session",help="Use this switch to remove session data and cookies after each request-response cycle.", action="store_true")
+args_python.add_argument("--python",help="Executes provided python code.")
+args_python.add_argument("--python-after",help="Executes provided python code after single fuzzing attempt of form.")
+args_python.add_argument("--python-file",help="Reads and Executes provided python code from file.")
 args_javascript.add_argument("--auto-remove-javascript-validation",help="This switch will tell The Browser-Bruter to not remove common javascript input validations mechanisms. Useful if removing of javacript validaiton breaks the web app.", action="store_true",default=False)
 args_javascript.add_argument("--javascript",help="Javascript code to run on browser", metavar="\"alert(1);\"")
 args_javascript.add_argument("--javascript-after",help="Javascript code to run on browser after pressing and submitting the button.")
@@ -228,13 +235,30 @@ if args.include_urls:
         if args.debug:
             print(f"\n\n{RED}[+]--------------------------------------------------------------------------------------------------------------------------[+]\nERROR: {RESET}{print_exc()}\n{RED}[+]--------------------------------------------------------------------------------------------------------------------------[+]{RESET}")
         sys.exit(0)
-# Set the urllib max retry count to 50 to make this script stable as f
-max_retry = Retry(total=50, backoff_factor=1)
+# Set the urllib max retry count to 30 to make this script stable as f
+max_retry = Retry(total=30, backoff_factor=1)
 # Creating chrome driver synchronization lock for multithreading
 driver_lock = Lock()
 # Getting time when script started to name the final report
 start_time_int = datetime.datetime.now()
 start_time = start_time_int.strftime("%Y-%m-%d_%H-%M-%S")
+# Get the python code to be executed
+python_to_execute = '\0'
+if args.python:
+    python_to_execute = args.python
+elif args.python_file:
+    if args.python:	
+        print(f"\n\n{RED}[+]--------------------------------------------------------------------------------------------------------------------------[+]\nERROR: {RESET}The --python-file option can not be used with --python option\n{RED}[+]--------------------------------------------------------------------------------------------------------------------------[+]{RESET}")
+        sys.exit(0)
+    try:
+        with open(args.python_file, 'rb') as file:
+            print(f"\n\n{YELLOW}[+]--------------------------------------------------------------------------------------------------------------------------[+]\nINFO: {RESET}Trying to read the Python file.\n{YELLOW}[+]--------------------------------------------------------------------------------------------------------------------------[+]{RESET}")
+            python_to_execute = file.read()
+            python_to_execute = python_to_execute.decode('utf-8')
+    except FileNotFoundError:
+        print(f"\n\n{RED}[+]--------------------------------------------------------------------------------------------------------------------------[+]\nERROR: {RESET}The specified file '{args.python_file}' does not exist.\n{RED}[+]--------------------------------------------------------------------------------------------------------------------------[+]{RESET}")
+        sys.exit(0)
+    
 # Get the javascript code to be executed
 javascript_to_execute = '\0'
 if args.javascript:
@@ -245,11 +269,11 @@ elif args.javascript_file:
         sys.exit(0)
     try:
         with open(args.javascript_file, 'rb') as file:
-            print(f"\n\n{YELLOW}[+]--------------------------------------------------------------------------------------------------------------------------[+]\nINFO: {RESET}Trying to read the replacement file.\n{YELLOW}[+]--------------------------------------------------------------------------------------------------------------------------[+]{RESET}")
+            print(f"\n\n{YELLOW}[+]--------------------------------------------------------------------------------------------------------------------------[+]\nINFO: {RESET}Trying to read the Javascript file\n{YELLOW}[+]--------------------------------------------------------------------------------------------------------------------------[+]{RESET}")
             javascript_to_execute = file.read()
             javascript_to_execute = javascript_to_execute.decode('utf-8')
     except FileNotFoundError:
-        print(f"\n\n{RED}[+]--------------------------------------------------------------------------------------------------------------------------[+]\nERROR: {RESET}The specified replacement file '{args.replace_files}' does not exist.\n{RED}[+]--------------------------------------------------------------------------------------------------------------------------[+]{RESET}")
+        print(f"\n\n{RED}[+]--------------------------------------------------------------------------------------------------------------------------[+]\nERROR: {RESET}The specified file '{args.javascript_file}' does not exist.\n{RED}[+]--------------------------------------------------------------------------------------------------------------------------[+]{RESET}")
         sys.exit(0)
 # Setting flag which indicates threads to run or stop
 terminate = False
@@ -582,7 +606,14 @@ def add_cookies(driver):
         driver.quit()
         log_error(format_exc())
         sys.exit(0)
-	
+
+# Function to execute python code
+def python_scripting_engine(driver, python_code):
+    pass_driver_object = {
+        'driver': driver
+    }
+    exec(python_code, globals(), pass_driver_object)
+
 # Function to intercept requests
 def intercept_request(request):
     try:
@@ -600,12 +631,23 @@ def replace_response_content(request, response):
             response_body_encoding = request.response.headers['Content-Encoding']
         except KeyError:
             response_body_encoding = 'utf-8'
-        if response_body_encoding and response_body_encoding.lower() == 'gzip':
-            response_body_str = gzip.decompress(request.response.body)
+        if response_body_encoding.lower() == 'gzip':
+            response_body_str = zlib.decompress(request.response.body, zlib.MAX_WBITS)
+        elif response_body_encoding.lower() =='br':
+            response_body_str = brotli.decompress(request.response.body)
+        elif response_body_encoding.lower() =='deflate':
+            response_body_str = zlib.decompress(request.response.body, -zlib.MAX_WBITS)
+        elif response_body_encoding.lower() =='zstd':
+            zdecompressor = zstandard.ZstdDecompressor()
+            response_body_str = zdecompressor.decompress(request.response.body)    
         elif response_body_encoding:
             response_body_str = request.response.body.decode(response_body_encoding,errors='ignore')
         else:
             response_body_str = request.response.body.decode('utf-8',errors='ignore')
+        
+        # Converting the bytes into string
+        response_body_str = response_body_str.decode('utf-8',errors='ignore')
+
         for to_be_replaced, to_be_replaced_with in replacement_pairs:
             # Replace bytes in response body
             new_response_body_str = response_body_str.replace(to_be_replaced, to_be_replaced_with)
@@ -822,21 +864,6 @@ def initial_operations_before_filling_the_form(driver):
         add_cookies(driver)
     # Wait for body to be loaded in case of slow response
     wait_and_handle_popup(driver)
-    # if args.reload_page then reload the current page
-    if args.reload_page:
-        # Force reload the page
-        driver.execute_script("location.reload(true);")
-        wait_and_handle_popup(driver)
-        sleep(0.5)
-    # if args.no_css then remove css
-    if args.no_css:
-        # Execute JavaScript to remove CSS
-        driver.execute_script("""
-            var styleElement = document.querySelector('style');
-            if (styleElement) {
-                styleElement.parentNode.removeChild(styleElement);
-            }
-        """)
     # Clear previous requests
     del driver.requests
     # Go to the target website
@@ -847,6 +874,46 @@ def initial_operations_before_filling_the_form(driver):
             print(f"\n\n{RED}[+]--------------------------------------------------------------------------------------------------------------------------[+]\nERROR: {RESET}HTTP Response Timeout has been reached. Do you want to wait for server to response? Press ENTER to continue to wait, press CTRL+C to stop the process and generate the report.\n{RED}[+]--------------------------------------------------------------------------------------------------------------------------[+]{RESET}")
             pause_event.set()
             sleep_while_pause()
+    # if args.reload_page then reload the current page
+    if args.reload_page:
+        # Force reload the page
+        driver.execute_script("location.reload(true);")
+        wait_and_handle_popup(driver)
+        sleep(0.5)
+    # Execute python code 
+    if not python_to_execute == '\0':
+        sleep(0.2)
+        try:
+            python_scripting_engine(driver,python_to_execute)
+        except:
+            sleep(3)
+            try:
+                python_scripting_engine(driver,python_to_execute)
+            except:
+                sleep(7)
+                python_scripting_engine(driver,python_to_execute)
+
+    # Execute custom javascript code
+    if not javascript_to_execute == '\0':
+        sleep(0.3)
+        try:
+            driver.execute_script(javascript_to_execute)
+        except JavascriptException:
+            sleep(3)
+            try:
+                driver.execute_script(javascript_to_execute)
+            except JavascriptException:
+                sleep(7)
+                driver.execute_script(javascript_to_execute)
+    # if args.no_css then remove css
+    if args.no_css:
+        # Execute JavaScript to remove CSS
+        driver.execute_script("""
+            var styleElement = document.querySelector('style');
+            if (styleElement) {
+                styleElement.parentNode.removeChild(styleElement);
+            }
+        """)
     if args.delay_before:
         sleep(args.delay_before)
     if args.buttons_to_press_before_fuzz:
@@ -856,18 +923,6 @@ def initial_operations_before_filling_the_form(driver):
     # Remove common javascript validation
     if args.auto_remove_javascript_validation:
         remove_javascript_validation(driver)
-    # Execute custom javascript code
-    if not javascript_to_execute == '\0':
-        sleep(0.3)
-        try:
-            driver.execute_script(javascript_to_execute)
-        except JavascriptException:
-            sleep(5)
-            try:
-                driver.execute_script(javascript_to_execute)
-            except JavascriptException:
-                sleep(7)
-                driver.execute_script(javascript_to_execute)
     # Handle alert if it is present
     try:
         alert = driver.switch_to.alert
@@ -886,9 +941,30 @@ def operations_after_pressing_the_button(element,driver,webpage_before,this_thre
         sleep(args.delay_after)
     # Wait for all requests to be completed
     wait_and_handle_popup(driver)
+    # Execute javascript
     if args.javascript_after:
         sleep(0.2)
-        driver.execute_script(args.javascript_after)
+        try:
+            driver.execute_script(args.javascript_after)
+        except JavascriptException:
+            sleep(3)
+            try:
+                driver.execute_script(args.javascript_after)
+            except JavascriptException:
+                sleep(7)
+                driver.execute_script(args.javascript_after)
+    # Execute python
+    if args.python_after:
+        sleep(0.2)
+        try:
+            python_scripting_engine(driver,args.python_after)
+        except:
+            sleep(3)
+            try:
+                python_scripting_engine(driver,args.python_after)
+            except:
+                sleep(7)
+                python_scripting_engine(driver,args.python_after)
     # Get web page content after making the response
     webpage_after = driver.page_source
     write_http_request_response(element,this_threads_file,driver,payload,webpage_before,webpage_after)
@@ -987,7 +1063,14 @@ def write_http_request_response(element, this_threads_file, driver, payload, web
                 raw = request.response.body
                 encoding = request.response.headers.get('Content-Encoding', 'UTF-8')
                 if encoding.lower() == 'gzip':
-                    raw = gzip.decompress(raw)
+                    raw = zlib.decompress(raw, zlib.MAX_WBITS | 16)
+                elif encoding.lower() == 'br':
+                    raw = brotli.decompress(raw)
+                elif encoding.lower() == 'deflate':
+                    raw = zlib.decompress(raw, -zlib.MAX_WBITS)
+                elif encoding.lower() == 'zstd':
+                    zdecompressor = zstandard.ZstdDecompressor()
+                    raw = zdecompressor.decompress(raw)    
                 else:
                     raw = raw.decode(encoding, errors='replace')
                 # URL Decode the request and response bodies
@@ -1041,8 +1124,6 @@ def write_http_request_response(element, this_threads_file, driver, payload, web
 
 # Function to Generate Final Report
 def generate_final_report():
-    # sleep for 3 seconds so console progress bars are properly rendered
-    #sleep(3)
     # Increase the field size limit
     csv.field_size_limit(sys.maxsize)
     print(f"\n\n\n{YELLOW}[+]--------------------------------------------------------------------------------------------------------------------------[+]\nINFO:{RESET} Generating Final Report\n{YELLOW}[+]--------------------------------------------------------------------------------------------------------------------------[+]{RESET}")
@@ -1142,14 +1223,17 @@ def get_form(driver,form):
         except NoSuchElementException:
             try:
                 return driver.find_element(By.CLASS_NAME, form)
-            except NoSuchElementException as e:
-                print(f"\n\n{RED}[+]--------------------------------------------------------------------------------------------------------------------------[+]\nError:{RESET} Specified element {element} is not found. Please verify the name of the element. For more information, check Error.txt or use --debug flag.\n{RED}[+]--------------------------------------------------------------------------------------------------------------------------[+]{RESET}")
-                if args.debug:
-                    print_exc()
-                    print(f"\n\n{RED}[+]--------------------------------------------------------------------------------------------------------------------------[+]\nERROR: {RESET}Refer Above Stack Trace\n{RED}[+]--------------------------------------------------------------------------------------------------------------------------[+]{RESET}")
-                driver.quit()
-                log_error(format_exc())
-                sys.exit(0)
+            except NoSuchElementException:
+                try:
+                    return driver.find_element(By.CSS_SELECTOR, form)
+                except NoSuchElementException as e:
+                    print(f"\n\n{RED}[+]--------------------------------------------------------------------------------------------------------------------------[+]\nError:{RESET} Specified element {element} is not found. Please verify the name of the element. For more information, check Error.txt or use --debug flag.\n{RED}[+]--------------------------------------------------------------------------------------------------------------------------[+]{RESET}")
+                    if args.debug:
+                        print_exc()
+                        print(f"\n\n{RED}[+]--------------------------------------------------------------------------------------------------------------------------[+]\nERROR: {RESET}Refer Above Stack Trace\n{RED}[+]--------------------------------------------------------------------------------------------------------------------------[+]{RESET}")
+                    driver.quit()
+                    log_error(format_exc())
+                    sys.exit(0)
 
 # Function to get element to be fuzzed
 def get_element(driver,element,coming_from_initial_operations_method):
@@ -1187,22 +1271,25 @@ def single_find_element_try(selector,element):
             try:
                 element = selector.find_element(By.CLASS_NAME, element)
             except (NoSuchElementException, StaleElementReferenceException):
-                try:
-                    element = selector.find_element(By.XPATH,f"//input[@value='{element}']")
+                try: 
+                    element = selector.find_element(By.CSS_SELECTOR,element)
                 except (NoSuchElementException, StaleElementReferenceException):
                     try:
-                        element = selector.find_element(By.XPATH,f"//input[@Type='{element}']")
+                        element = selector.find_element(By.XPATH,f"//input[@value='{element}']")
                     except (NoSuchElementException, StaleElementReferenceException):
                         try:
-                            element = selector.find_element(By.XPATH,f"//textarea[@value='{element}']")
-                        except (NoSuchElementException, StaleElementReferenceException):    
+                            element = selector.find_element(By.XPATH,f"//input[@Type='{element}']")
+                        except (NoSuchElementException, StaleElementReferenceException):
                             try:
-                                element = selector.find_element(By.XPATH,f"//button[@value='{element}']")
-                            except (NoSuchElementException, StaleElementReferenceException):
+                                element = selector.find_element(By.XPATH,f"//textarea[@value='{element}']")
+                            except (NoSuchElementException, StaleElementReferenceException):    
                                 try:
-                                    element = selector.find_element(By.XPATH,f"//button[@Type='{element}']")
+                                    element = selector.find_element(By.XPATH,f"//button[@value='{element}']")
                                 except (NoSuchElementException, StaleElementReferenceException):
-                                    return False, element
+                                    try:
+                                        element = selector.find_element(By.XPATH,f"//button[@Type='{element}']")
+                                    except (NoSuchElementException, StaleElementReferenceException):
+                                        return False, element
     return True, element
                                 
 # Function to fill the payload in selected input field
