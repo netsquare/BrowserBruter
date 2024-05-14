@@ -8,7 +8,7 @@ import sys
 import threading
 import os
 import json
-#import gzip
+import gzip
 import zlib
 import brotli
 import zstandard
@@ -632,7 +632,7 @@ def replace_response_content(request, response):
         except KeyError:
             response_body_encoding = 'utf-8'
         if response_body_encoding.lower() == 'gzip':
-            response_body_str = zlib.decompress(request.response.body, zlib.MAX_WBITS)
+            response_body_str = gzip.decompress(request.response.body)
         elif response_body_encoding.lower() =='br':
             response_body_str = brotli.decompress(request.response.body)
         elif response_body_encoding.lower() =='deflate':
@@ -1063,7 +1063,7 @@ def write_http_request_response(element, this_threads_file, driver, payload, web
                 raw = request.response.body
                 encoding = request.response.headers.get('Content-Encoding', 'UTF-8')
                 if encoding.lower() == 'gzip':
-                    raw = zlib.decompress(raw, zlib.MAX_WBITS | 16)
+                    raw = gzip.decompress(raw)
                 elif encoding.lower() == 'br':
                     raw = brotli.decompress(raw)
                 elif encoding.lower() == 'deflate':
