@@ -166,9 +166,13 @@ Thank you for considering contributing to BrowserBruter. Your support is greatly
 
 ## Contact 
 
-You can reach to **Jafar Pathan** at **[LinkedIn](https://linkedin.com/in/jafar-pathan/)** and **[GitHub](https://github.com/zinja-coder)**
+  - **[Jafar Pathan](https://zinja-coder.github.io/)** at **[LinkedIn](https://linkedin.com/in/jafar-pathan/)**, **[X (Twitter)](https://twitter.com/zinja_coder)** and **[GitHub](https://github.com/zinja-coder)**
 
-You can reach to **Ravi Kumar Paghdal** at **[LinkedIn](https://www.linkedin.com/in/raviramesh/)** and **[GitHub](https://github.com/RavikumarPaghdal-NS)**
+  - **Ravi Kumar Paghdal** at **[LinkedIn](https://www.linkedin.com/in/raviramesh/)**, **[X (Twitter)](https://twitter.com/_RaviRamesh)** and **[GitHub](https://github.com/RavikumarPaghdal-NS)**
+
+  - **Jatan Raval** at **[LinkedIn](https://www.linkedin.com/in/jatanraval/)**, **[X (twitter)](https://twitter.com/JatanKRaval)** and **[GitHub](https://github.com/jatankraval)**
+
+  - **Saumil Shah** at **[LinkedIn](https://www.linkedin.com/in/saumilshah/)**, **[X (twitter)](https://twitter.com/therealsaumil)** and **[Github](https://github.com/therealsaumil/emux)**
 
 ## License 
 
@@ -177,7 +181,3 @@ This project is licensed under the GNU General Public License v3.0
 ## Legal Warning
 
 This Browser-Bruter open-source penetration testing tool is provided for educational and ethical purposes only. Users are solely responsible for ensuring compliance with all applicable laws and regulations, and the developer(s) disclaim any liability for misuse or damage caused by the tool.
-
-## My Other Project 
-
-[**Damn Vulnerable Android Components**](https://github.com/zinja-coder/Damn-Vulnerable-Android-Components): Damn Vulnerable Android Components (DVAC) is an educational Android application intentionally designed to expose and demonstrate vulnerabilities related to various Android components such as Activities, Intents, Content Providers, and Broadcast Receivers. It is structured as a password manager application to manage and store passwords securely (LOL).
