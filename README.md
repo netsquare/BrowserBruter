@@ -176,8 +176,8 @@ Thank you for considering contributing to BrowserBruter. Your support is greatly
 
 ## License 
 
-This project is licensed under the GNU General Public License v3.0
+This project is licensed under the MPL license
 
 ## Legal Warning
 
-This Browser-Bruter open-source penetration testing tool is provided for educational and ethical purposes only. Users are solely responsible for ensuring compliance with all applicable laws and regulations, and the developer(s) disclaim any liability for misuse or damage caused by the tool.
+This Browser-Bruter open-source penetration testing tool as well as the documentation is Copyrighted Property of Net-Square Solutions PVT LTD. provided for educational and ethical purposes only. Users are solely responsible for ensuring compliance with all applicable laws and regulations, and the developer(s) disclaim any liability for misuse or damage caused by the tool.
