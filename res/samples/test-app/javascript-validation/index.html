@@ -1,0 +1,99 @@
+<!-- index.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Form Page</title>
+</head>
+<body>
+    <h1>Form Page</h1>
+    <form id="myForm" action="/submit" method="POST" onsubmit="return validateForm()">
+      <input type="hidden" name="_csrf" value="${csrfToken}">
+      
+      <label for="data">Data:</label>
+      <input type="text" name="data" id="data" placeholder="Enter data" required/><br/>
+
+      <label for="yes">Yes:</label>
+      <input type="radio" name="yesno" id="yes" value="yes" required/>
+  
+      <label for="no">No:</label>
+      <input type="radio" name="yesno" id="no" value="no" required/>
+      
+      <label for="hobbies">Hobbies:</label>
+      <input type="checkbox" name="hobbies" id="reading" value="reading"/> Reading
+      <input type="checkbox" name="hobbies" id="writing" value="writing"/> Writing
+      <input type="checkbox" name="hobbies" id="painting" value="painting"/> Painting<br/>
+      
+      <label for="phone">Phone Number:</label>
+      <input type="tel" name="phone" id="phone" placeholder="Enter phone number" pattern="[0-9]{10}" title="Phone number must be 10 digits" required/><br/>
+      
+      <label for="calendar">Calendar:</label>
+      <input type="text" name="calendar" id="calendar" placeholder="YYYY-MM-DD" required/><br/>
+      
+      <label for="time">Time:</label>
+      <input type="text" name="time" id="time" placeholder="HH:MM" required/><br/>
+      
+      <label for="color">Color:</label>
+      <input type="text" name="color" id="color" placeholder="Enter color in hex format (#RRGGBB)" required/><br/>
+      
+      <label for="select">Select:</label>
+      <select name="select" id="select" required>
+        <option value="">Select an option</option>
+        <option value="2">2</option>
+      </select><br/>
+      
+      <label for="textarea">Textarea:</label>
+      <textarea name="textarea" id="textarea" placeholder="Enter text" required></textarea><br/>
+      
+      <button id="submit" type="submit">Submit</button>
+    </form>
+
+    <script>
+      function validateForm() {
+        // Get form input values
+        var data = document.getElementById("data").value;
+        var phone = document.getElementById("phone").value;
+        var calendar = document.getElementById("calendar").value;
+        var time = document.getElementById("time").value;
+        var color = document.getElementById("color").value;
+        var select = document.getElementById("select").value;
+        var textarea = document.getElementById("textarea").value;
+
+        // Perform validation for each input field
+        if (!data.match(/[a-zA-Z0-9]+/)) {
+          alert("Data must contain only letters and numbers");
+          return false; // Prevent form submission
+        }
+
+        if (!phone.match(/[0-9]{10}/)) {
+          alert("Phone number must be 10 digits");
+          return false; // Prevent form submission
+        }
+
+        if (!isValidDate(calendar)) {
+          alert("Invalid calendar value");
+          return false; // Prevent form submission
+        }
+
+        if (!isValidTime(time)) {
+          alert("Invalid time value");
+          return false; // Prevent form submission
+        }
+
+        if (!isValidColor(color)) {
+          alert("Invalid color value");
+          return false; // Prevent form submission
+        }
+
+        if (select === "") {
+          alert("Please select an option");
+          return false; // Prevent form submission
+        }
+
+        return true; // Allow form submission
+      }
+
+    </script>
+</body>
+</html>

@@ -1,0 +1,34 @@
+{
+  "name": "err",
+  "version": "1.1.1",
+  "description": "A tiny library to create custom errors in JavaScript.",
+  "main": "lib/index.js",
+  "directories": {
+    "example": "example"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/IonicaBizau/err.git"
+  },
+  "keywords": [
+    "error",
+    "tiny",
+    "library",
+    "custom"
+  ],
+  "author": "Ionică Bizău <bizauionica@gmail.com> (http://ionicabizau.net)",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/IonicaBizau/err/issues"
+  },
+  "homepage": "https://github.com/IonicaBizau/err#readme",
+  "dependencies": {
+    "typpy": "^2.2.0"
+  },
+  "blah": {
+    "h_img": "http://i.imgur.com/yQF0uDO.png"
+  }
+}

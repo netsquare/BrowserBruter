@@ -1,0 +1,52 @@
+<!-- index.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Form Page</title>
+</head>
+<body>
+    <h1>Form Page</h1>
+    <form action="/submit" method="POST">
+      <input type="hidden" name="_csrf" value="${csrfToken}">
+      
+      <label for="data">Data:</label>
+      <input type="text" name="data" placeholder="Enter data" required/><br/>
+
+      <label for="yes">Yes:</label>
+      <input type="radio" name="yesno" id="yes" value="yes" required/>
+  
+      <label for="no">No:</label>
+      <input type="radio" name="yesno" id="no" value="no" required/>
+      
+      <label for="hobbies">Hobbies:</label>
+      <input type="checkbox" name="hobbies" value="reading"/> Reading
+      <input type="checkbox" name="hobbies" value="writing"/> Writing
+      <input type="checkbox" name="hobbies" value="painting"/> Painting<br/>
+      
+      <label for="phone">Phone Number:</label>
+      <input type="tel" name="phone" placeholder="Enter phone number" pattern="[0-9]{10}" required/><br/>
+      
+      <label for="calendar">Calendar:</label>
+      <input type="date" name="calendar" required/><br/>
+      
+      <label for="time">Time:</label>
+      <input type="time" name="time" required/><br/>
+      
+      <label for="color">Color:</label>
+      <input type="color" name="color" required/><br/>
+      
+      <label for="select">Select:</label>
+      <select name="select" required>
+        <option >Select an option</option>
+        <option value="2">2</option>
+      </select><br/>
+      
+      <label for="textarea">Textarea:</label>
+      <textarea name="textarea" placeholder="Enter text" required></textarea><br/>
+      
+      <button id="submit" type="submit">Submit</button>
+    </form>
+</body>
+</html>

@@ -1,0 +1,46 @@
+{
+  "name": "package-json-path",
+  "version": "1.0.9",
+  "description": "Get the package.json path in a specific directory.",
+  "main": "lib/index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "package.json",
+    "npm",
+    "path"
+  ],
+  "author": "Ionică Bizău <bizauionica@gmail.com> (https://ionicabizau.net)",
+  "license": "MIT",
+  "dependencies": {
+    "abs": "^1.2.1"
+  },
+  "directories": {
+    "example": "example"
+  },
+  "devDependencies": {},
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/IonicaBizau/package-json-path.git"
+  },
+  "bugs": {
+    "url": "https://github.com/IonicaBizau/package-json-path/issues"
+  },
+  "homepage": "https://github.com/IonicaBizau/package-json-path#readme",
+  "files": [
+    "bin/",
+    "app/",
+    "lib/",
+    "dist/",
+    "src/",
+    "scripts/",
+    "resources/",
+    "menu/",
+    "cli.js",
+    "index.js",
+    "bloggify.js",
+    "bloggify.json",
+    "bloggify/"
+  ]
+}

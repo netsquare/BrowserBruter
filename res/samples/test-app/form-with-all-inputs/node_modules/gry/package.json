@@ -1,0 +1,52 @@
+{
+  "name": "gry",
+  "version": "5.0.8",
+  "description": "A minimalist NodeJS wrapper for the `git` commands. `gry` stands for the Git RepositorY.",
+  "main": "lib/index.js",
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "test": "node example/index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:IonicaBizau/node-gry.git"
+  },
+  "keywords": [
+    "git",
+    "repository",
+    "nodejs"
+  ],
+  "author": "Ionică Bizău <bizauionica@gmail.com> (https://ionicabizau.net)",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/IonicaBizau/node-gry/issues"
+  },
+  "homepage": "https://github.com/IonicaBizau/node-gry",
+  "dependencies": {
+    "abs": "^1.2.1",
+    "exec-limiter": "^3.0.0",
+    "one-by-one": "^3.0.0",
+    "ul": "^5.0.0"
+  },
+  "blah": {
+    "h_img": "http://i.imgur.com/vPz8gkX.png"
+  },
+  "devDependencies": {},
+  "files": [
+    "bin/",
+    "app/",
+    "lib/",
+    "dist/",
+    "src/",
+    "scripts/",
+    "resources/",
+    "menu/",
+    "cli.js",
+    "index.js",
+    "bloggify.js",
+    "bloggify.json",
+    "bloggify/"
+  ]
+}

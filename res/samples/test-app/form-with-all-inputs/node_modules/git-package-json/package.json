@@ -1,0 +1,53 @@
+{
+  "name": "git-package-json",
+  "version": "1.4.10",
+  "description": "Get the package.json contents from git repositories.",
+  "main": "lib/index.js",
+  "directories": {
+    "example": "example"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/IonicaBizau/git-package-json.git"
+  },
+  "keywords": [
+    "git",
+    "package",
+    "json"
+  ],
+  "author": "Ionică Bizău <bizauionica@gmail.com> (https://ionicabizau.net)",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/IonicaBizau/git-package-json/issues"
+  },
+  "homepage": "https://github.com/IonicaBizau/git-package-json#readme",
+  "dependencies": {
+    "deffy": "^2.2.1",
+    "err": "^1.1.1",
+    "gry": "^5.0.0",
+    "normalize-package-data": "^2.3.5",
+    "oargv": "^3.4.1",
+    "one-by-one": "^3.1.0",
+    "r-json": "^1.2.1",
+    "r-package-json": "^1.0.0",
+    "tmp": "0.0.28"
+  },
+  "files": [
+    "bin/",
+    "app/",
+    "lib/",
+    "dist/",
+    "src/",
+    "scripts/",
+    "resources/",
+    "menu/",
+    "cli.js",
+    "index.js",
+    "bloggify.js",
+    "bloggify.json",
+    "bloggify/"
+  ]
+}
