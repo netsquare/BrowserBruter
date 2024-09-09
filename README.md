@@ -71,8 +71,8 @@ This approach -
 
 - Removes the burden of session management, auth handling and other micro management like CSRF handling while using HTTP proxy tools.
 
-![console](https://raw.githubusercontent.com/netsquare/BrowserBruter/main/res/img/image-23.png)
-![console](https://raw.githubusercontent.com/netsquare/BrowserBruter/main/res/img/image-24.png)
+![console](https://www.net-square.com/browserbruter/UsageManual/image-23.png)
+![console](https://www.net-square.com/browserbruter/UsageManual/image-24.png)
 
 ## Prerequisites
 
