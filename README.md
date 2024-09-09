@@ -180,4 +180,4 @@ This project is licensed under the MPL license
 
 ## Legal Warning
 
-This Browser-Bruter open-source penetration testing tool as well as the documentation is Copyrighted Property of Net-Square Solutions PVT LTD. provided for educational and ethical purposes only. Users are solely responsible for ensuring compliance with all applicable laws and regulations, and the developer(s) disclaim any liability for misuse or damage caused by the tool.
+This BrowserBruter (‘Software’)  is protected under the Indian Copyright Act and is the exclusively property  owned by Net Square Solutions Private Limited (‘Net Square’). The use of this Software (including but not limited to) reproduction, distribution, copying, republication, modification, transmission, sale or offer for sale, alteration in any form (including but not limited to electronic or otherwise) is strictly prohibited without the prior written consent from Net Square. Permission to grant license to use the Software shall be at the sole discretion of Net Square.
