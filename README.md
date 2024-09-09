@@ -176,7 +176,7 @@ Thank you for considering contributing to BrowserBruter. Your support is greatly
 
 ## License 
 
-This project is licensed under the MPL license
+This project is licensed under the Microsoft Public License
 
 ## Legal Warning
 
