@@ -1,0 +1,48 @@
+{
+  "name": "r-json",
+  "version": "1.3.0",
+  "description": "A small module to read JSON files.",
+  "main": "lib/index.js",
+  "directories": {
+    "example": "example"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:IonicaBizau/node-r-json.git"
+  },
+  "keywords": [
+    "read",
+    "json",
+    "files"
+  ],
+  "author": "Ionică Bizău <bizauionica@gmail.com> (https://ionicabizau.net)",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/IonicaBizau/node-r-json/issues"
+  },
+  "homepage": "https://github.com/IonicaBizau/node-r-json",
+  "blah": {
+    "description": "If you want to write JSON files, check out [`w-json`](https://github.com/IonicaBizau/node-w-json)."
+  },
+  "files": [
+    "bin/",
+    "app/",
+    "lib/",
+    "dist/",
+    "src/",
+    "scripts/",
+    "resources/",
+    "menu/",
+    "cli.js",
+    "index.js",
+    "bloggify.js",
+    "bloggify.json",
+    "bloggify/"
+  ],
+  "dependencies": {
+    "w-json": "1.3.10"
+  }
+}

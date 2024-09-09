@@ -1,0 +1,45 @@
+{
+  "name": "w-json",
+  "version": "1.3.10",
+  "description": "A small module to write JSON files.",
+  "main": "lib/index.js",
+  "directories": {
+    "example": "example"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:IonicaBizau/node-w-json.git"
+  },
+  "keywords": [
+    "write",
+    "json",
+    "files"
+  ],
+  "author": "Ionică Bizău <bizauionica@gmail.com> (https://ionicabizau.net)",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/IonicaBizau/node-w-json/issues"
+  },
+  "homepage": "https://github.com/IonicaBizau/node-w-json",
+  "blah": {
+    "description": "If you want to read JSON files, check out [`r-json`](https://github.com/IonicaBizau/node-r-json)."
+  },
+  "files": [
+    "bin/",
+    "app/",
+    "lib/",
+    "dist/",
+    "src/",
+    "scripts/",
+    "resources/",
+    "menu/",
+    "cli.js",
+    "index.js",
+    "bloggify.js",
+    "bloggify.json",
+    "bloggify/"
+  ]
+}

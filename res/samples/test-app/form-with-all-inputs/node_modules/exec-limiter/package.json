@@ -1,0 +1,56 @@
+{
+  "name": "exec-limiter",
+  "version": "3.2.13",
+  "description": "Limit the shell execution commands to <x> calls same time.",
+  "main": "lib/index.js",
+  "directories": {
+    "example": "example",
+    "test": "test"
+  },
+  "scripts": {
+    "test": "mocha test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/IonicaBizau/exec-limiter.git"
+  },
+  "keywords": [
+    "exec",
+    "limiter",
+    "shell"
+  ],
+  "author": "Ionică Bizău <bizauionica@gmail.com> (https://ionicabizau.net)",
+  "contributors": [
+    "Gabriel Petrovay <gabipetrovay@gmail.com>"
+  ],
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/IonicaBizau/exec-limiter/issues"
+  },
+  "homepage": "https://github.com/IonicaBizau/exec-limiter",
+  "dependencies": {
+    "limit-it": "^3.0.0",
+    "typpy": "^2.1.0"
+  },
+  "devDependencies": {
+    "mocha": "^2.3.3"
+  },
+  "files": [
+    "bin/",
+    "app/",
+    "lib/",
+    "dist/",
+    "src/",
+    "scripts/",
+    "resources/",
+    "menu/",
+    "cli.js",
+    "index.js",
+    "bloggify.js",
+    "bloggify.json",
+    "bloggify/"
+  ],
+  "blah": {
+    "cli": "exec-limiter-cli"
+  }
+}

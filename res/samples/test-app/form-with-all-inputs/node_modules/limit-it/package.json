@@ -1,0 +1,48 @@
+{
+  "name": "limit-it",
+  "version": "3.2.10",
+  "description": "Run in parallel as many functions you want, but not more than <x> functions at the time.",
+  "main": "lib/index.js",
+  "scripts": {
+    "test": "node example"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:IonicaBizau/node-limit-it.git"
+  },
+  "keywords": [
+    "limit",
+    "functions"
+  ],
+  "author": "Ionică Bizău <bizauionica@gmail.com> (https://ionicabizau.net)",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/IonicaBizau/node-limit-it/issues"
+  },
+  "homepage": "https://github.com/IonicaBizau/node-limit-it",
+  "blah": {
+    "h_img": "http://i.imgur.com/4UoX6DL.png"
+  },
+  "directories": {
+    "example": "example"
+  },
+  "dependencies": {
+    "typpy": "^2.0.0"
+  },
+  "devDependencies": {},
+  "files": [
+    "bin/",
+    "app/",
+    "lib/",
+    "dist/",
+    "src/",
+    "scripts/",
+    "resources/",
+    "menu/",
+    "cli.js",
+    "index.js",
+    "bloggify.js",
+    "bloggify.json",
+    "bloggify/"
+  ]
+}

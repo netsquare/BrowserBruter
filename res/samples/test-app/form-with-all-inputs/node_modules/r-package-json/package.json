@@ -1,0 +1,53 @@
+{
+  "name": "r-package-json",
+  "version": "1.0.9",
+  "description": "Read package.json files.",
+  "main": "lib/index.js",
+  "directories": {
+    "example": "example"
+  },
+  "dependencies": {
+    "package-json-path": "^1.0.0",
+    "r-json": "^1.2.1"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/IonicaBizau/r-package-json.git"
+  },
+  "keywords": [
+    "package",
+    "npm",
+    "write",
+    "json"
+  ],
+  "author": "Ionică Bizău <bizauionica@gmail.com> (https://ionicabizau.net)",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/IonicaBizau/r-package-json/issues"
+  },
+  "homepage": "https://github.com/IonicaBizau/r-package-json#readme",
+  "blah": {
+    "related": [
+      "w-package-json"
+    ]
+  },
+  "files": [
+    "bin/",
+    "app/",
+    "lib/",
+    "dist/",
+    "src/",
+    "scripts/",
+    "resources/",
+    "menu/",
+    "cli.js",
+    "index.js",
+    "bloggify.js",
+    "bloggify.json",
+    "bloggify/"
+  ]
+}

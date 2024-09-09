@@ -1,0 +1,54 @@
+{
+  "name": "oargv",
+  "version": "3.4.10",
+  "description": "Turns an object into a bash command.",
+  "main": "lib/index.js",
+  "directories": {
+    "example": "example",
+    "test": "test"
+  },
+  "scripts": {
+    "test": "mocha test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/IonicaBizau/node-oargv.git"
+  },
+  "keywords": [
+    "oargv",
+    "arguments",
+    "commands",
+    "bash"
+  ],
+  "author": "Ionică Bizău <bizauionica@gmail.com> (https://ionicabizau.net)",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/IonicaBizau/node-oargv/issues"
+  },
+  "homepage": "https://github.com/IonicaBizau/node-oargv",
+  "devDependencies": {
+    "mocha": "^2.2.5"
+  },
+  "blah": {
+    "h_img": "http://i.imgur.com/TgmKSGy.png"
+  },
+  "dependencies": {
+    "iterate-object": "^1.1.0",
+    "ul": "^5.0.0"
+  },
+  "files": [
+    "bin/",
+    "app/",
+    "lib/",
+    "dist/",
+    "src/",
+    "scripts/",
+    "resources/",
+    "menu/",
+    "cli.js",
+    "index.js",
+    "bloggify.js",
+    "bloggify.json",
+    "bloggify/"
+  ]
+}

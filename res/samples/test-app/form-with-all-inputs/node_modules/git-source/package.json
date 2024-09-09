@@ -1,0 +1,50 @@
+{
+  "name": "git-source",
+  "version": "1.1.10",
+  "description": "Parse and stringify git urls in a friendly way.",
+  "main": "lib/index.js",
+  "directories": {
+    "example": "example",
+    "test": "test"
+  },
+  "scripts": {
+    "test": "node test"
+  },
+  "keywords": [
+    "git",
+    "urls",
+    "parse",
+    "stringify"
+  ],
+  "author": "Ionică Bizău <bizauionica@gmail.com> (https://ionicabizau.net)",
+  "license": "MIT",
+  "devDependencies": {
+    "tester": "^1.3.1"
+  },
+  "dependencies": {
+    "git-url-parse": "^5.0.1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/IonicaBizau/git-source.git"
+  },
+  "bugs": {
+    "url": "https://github.com/IonicaBizau/git-source/issues"
+  },
+  "homepage": "https://github.com/IonicaBizau/git-source#readme",
+  "files": [
+    "bin/",
+    "app/",
+    "lib/",
+    "dist/",
+    "src/",
+    "scripts/",
+    "resources/",
+    "menu/",
+    "cli.js",
+    "index.js",
+    "bloggify.js",
+    "bloggify.json",
+    "bloggify/"
+  ]
+}
