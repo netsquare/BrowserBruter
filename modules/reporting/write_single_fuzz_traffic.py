@@ -22,6 +22,7 @@ import gzip # used for gzip decompression of http response
 import zlib # used for zlib decompression of http response
 import brotli # used for brotli decompression of http response
 import zstandard # used for zstd decompression of http response
+import base64 # used to encode the raw http request and response
 from traceback import format_exc
 from bs4 import BeautifulSoup as bs # used to make html into pretty format
 from urllib.parse import urlparse # used to parse the url
@@ -75,11 +76,48 @@ def write_http_request_response(element, this_threads_file, driver, payload, web
         writer = csv.writer(report)
         # Algorithm step: 6. 
         for request in filtered_requests: # For each request
+            try:
+                base64_request = None
+                base64_response = None
+                # Converting request into base64
+                request_headers_for_bs64 = "\r\n".join(f"{header}: {value}" for header, value in request.headers.items())
+    
+                # Combine headers and raw body
+                if request.body:
+                    raw_data_request = f"{request.method} {request.path} HTTP/1.1\r\n{request_headers_for_bs64}\r\n\r\n".encode('utf-8') + request.body
+                else:
+                    raw_data_request = f"{request.method} {request.path} HTTP/1.1\r\n{request_headers_for_bs64}\r\n\r\n".encode('utf-8')
+
+                # Encode the raw data in Base64
+                base64_request = base64.b64encode(raw_data_request).decode('utf-8')
+
+                # Converting response into base64
+                response_headers_for_bs64 = "\r\n".join(f"{header}: {value}" for header, value in request.response.headers.items())
+                # Combine headers and raw body
+                if request.response.body:
+                    raw_data_response = f"HTTP/1.1 {request.response.status_code} {request.response.reason}\r\n{response_headers_for_bs64}\r\n\r\n".encode('utf-8') + request.response.body
+                else:
+                    raw_data_response = f"HTTP/1.1 {request.response.status_code} {request.response.reason}\r\n{response_headers_for_bs64}\r\n\r\n".encode('utf-8')
+                # Encode the raw data in Base64
+                base64_response = base64.b64encode(raw_data_response).decode('utf-8')
+            except Exception as e:
+                log_error(format_exc())
+                if global_variable.args.debug:
+                    print(e)
+                    pass
+                else:
+                    pass
+                
             try: # Algorithm step: 6.a decode the request body
                 request_body = request.body.decode("UTF-8")
             except UnicodeDecodeError:
                 request_body = request.body
             try:
+                # Check if the base64 request or base64 response are not none
+                if base64_response is None:
+                    base64_response = "N/A"
+                if base64_request is None:
+                    base64_request = "N/A"
                 # Algorithm step: 6.b Get request response time
                 request_time = request.date
                 response_time = request.response.date
@@ -115,7 +153,7 @@ def write_http_request_response(element, this_threads_file, driver, payload, web
                     [request_time.strftime('%Y-%m-%d %H:%M:%S'), str(element), str(payload), request.method, urllib.parse.unquote(request.url), request.headers, request_body, response_time.strftime('%Y-%m-%d %H:%M:%S'), 
                     cycle_time_in_milliseconds, request.response.status_code, request.response.reason, request.response.headers, response_body,
                     len(request.response.body), bs(webpage_before,features="html.parser").prettify(), 
-                    bs(webpage_after,features="html.parser").prettify()]]
+                    bs(webpage_after,features="html.parser").prettify(), base64_request, base64_response]]
                 # Algorithm step: 6.i write the row in report
                 writer.writerow(row)
                 # Algorithm step: 6.j Check whether the output should be printed on the console or not
@@ -149,6 +187,6 @@ def write_http_request_response(element, this_threads_file, driver, payload, web
                     [request_time.strftime('%Y-%m-%d %H:%M:%S'), str(element), str(payload), request.method, urllib.parse.unquote(request.url), request.headers, request_body, request_time.strftime('%Y-%m-%d %H:%M:%S'), 
                     '0', '0', "N/A", "N/A", "N/A",
                     '0', bs(webpage_before,features="html.parser").prettify(), 
-                    bs(webpage_after,features="html.parser").prettify()]]
+                    bs(webpage_after,features="html.parser").prettify(), base64_request, base64_response]]
                 # write the row to report
                 writer.writerow(row)

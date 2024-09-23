@@ -79,7 +79,7 @@ def generate_final_report():
             # Algorithm step: 9 get the csv writer object which writes csv data into report
             writer = csv.writer(final)
             # Algorithm step: 10 Insert column names or, in other words, headings
-            writer.writerow(['Index', 'Request Time', 'Fuzzing', 'Payload', 'Method', 'URL', 'Request Headers', 'Request Body', 'Response Time', 'Cycle Time MilliSeconds', 'Response Status Code', 'Response Reason', 'Response Headers', 'Response Body', 'Response Length', 'Web Page Before', 'Web Page After'])
+            writer.writerow(['Index', 'Request Time', 'Fuzzing', 'Payload', 'Method', 'URL', 'Request Headers', 'Request Body', 'Response Time', 'Cycle Time MilliSeconds', 'Response Status Code', 'Response Reason', 'Response Headers', 'Response Body', 'Response Length', 'Web Page Before', 'Web Page After', 'Base64 Request', 'Base64 Response'])
             # Algorithm step: 11 Iterate over each CSV file
             for csv_file in all_threads_files: 
                 # Algorithm step: 11.a get the temporary file
