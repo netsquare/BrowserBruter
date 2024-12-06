@@ -2,7 +2,7 @@
 """
 Name  : ReportExplorer.py 
 Date  : 21/06/2023
-Author: Jafar Pathan (jafar.pathan2503@outlook.com)
+Author: Jafar Pathan 
 Algorithm ->
     1. Import necessary libraries:
         a. sys, argparse: For handling command-line arguments.
@@ -60,7 +60,6 @@ from tkinter import messagebox
 from modules.report_explorer.global_variables.global_variables import re_global_variable
 from modules.report_explorer.split_report.split_report import split_report
 from modules.report_explorer.show_data.sort_treeview import sort_treeview
-from modules.report_explorer.context_menu.show_context_menu_notebook import show_context_menu_notebook
 from modules.report_explorer.context_menu.show_context_menu import show_context_menu
 from modules.report_explorer.show_data.show_request_response import show_request_response
 from modules.report_explorer.show_data.load_csv import load_csv
@@ -68,7 +67,7 @@ from modules.report_explorer.filter.filter_button_click import filter_button_cli
 from modules.report_explorer.filter.clear_filter import clear_filter
 from modules.report_explorer.show_data.display_data import display_data
 from modules.report_explorer.grep.grep_strings import grep_strings
-from modules.report_explorer.show_data.ignore_keyboard import ignore_keyboard
+from modules.report_explorer.request_response_ui.request_response_ui import request_response_ui
 
 ##################################################################
 """
@@ -163,7 +162,6 @@ if __name__ == "__main__":
     view_menu.add_command(label="Increase Font Size", command=lambda: update_font_size(1))
     view_menu.add_command(label="Decrease Font Size", command=lambda: update_font_size(-1))
 
-
     # Create Panedwindow for Treeview and Notebook
     paned_window = ttk.Panedwindow(root, orient=tk.VERTICAL)
     paned_window.pack(expand=True, fill='both')
@@ -204,21 +202,9 @@ if __name__ == "__main__":
     request_response_paned_window = ttk.Panedwindow(request_response_tab, orient=tk.HORIZONTAL)
     request_response_paned_window.pack(expand=True, fill='both')
 
-    # Create frame for Request tab
-    request_tab = ttk.Frame(request_response_paned_window)
-    request_response_paned_window.add(request_tab, weight=1)
-
-    # Create Text widget for displaying request details
-    request_text = tk.Text(request_tab, wrap='word', width=80, height=20)
-    request_text.pack(fill='both', expand=True)
-
-    # Create frame for Response tab
-    response_tab = ttk.Frame(request_response_paned_window)
-    request_response_paned_window.add(response_tab, weight=1)
-
-    # Create Text widget for displaying response details
-    response_text = tk.Text(response_tab, wrap='word', width=80, height=20)
-    response_text.pack(fill='both', expand=True)
+    # Create a request/response UI area
+    request_text, request_search = request_response_ui(root, tk, ttk, request_response_paned_window)
+    response_text, response_search = request_response_ui(root, tk, ttk, request_response_paned_window)
 
     # Create tab for Web Page Before/After details
     web_page_tab = ttk.Frame(notebook)
@@ -228,25 +214,9 @@ if __name__ == "__main__":
     web_page_paned_window = ttk.Panedwindow(web_page_tab, orient=tk.HORIZONTAL)
     web_page_paned_window.pack(expand=True, fill='both')
 
-    # Create frame for Web Page Before tab
-    web_page_before_tab = ttk.Frame(web_page_paned_window)
-    web_page_paned_window.add(web_page_before_tab, weight=1)
-
-    # Create Text widget for displaying web page before details
-    web_page_before_text = tk.Text(web_page_before_tab, wrap='word', width=40, height=20)
-    web_page_before_text.pack(fill='both', expand=True)
-
-    # Create frame for Web Page After tab
-    web_page_after_tab = ttk.Frame(web_page_paned_window)
-    web_page_paned_window.add(web_page_after_tab, weight=1)
-
-    # Create Text widget for displaying web page after details
-    web_page_after_text = tk.Text(web_page_after_tab, wrap='word', width=40, height=20)
-    web_page_after_text.pack(fill='both', expand=True)
-
-    # Create label for displaying response body length
-    response_body_length_label = ttk.Label(web_page_after_tab, text="")
-    response_body_length_label.pack()
+    # Create the Web page before/after UI area
+    web_page_before_text, web_page_before_search = request_response_ui(root, tk, ttk, web_page_paned_window)
+    web_page_after_text, web_page_after_search = request_response_ui(root, tk, ttk, web_page_paned_window)
 
     # Create tab for Request/Response details base64
     request_response_tab_base64 = ttk.Frame(notebook)
@@ -256,45 +226,20 @@ if __name__ == "__main__":
     request_response_paned_window_base64 = ttk.Panedwindow(request_response_tab_base64, orient=tk.HORIZONTAL)
     request_response_paned_window_base64.pack(expand=True, fill='both')
 
-    # Create frame for Request tab base64
-    request_tab_base64 = ttk.Frame(request_response_paned_window_base64)
-    request_response_paned_window_base64.add(request_tab_base64, weight=1)
+    # Create the base64 UI area
+    response_text_base64, response_text_base64_search = request_response_ui(root, tk, ttk, request_response_paned_window_base64)
+    request_text_base64, request_text_base64_search = request_response_ui(root, tk, ttk, request_response_paned_window_base64)
 
-    # Create Text widget for displaying request details base64
-    request_text_base64 = tk.Text(request_tab_base64, wrap='word', width=80, height=20)
-    request_text_base64.pack(fill='both', expand=True)
-
-    # Create frame for Response tab base64
-    response_tab_base64 = ttk.Frame(request_response_paned_window_base64)
-    request_response_paned_window_base64.add(response_tab_base64, weight=1)
-
-    # Create Text widget for displaying response details base64
-    response_text_base64 = tk.Text(response_tab_base64, wrap='word', width=80, height=20)
-    response_text_base64.pack(fill='both', expand=True)
-
-    # Bind keyboard events to notebook
-    request_text.bind("<KeyPress>", lambda event: ignore_keyboard(event, request_text, root, tk))
-    response_text.bind("<KeyPress>", lambda event: ignore_keyboard(event, response_text, root, tk))
-    web_page_before_text.bind("<KeyPress>", lambda event: ignore_keyboard(event, web_page_before_text, root, tk))
-    web_page_after_text.bind("<KeyPress>", lambda event: ignore_keyboard(event, web_page_after_text, root, tk))
-    response_text_base64.bind("<KeyPress>", lambda event: ignore_keyboard(event, response_text_base64, root, tk))
-    request_text_base64.bind("<KeyPress>", lambda event: ignore_keyboard(event, request_text_base64, root, tk))
-
-    # Bind Right mouse click to copy selection
-    request_text.bind("<Button-3>", lambda event: show_context_menu_notebook(event, request_text, root, tk))
-    response_text.bind("<Button-3>", lambda event: show_context_menu_notebook(event, response_text, root, tk))
-    web_page_before_text.bind("<Button-3>", lambda event: show_context_menu_notebook(event, web_page_before_text, root, tk))
-    web_page_after_text.bind("<Button-3>", lambda event: show_context_menu_notebook(event, web_page_after_text, root, tk))
-    response_text_base64.bind("<Button-3>", lambda event: show_context_menu_notebook(event, response_text_base64, root, tk))
-    request_text_base64.bind("<Button-3>", lambda event: show_context_menu_notebook(event, request_text_base64, root, tk))
-    
+    # Creating list of search and text widget to pass them to the show_request_response() method
+    list_of_search_widgets = [request_search, response_search, web_page_before_search, web_page_after_search, request_text_base64_search, response_text_base64_search]
+    list_of_text_widgets = [request_text, response_text, web_page_before_text, web_page_after_text, request_text_base64, response_text_base64]
 
     # Bind Treeview click event to show_request_response function
-    tree.bind('<ButtonRelease-1>', lambda event: show_request_response(event, tree, tk, request_text, response_text, web_page_before_text, web_page_after_text, request_text_base64, response_text_base64, messagebox))
+    tree.bind('<ButtonRelease-1>', lambda event: show_request_response(event, tree, tk, list_of_text_widgets, list_of_search_widgets, messagebox))#request_text, response_text, web_page_before_text, web_page_after_text, request_text_base64, response_text_base64, messagebox))
 
     # Bind Treeview up and down arrow keys to show_request_response function
-    tree.bind('<Up>', lambda event: show_request_response(event, tree, tk, request_text, response_text, web_page_before_text, web_page_after_text, request_text_base64, response_text_base64, messagebox))
-    tree.bind('<Down>', lambda event: show_request_response(event, tree, tk, request_text, response_text, web_page_before_text, web_page_after_text, request_text_base64, response_text_base64, messagebox))
+    tree.bind('<Up>', lambda event: show_request_response(event, tree, tk, list_of_text_widgets, list_of_search_widgets, messagebox))#request_text, response_text, web_page_before_text, web_page_after_text, request_text_base64, response_text_base64, messagebox))
+    tree.bind('<Down>', lambda event: show_request_response(event, tree, tk, list_of_text_widgets, list_of_search_widgets, messagebox))#request_text, response_text, web_page_before_text, web_page_after_text, request_text_base64, response_text_base64, messagebox))
 
     # Bind the right-click event to the show_request_response function
     tree.bind("<Button-3>", lambda event: show_context_menu(event, tree, tk, root))

@@ -2,7 +2,7 @@
 """
 Name  : battering_ram.py 
 Date  : 13/03/2023
-Author: Jafar Pathan (jafar.pathan2503@outlook.com)
+Author: Jafar Pathan 
 Copyright: Net-Square Solutions PVT LTD.
 """
 ##################################################################
@@ -154,4 +154,4 @@ def attempt_battering_ram_fuzz(elements, payload, driver, this_threads_file):
     if global_variable.args.button in global_variable.remove_class_elements: # Algorithm step: 6 remove class attribute if required
             driver.execute_script("arguments[0].removeAttribute('class');",button_to_press) # remove the class attribute using javascript
     press_button(driver,button_to_press,False) # Algorithm step: 7 press the button
-    operations_after_pressing_the_button(element,driver,webpage_before,this_threads_file,payload) # Algorithm step: 8 perform post fuzz operations
+    operations_after_pressing_the_button(elements,driver,webpage_before,this_threads_file,payload) # Algorithm step: 8 perform post fuzz operations

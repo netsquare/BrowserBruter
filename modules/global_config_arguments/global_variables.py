@@ -2,7 +2,7 @@
 """
 Name  : global_variables.py 
 Date  : 13/03/2023
-Author: Jafar Pathan (jafar.pathan2503@outlook.com)
+Author: Jafar Pathan 
 Copyright: Net-Square Solutions PVT LTD.
 """
 ##################################################################
@@ -50,11 +50,11 @@ class Global_Variable_Class:
             cls._instance = super(Global_Variable_Class, cls).__new__(cls)
 
             # All of this color constants are global variables and used throughout the script
-            cls._instance.GREEN = Fore.GREEN # Using Fore library, defining and assigning cls._instance.GREEN variable
-            cls._instance.YELLOW = Fore.YELLOW # cls._instance.YELLOW color
-            cls._instance.RED = Fore.RED # cls._instance.RED color
-            cls._instance.RESET = Fore.RESET # cls._instance.RESET color, go back to default color
-            cls._instance.BLUE = Fore.BLUE # cls._instance.BLUE color 
+            cls._instance.GREEN = '\033[92m' # Using Fore library, defining and assigning cls._instance.GREEN variable
+            cls._instance.YELLOW = '\033[93m' # cls._instance.YELLOW color
+            cls._instance.RED = '\033[91m' # cls._instance.RED color
+            cls._instance.RESET = '\033[0m' # cls._instance.RESET color, go back to default color
+            cls._instance.BLUE = '\033[94m' # cls._instance.BLUE color 
 
             cls._instance.args = get_arguments()
 
@@ -92,8 +92,14 @@ class Global_Variable_Class:
                 elif cls._instance.args.threads > 20 or cls._instance.args.threads < 0: # if threads are more than 20 and less than 1 then exit the script
                     print(f"\n\n{cls._instance.RED}[+]--------------------------------------------------------------------------------------------------------------------------[+]\nERROR: {cls._instance.RESET}Value of threads must less than 8 and more than 0\n{cls._instance.RED}[+]--------------------------------------------------------------------------------------------------------------------------[+]{cls._instance.RESET}")
                     sys.exit(0)
-                elif (cls._instance.args.elements and cls._instance.args.elements_payloads): # if --elements and --elements-payloads is given together then throw error
-                    print(f"\n\n{cls._instance.RED}[+]--------------------------------------------------------------------------------------------------------------------------[+]\nERROR: {cls._instance.RESET}--elements and --elements--payloads can't be used together\n{cls._instance.RED}[+]--------------------------------------------------------------------------------------------------------------------------[+]{cls._instance.RESET}")
+                elif (cls._instance.args.elements and cls._instance.args.elements_payloads) or (cls._instance.args.payloads and cls._instance.args.elements_payloads): # if --elements and --elements-payloads is given together then throw error
+                    print(f"\n\n{cls._instance.RED}[+]--------------------------------------------------------------------------------------------------------------------------[+]\nERROR: {cls._instance.RESET}--elements and --elements--payloads or --payloads and --elements-payloads can't be used together\n{cls._instance.RED}[+]--------------------------------------------------------------------------------------------------------------------------[+]{cls._instance.RESET}")
+                    sys.exit(0)
+                elif cls._instance.args.attack in (4,3) and (cls._instance.args.payloads or cls._instance.args.elements): # if --elements and --elements-payloads is given together then throw error
+                    print(f"\n\n{cls._instance.RED}[+]--------------------------------------------------------------------------------------------------------------------------[+]\nERROR: {cls._instance.RESET}--elements or --payloads can't be used with attack mode 3. PITCHFORK, 4. CLUSTERBOMB, for these attack modes kindly use --elements-payloads option.\n{cls._instance.RED}[+]--------------------------------------------------------------------------------------------------------------------------[+]{cls._instance.RESET}")
+                    sys.exit(0)
+                elif cls._instance.args.attack in (1,2) and cls._instance.args.elements_payloads: # if --elements and --elements-payloads is given together then throw error
+                    print(f"\n\n{cls._instance.RED}[+]--------------------------------------------------------------------------------------------------------------------------[+]\nERROR: {cls._instance.RESET}--elements-payloads can't be used with attack mode 1. SNIPER, 2. BATTERING RAM, for these attack modes kindly use --elements and --payloads option.\n{cls._instance.RED}[+]--------------------------------------------------------------------------------------------------------------------------[+]{cls._instance.RESET}")
                     sys.exit(0)
                 # if force-cookie argument is present withouth --cookie option then throw error 
                 elif cls._instance.args.force_cookie:
@@ -213,21 +219,31 @@ class Global_Variable_Class:
                     sys.exit(0)
             # Setting flag which indicates threads to run or stop, This global terminate flag works as cls._instance.RED flag for the script, this flag is checked at many places in the script
             cls._instance.terminate = False
+            # Setting flag for --no-reload-page switch
+            cls._instance.no_reload = True
             # This global variable Pause event will be used to pause the threads when user presses the ENTER KEY
             cls._instance.pause_event = threading.Event()
             # if there is code to replace, get the code
             if cls._instance.args.replace_code:
                 # Split the replace_code argument into individual strings
-                cls._instance.replace_codes = cls._instance.args.replace_code.split(',')
+                cls._instance.replace_codes = cls._instance.args.replace_code.split('+++')
                 # Create pairs of replacement codes
                 cls._instance.replacement_pairs = []
-                i = 0 # set index
-                while i < len(cls._instance.replace_codes): # get the replacement codes one by one
-                    if i + 1 < len(cls._instance.replace_codes):
-                        to_be_replaced = cls._instance.replace_codes[i] # get the code to replace 
-                        to_be_replaced_with = cls._instance.replace_codes[i + 1] # get the replacement code which will be after code to replace in replace_codes list
-                        cls._instance.replacement_pairs.append((to_be_replaced, to_be_replaced_with)) # Create pairs for replacement and code to replace 
-                    i += 2
+                #i = 0 # set index
+                #while i < len(cls._instance.replace_codes): # get the replacement codes one by one
+                #    if i + 1 < len(cls._instance.replace_codes):
+                #        to_be_replaced = cls._instance.replace_codes[i] # get the code to replace 
+                #        to_be_replaced_with = cls._instance.replace_codes[i + 1] # get the replacement code which will be after code to replace in replace_codes list
+                #        cls._instance.replacement_pairs.append((to_be_replaced, to_be_replaced_with)) # Create pairs for replacement and code to replace 
+                #    i += 2
+                # V2024.10.12 changing replace_code logic
+                for find_replace_pair in cls._instance.replace_codes:
+                    try:
+                        to_be_replaced, to_be_replaced_with = find_replace_pair.split('::')
+                        cls._instance.replacement_pairs.append((to_be_replaced, to_be_replaced_with))
+                    except ValueError:
+                        print(f"\n\n{cls._instance.RED}[+]--------------------------------------------------------------------------------------------------------------------------[+]\nERROR: {cls._instance.RESET}The --replace-code option required data in following format -> --replace-code to_be_replaced::to_be_repalced_with\n{cls._instance.RED}[+]--------------------------------------------------------------------------------------------------------------------------[+]{cls._instance.RESET}")
+                        sys.exit(0)
             # Abort request with following extensions, this global forbidden_extensions holds the extension which will be aborted by request interceptor
             cls._instance.forbidden_extensions = ['.ico', '.png', '.img', '.jpg', '.svg', '.jpeg', '.jfif', '.pjpeg', '.pjp', '.gif', '.apng', '.avif', '.webp', '.bmp', '.cur', '.tif', '.tiff', '.mp3', '.mp4', '.avi', '.mkv', '.webm', 'ogv']
             if cls._instance.args.no_css: # if --no-css flag is set the remove .css extension into forbidden_extensions as well
@@ -340,7 +356,7 @@ class Global_Variable_Class:
             if cls._instance.args.fill_values:
                 try:
                     with open(cls._instance.args.fill_values, 'r') as values_file: # open the file provided user in read mode
-                        attribute_values = json.load(values_file) # override the values with values given by user
+                        cls._instance.attribute_values = json.load(values_file) # override the values with values given by user
                 except FileNotFoundError: # if file not found then print generic message
                     print(f"\n\n{cls._instance.RED}[+]--------------------------------------------------------------------------------------------------------------------------[+]\nERROR: {cls._instance.RESET}The specified values file '{cls._instance.args.values}' does not exist.\n{cls._instance.RED}[+]--------------------------------------------------------------------------------------------------------------------------[+]{cls._instance.RESET}")
                     sys.exit(0) # exit the script

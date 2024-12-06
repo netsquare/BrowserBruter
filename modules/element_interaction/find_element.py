@@ -2,7 +2,7 @@
 """
 Name  : find_element.py 
 Date  : 13/03/2023
-Author: Jafar Pathan (jafar.pathan2503@outlook.com)
+Author: Jafar Pathan 
 Copyright: Net-Square Solutions PVT LTD.
 """
 ##################################################################

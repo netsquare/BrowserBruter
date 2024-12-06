@@ -2,7 +2,7 @@
 """
 Name  : pre_fuzzing.py 
 Date  : 13/03/2023
-Author: Jafar Pathan (jafar.pathan2503@outlook.com)
+Author: Jafar Pathan 
 Copyright: Net-Square Solutions PVT LTD.
 """
 ##################################################################
@@ -67,9 +67,14 @@ def initial_operations_before_filling_the_form(driver):
     wait_and_handle_popup(driver)
     # Algorithm step: 3 Clear previous requests
     del driver.requests
+    # if user has supplied the --no-reload-page switch then reload one time and set global flag to prevent further reload
+    if global_variable.args.no_reload_page and global_variable.no_reload:
+        driver.get(global_variable.args.target)
+        global_variable.no_reload = False
     # Algorithm step: 4 Go to the target website
-    if not global_variable.args.interactive: # Check if --interactive is set, because if it set then, the browser has already navigated to target URL, else if it is not then navigate to target url.
+    if not (global_variable.args.interactive and global_variable.args.no_reload_page): # Check if --interactive is set, because if it set then, the browser has already navigated to target URL, else if it is not then navigate to target url.
         try:
+           # if not driver.get(global_variable.args.no_reload_page): # Check if user specified not to visit the target URL
             driver.get(global_variable.args.target) # navigate to url
         except TimeoutException as e: # if there is a timeout in navigating to url
             print(f"\n\n{global_variable.RED}[+]--------------------------------------------------------------------------------------------------------------------------[+]\nERROR: {global_variable.RESET}HTTP Response Timeout has been reached. Do you want to wait for server to response? Press ENTER to continue to wait, press CTRL+C to stop the process and generate the report.\n{global_variable.RED}[+]--------------------------------------------------------------------------------------------------------------------------[+]{global_variable.RESET}")

@@ -2,10 +2,15 @@
 """
 Name  : wait_and_handle_popup.py 
 Date  : 13/03/2023
-Author: Jafar Pathan (jafar.pathan2503@outlook.com)
+Author: Jafar Pathan 
 Copyright: Net-Square Solutions PVT LTD.
 """
 ##################################################################
+
+##################################################################
+# Importing Custom Modules
+##################################################################
+from modules.global_config_arguments.global_variables import global_variable
 
 ##################################################################
 # Importing Python Libraries
@@ -33,6 +38,10 @@ def wait_and_handle_popup(driver):
     try:
         wait.until(EC.presence_of_all_elements_located(("xpath", '//body'))) # Algorithm step: 2 Wait until all elements located by the XPath '//body' are present in the DOM
     except UnexpectedAlertPresentException: # Algorithm step: 3 If a popup appears before this condition is met, it will raise UnexpectedAlertPresentException
+        if global_variable.args.pause_on_popup:
+            global_variable.pause_event.set()
+            print(f"\n\n{global_variable.YELLOW}[+]--------------------------------------------------------------------------------------------------------------------------[+]\nINFO:{global_variable.RESET} A POPUP is found, since you are using --pause-on-popup option, Browser Bruter is paused, kindly interact with popup and then press to ENTER to resume the Browser Bruter.\n{global_variable.RED}[+]--------------------------------------------------------------------------------------------------------------------------[+]{global_variable.RESET}")
+        else:
             try:
                 alert = driver.switch_to.alert # Switch focus to the alert box
                 alert.accept() # Accept the alert (click OK)

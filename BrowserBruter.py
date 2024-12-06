@@ -2,7 +2,7 @@
 """
 Name  : BrowserBruter.py 
 Date  : 13/03/2023
-Author: Jafar Pathan (jafar.pathan2503@outlook.com)
+Author: Jafar Pathan 
 Copyright: Net-Square Solutions PVT LTD.
 """
 ##################################################################
@@ -61,7 +61,7 @@ from modules.threading.slice_dict_for_threads import slice_dict_for_threads
 from modules.reporting.final_report import generate_final_report
 from modules.error_handling.error_handling import handle_unknown_exception
 from modules.global_config_arguments.global_variables import global_variable
-from modules.tee.tee import Tee # res.tee contains code which prints the output of the Browser Bruter on console as well as log file
+# from modules.tee.tee import Tee # res.tee contains code which prints the output of the Browser Bruter on console as well as log file
 from modules.automatic_navigation_handler.record_navigation import record_navigation
 
 ##################################################################
@@ -113,10 +113,14 @@ if __name__ == "__main__": # Check that the script is started directly and not i
         # print banner
         print_banner()
         
+        #try:
         # Creating Reports directory in current directory to store reports
         os.makedirs("BrowserBruter_Reports",exist_ok=True) # create BrowserBruter_Reports directory
         os.makedirs(f"BrowserBruter_Reports/{global_variable.hostname}/{global_variable.start_time}",exist_ok=True) # create directory with target hostname and inside that new directory with current time
         os.makedirs("logs",exist_ok=True) # create directory to store the logs
+            #if "permission" in e.message:
+            #print(e)
+
 
         # If --record-navigation is set then start the browser to start recording the navigation
         if global_variable.args.record_navigation:
@@ -130,13 +134,14 @@ if __name__ == "__main__": # Check that the script is started directly and not i
         # Algorithm step:2 Create and start the keyboard listener thread which will pause and resume the BrowserBruter
         keyboard_thread = threading.Thread(target=pause_resume,daemon=True) # This thread will run independently of browser threads, and will look for key press event console, if key is pressed then this thread will throw and signal to pause the script. Also starting this thread as daemon because we want it close when script's main thread is closed.
         keyboard_thread.start()
+        # NOTE: Algorithm step:3 Abandoned, not required now.
         # Algorithm step:3 If only verbose or debug flag is set then track logs else do not track STDOUT console output on logs/BrowserBruterSTDOUT.txt file
-        if global_variable.args.verbose or global_variable.args.debug:
-            # Redirect stdout to the Tee class, the tee class redirects STDOUT to STDOUT and the log file only if --verbose flag or --debug flag is set
-            log_file = 'logs/BrowserBruterSTDOUT.txt'  # This file stores console output
-            tee_instance = Tee(log_file) # Tee -> this will print the output on console as well as redirect the STDOUT to logs/BrowserBruterSTDOUT.txt file, This functionality is written in res/tee.py
-            stdout = tee_instance # Setting Operating System's STDOUT to tee_instance, look -> res/tee.py for more info.
-            print(f"\n\n{global_variable.YELLOW}[+]--------------------------------------------------------------------------------------------------------------------------[+]\nINFO: {global_variable.RESET}Either --verbose or --debug flag detected creating logs in -> {log_file}\n{global_variable.YELLOW}[+]--------------------------------------------------------------------------------------------------------------------------[+]{global_variable.RESET}")
+        #if global_variable.args.verbose or global_variable.args.debug:
+        #    # Redirect stdout to the Tee class, the tee class redirects STDOUT to STDOUT and the log file only if --verbose flag or --debug flag is set
+        #    log_file = 'logs/BrowserBruterSTDOUT.txt'  # This file stores console output
+        #    tee_instance = Tee(log_file) # Tee -> this will print the output on console as well as redirect the STDOUT to logs/BrowserBruterSTDOUT.txt file, This functionality is written in res/tee.py
+        #    stdout = tee_instance # Setting Operating System's STDOUT to tee_instance, look -> res/tee.py for more info.
+        #    print(f"\n\n{global_variable.YELLOW}[+]--------------------------------------------------------------------------------------------------------------------------[+]\nINFO: {global_variable.RESET}Either --verbose or --debug flag detected creating logs in -> {log_file}\n{global_variable.YELLOW}[+]--------------------------------------------------------------------------------------------------------------------------[+]{global_variable.RESET}")
         # Algorithm step:4 Print legal disclaimer and general info about target and payloads
         print(f"\n\n{global_variable.YELLOW}[+]--------------------------------------------------------------------------------------------------------------------------[+]\nLegal Warning:{global_variable.RESET} This Browser-Bruter open-source penetration testing tool is Copyrighted Property of Net-Square Solutions PVT LTD. provided for educational and ethical purposes only. Users are solely responsible for ensuring compliance with all applicable laws and regulations, and the developer(s) disclaim any liability for misuse or damage caused by the tool.\n{global_variable.YELLOW}[+]--------------------------------------------------------------------------------------------------------------------------[+]\n{global_variable.RESET}")
         print(f"{global_variable.YELLOW}[+]--------------------------------------------------------------------------------------------------------------------------[+]")
@@ -244,6 +249,12 @@ if __name__ == "__main__": # Check that the script is started directly and not i
         # Set the terminate flag so the keyboard thread stops
         terminate = True
     # Algorithm step:11
+    except PermissionError as e:
+        log_error(format_exc())
+        if global_variable.args.debug:
+            print_exc()
+        print(f"\n\n{global_variable.RED}[+]--------------------------------------------------------------------------------------------------------------------------[+]\nERROR: {global_variable.RESET}BrowserBruter does not have WRITE PERMISSION to 'BrowserBruter_Reports/' or 'logs/' folder. This is not an issue with Browser Bruter.\nKindly run the following command to solve the issue {global_variable.BLUE}'sudo chmod 777 -R ./BrowserBruter_Reports && sudo chmod 777 -R ./logs'{global_variable.RESET} and the issue will be resolved. If issue still persists then Contact the dev at https://github.com/netsquare/BrowserBruter\n{global_variable.RED}[+]--------------------------------------------------------------------------------------------------------------------------[+]{global_variable.RESET}")
+        sys.exit(0)
     except KeyboardInterrupt:
         signal_handler(signal.SIGINT, None)
         log_error(format_exc())
@@ -261,8 +272,10 @@ if __name__ == "__main__": # Check that the script is started directly and not i
         if not global_variable.args.record_navigation:
             generate_final_report()
         # Reset sys.stdout to the console at the end
-        if global_variable.args.verbose or global_variable.args.debug:
-            sys.stdout = sys.__stdout__
+        #if global_variable.args.verbose or global_variable.args.debug:
+            #sys.stdout = sys.__stdout__
+        # Ensure terminal is in 'echo' mode
+        os.system('stty echo')
         sys.exit(0)      
 else: # Algorithm step:13
     print(f"\n\n{global_variable.RED}[+]--------------------------------------------------------------------------------------------------------------------------[+]\nError:{global_variable.RESET} Please run the script again using python3 BrowserBruter.py, closing the BrowserBruter\n{global_variable.RED}[+]--------------------------------------------------------------------------------------------------------------------------[+]{global_variable.RESET}")

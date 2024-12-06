@@ -1,8 +1,9 @@
 ##################################################################
 """
 Name  : tee.py 
+NOTE  : Abandoned (Reason: does not required for now)
 Date  : 12/11/2023
-Author: Jafar Pathan (jafar.pathan2503@outlook.com)
+Author: Jafar Pathan 
 CopyRight: Net-Square Solutions PVT LTD.
 """
 ##################################################################
@@ -26,7 +27,7 @@ This file is used to replicate the functionality of the tee tool.
 This will print the script output to console as well as logs file
 """
 ##################################################################
-
+"""
 import sys
 
 class Tee:  # Creating a class called Tee
@@ -42,3 +43,4 @@ class Tee:  # Creating a class called Tee
     def flush(self):  # Defining a method to flush the output stream buffers
         self.stdout_orig.flush()  # Flushing the buffer of the original standard output stream
 
+"""

@@ -2,7 +2,7 @@
 """
 Name  : print_banner.py 
 Date  : 13/03/2023
-Author: Jafar Pathan (jafar.pathan2503@outlook.com)
+Author: Jafar Pathan 
 Copyright: Net-Square Solutions PVT LTD.
 """
 ##################################################################
@@ -28,7 +28,7 @@ def print_banner():
     {global_variable.GREEN}###                                                                                                                         {global_variable.GREEN}###
     {global_variable.GREEN}###                                                                                                                         {global_variable.GREEN}###
     {global_variable.GREEN}### 	               {global_variable.YELLOW}The First-Ever! Advance Browser Based Automated Web Form Fuzzing Tool                            {global_variable.GREEN}###
-    {global_variable.GREEN}### 	               {global_variable.YELLOW}Version      : {global_variable.BLUE}v2024.10                                                                           {global_variable.GREEN}###
+    {global_variable.GREEN}### 	               {global_variable.YELLOW}Version      : {global_variable.BLUE}v2024.12                                                                          {global_variable.GREEN}###
     {global_variable.GREEN}###                        {global_variable.YELLOW}Github       : {global_variable.BLUE}https://github.com/netsquare/BrowserBruter                                        {global_variable.GREEN}###
     {global_variable.GREEN}###                        {global_variable.YELLOW}Copyright    : {global_variable.BLUE}Net-Square Solutions PVT LTD. (https://net-square.com)                            {global_variable.GREEN}###
     {global_variable.GREEN}###                        {global_variable.YELLOW}Documentation: {global_variable.BLUE}https://net-square.com/browserbruter                                              {global_variable.GREEN}###

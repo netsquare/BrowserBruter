@@ -115,7 +115,8 @@ def initialize_gui_args(args):
         
         target = tk.Text(frames["Basic Arguments"], font=('Hacker',14), height=2, width=120, wrap="word")
         button = tk.Text(frames["Basic Arguments"], font=('Hacker',14), height=1, width=80, wrap="word")#, textvariable=args_vars["button"])
-        attack = ttk.Combobox(frames["Attack Modes"], font=('Hacker',14), values=list(range(1, 5)), width=5)
+        attack = ttk.Combobox(frames["Attack Modes"], font=('Hacker',14), values=list(['1. SNIPER','2. BATTERING RAM', '3. PITCH FORK', '4. CLUSTER BOMB']), width=20)
+        #attack = ttk.Combobox(frames["Attack Modes"], font=('Hacker',14), values=list(range(1, 5)), width=5)
         elements = tk.Text(frames["Sniper and Battering Ram"], font=('Hacker',14), height=1, width=120, wrap="word")
         payloads = tk.Text(frames["Sniper and Battering Ram"], font=('Hacker',14), height=1, width=120, wrap="word")
         elements_payloads = tk.Text(frames["PitchFork and ClusterBomb"], font=('Hacker',14), height=5, width=75, wrap="word")
@@ -172,7 +173,7 @@ def initialize_gui_args(args):
         args_vars = {
             "target": [target, tk.StringVar()],
             "button": [button, tk.StringVar()],
-            "attack": [attack, tk.IntVar()],
+            "attack": [attack, tk.StringVar()],
             "elements": [elements, tk.StringVar()],
             "payloads": [payloads, tk.StringVar()],
             "elements_payloads": [elements_payloads, tk.StringVar()],
@@ -336,7 +337,7 @@ def initialize_gui_args(args):
                     collected_args[key] = var[1].get()
                 elif isinstance(var[1], tk.IntVar):
                     try:
-                        print(var)
+                        #print(var)
                         collected_args[key] = int(var[0].get("1.0", "end-1c"))
                     except Exception as e:
                         try: 
@@ -352,6 +353,8 @@ def initialize_gui_args(args):
                         collected_args[key] = float(var[0].get("1.0", "end-1c"))
                     except ValueError as e:
                         collected_args[key] = 0.0
+                elif key == "attack":
+                    collected_args[key] = var[0].get()
                 else:
                     collected_args[key] = var[0].get("1.0", "end-1c")
 
@@ -399,17 +402,28 @@ def initialize_gui_args(args):
                         collected_args[key] = float(var[0].get("1.0", "end-1c"))
                     except ValueError as e:
                         collected_args[key] = 0.0
+                elif key == "attack":
+                    collected_args[key] = var[0].get()
                 else:
                     collected_args[key] = var[0].get("1.0", "end-1c")
                 
             # debug purpose
-            print(collected_args)
+            #print(collected_args)
 
             # Update the Namespace object
             for key, value in collected_args.items():
                 if value not in [None, "", 0, 0.0]:  # Also checks for empty strings and zero values
                     setattr(args, key, value)
-    
+                
+            attack_mode = collected_args["attack"]
+            if attack_mode == "1. SNIPER":
+                setattr(args, "attack", 1)
+            elif attack_mode == "2. BATTERING RAM":
+                setattr(args, "attack", 2)
+            elif attack_mode == "3. PITCH FORK":
+                setattr(args, "attack", 3)
+            else:
+                setattr(args, "attack", 4)
             # Close the GUI window
             root.destroy()
 

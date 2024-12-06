@@ -3,7 +3,7 @@
 Name  : usage_manual.py
 Date  : 08/03/2024
 CopyRight: Net-Square Solutions PVT LTD.
-Author: Jafar Pathan (jafar.pathan2503@outlook.com)
+Author: Jafar Pathan 
 This file is used to print the in-built help usage examples
 """
 ##################################################################
@@ -87,10 +87,10 @@ Usage Examples:
         {YELLOW}python3 BrowserBruter.py{GREEN} --elements{RESET} username,password {GREEN}--fill{RESET} username,password {GREEN}--button{RESET} login {GREEN}--target{RESET} http://localhost/login {GREEN}--payloads{RESET} payloads.txt {GREEN}--replace-files{RESET} "input-validation.js"++"http://localhost/assets/js/input-validation.js" {GREEN}--javascript-file{RESET} element-click.js {GREEN}--attack{RESET} 1{RESET}
     
     22. Replace every "return false" statement with "return true" and replace every "alert(0)" with "alert(1)":
-        {YELLOW}python3 BrowserBruter.py{GREEN} --elements{RESET} username,password {GREEN}--fill{RESET} username,password {GREEN}--button{RESET} login {GREEN}--target{RESET} http://localhost/login {GREEN}--payloads{RESET} payloads.txt {GREEN}--replace-code{RESET} "return false","return true","alert(0)","alert(1)" {GREEN}--javascript{RESET} "var elmnt = document.getElementById('ClickMe'); elmnt.click();" {GREEN}--attack{RESET} 1{RESET}
+        {YELLOW}python3 BrowserBruter.py{GREEN} --elements{RESET} username,password {GREEN}--fill{RESET} username,password {GREEN}--button{RESET} login {GREEN}--target{RESET} http://localhost/login {GREEN}--payloads{RESET} payloads.txt {GREEN}--replace-code{RESET} "return false"::"return true"+++"alert(0)"::"alert(1)" {GREEN}--javascript{RESET} "var elmnt = document.getElementById('ClickMe'); elmnt.click();" {GREEN}--attack{RESET} 1{RESET}
     
     23. Replace bunch of javascript code into return true:
-        {YELLOW}python3 BrowserBruter.py{GREEN} --elements-payloads{RESET} textarea:sqli.txt,data:sqli.txt {GREEN}--button{RESET} submit {GREEN}--target{RESET} http://localhost:3000/index.html {GREEN}--attack{RESET} 3 {GREEN}--replace-code{RESET} "return false","return true","return regex.test(dateString)","return true","return regex.test(timeString)","return true","return regex.test(colorString)","return true"{RESET}
+        {YELLOW}python3 BrowserBruter.py{GREEN} --elements-payloads{RESET} textarea:sqli.txt,data:sqli.txt {GREEN}--button{RESET} submit {GREEN}--target{RESET} http://localhost:3000/index.html {GREEN}--attack{RESET} 3 {GREEN}--replace-code{RESET} "return false"::"return true"+++"return regex.test(dateString)"::"return true"+++"return regex.test(timeString)"::"return true"+++"return regex.test(colorString)"::"return true"{RESET}
 
     24. Fuzz the search box, when user have to press enter to submit the search query, the user has to click on search icon to make search box appear:
         {YELLOW}python3 BrowserBruter.py{GREEN} --elements{RESET} search-bar {GREEN}--button{RESET} search-bar {GREEN}--attack{RESET} 1 {GREEN}--target{RESET} http://localhost:3000/#/ {GREEN}--payloads{RESET} fuzz.txt {GREEN}--buttons-to-press-before-fuzz searchQuery {GREEN}--press-enter-no-click{RESET}

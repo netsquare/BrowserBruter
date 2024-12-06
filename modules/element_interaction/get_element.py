@@ -2,7 +2,7 @@
 """
 Name  : get_element.py 
 Date  : 13/03/2023
-Author: Jafar Pathan (jafar.pathan2503@outlook.com)
+Author: Jafar Pathan 
 Copyright: Net-Square Solutions PVT LTD.
 """
 ##################################################################
@@ -49,9 +49,11 @@ def get_element(driver,element,coming_from_initial_operations_method):
     if global_variable.args.form and not coming_from_initial_operations_method:
         selector = get_form(driver,global_variable.args.form)
     else:  # Algorithm step: 2 set selector as driver
-        selector = driver    
+        selector = driver
     # Algorithm step: 3 set the found flag as False
     found = False
+    #retry = True
+    #while retry:
     # Algorithm step: 4
     for i in range(30): # retry 30 times
         # Algorithm step: 4.a Try to find the element by calling single_find_element_try()
@@ -59,17 +61,48 @@ def get_element(driver,element,coming_from_initial_operations_method):
         if found: # Algorithm step: 4.b if element is found then break out of the loop
             break
         else: # Algorithm step: 4.c if element is not found then
-            if global_variable.first_payload: # Algorithm step: 4.c.1 if this is first round of the fuzzing then do not wait just retry
+            if global_variable.first_payload: # Algorithm step: 4.c.1 if this is first round of the fuzzing then do wait for 0.5 sec just retry
                 found = False
+                sleep(0.5)
             else: # else wait for some time and continue
                 sleep(5)
     if not found: # Algorithm step: 5 if element is not found then do below
-        print(f"\n\n{global_variable.RED}[+]--------------------------------------------------------------------------------------------------------------------------[+]\nError:{global_variable.RESET} Specified element {element} is not found. Please verify the name of the element. For more information, check Error.txt or use --debug flag.\n{global_variable.RED}[+]--------------------------------------------------------------------------------------------------------------------------[+]{global_variable.RESET}")
-        if global_variable.args.debug: # if --debug flag is set then print the error on console
-            print_exc()
-            print(f"\n\n{global_variable.RED}[+]--------------------------------------------------------------------------------------------------------------------------[+]\nERROR: {global_variable.RESET}Refer Above Stack Trace\n{global_variable.RED}[+]--------------------------------------------------------------------------------------------------------------------------[+]{global_variable.RESET}")
-        driver.quit() # close the browser
-        log_error(format_exc()) # log the error in log file
-        sys.exit(0) # Exit from the script
+        global_variable.pause_event.clear()
+        print(f"\n\n{global_variable.RED}[+]--------------------------------------------------------------------------------------------------------------------------[+]\nError:{global_variable.RESET} Specified element {element} is not found. Please verify the id, name, xpath or class of the element. For more information, check Error.txt or use --debug flag.\n{global_variable.RED}[+]--------------------------------------------------------------------------------------------------------------------------[+]{global_variable.RESET}")
+        k = input(f"\n\n{global_variable.YELLOW}[+]--------------------------------------------------------------------------------------------------------------------------[+]\nINFO:{global_variable.RESET} Do you want to retry one more time? - Y/N\n{global_variable.YELLOW}[+]--------------------------------------------------------------------------------------------------------------------------[+]{global_variable.RESET}")
+        global_variable.pause_event.clear()
+        if k in ('Y', 'y'):
+            global_variable.pause_event.clear()
+            print(f"\n\n{global_variable.YELLOW}[+]--------------------------------------------------------------------------------------------------------------------------[+]\nINFO:{global_variable.RESET} Trying to find element -> {element}\n{global_variable.YELLOW}[+]--------------------------------------------------------------------------------------------------------------------------[+]{global_variable.RESET}")
+            # Algorithm step: 4
+            for i in range(30): # retry 30 times
+                # Algorithm step: 4.a Try to find the element by calling single_find_element_try()
+                found, element = single_find_element_try(selector,element)
+                if found: # Algorithm step: 4.b if element is found then break out of the loop
+                    break
+                else: # Algorithm step: 4.c if element is not found then
+                    found = False
+                    sleep(1.5)
+            if not found:
+                if global_variable.args.debug: # if --debug flag is set then print the error on console
+                    print_exc()
+                    print(f"\n\n{global_variable.RED}[+]--------------------------------------------------------------------------------------------------------------------------[+]\nERROR: {global_variable.RESET}Refer Above Stack Trace\n{global_variable.RED}[+]--------------------------------------------------------------------------------------------------------------------------[+]{global_variable.RESET}")
+                driver.quit() # close the browser
+                log_error(format_exc()) # log the error in log file
+                sys.exit(0) # Exit from the script
+        else:
+            global_variable.pause_event.clear()
+            print(f"\n\n{global_variable.RED}[+]--------------------------------------------------------------------------------------------------------------------------[+]\nError:{global_variable.RESET} Specified element {element} is not found. Please verify the id, name, xpath or class of the element. For more information, check Error.txt or use --debug flag.\n{global_variable.RED}[+]--------------------------------------------------------------------------------------------------------------------------[+]{global_variable.RESET}")
+            if global_variable.args.debug: # if --debug flag is set then print the error on console
+                print_exc()
+                print(f"\n\n{global_variable.RED}[+]--------------------------------------------------------------------------------------------------------------------------[+]\nERROR: {global_variable.RESET}Refer Above Stack Trace\n{global_variable.RED}[+]--------------------------------------------------------------------------------------------------------------------------[+]{global_variable.RESET}")
+            driver.quit() # close the browser
+            log_error(format_exc()) # log the error in log file
+            sys.exit(0) # Exit from the script
+        
+        #    retry = False
+        #if found:
+          #  break
+        
     remove_attributes_and_get_focus(driver, element) # Algorithm step: 6 remove the input validation related attributes from the element and make it in focus
     return element # Algorithm step: 7 return the element

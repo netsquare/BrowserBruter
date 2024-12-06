@@ -2,7 +2,7 @@
 """
 Name  : get_browser_options.py 
 Date  : 13/03/2023
-Author: Jafar Pathan (jafar.pathan2503@outlook.com)
+Author: Jafar Pathan 
 Copyright: Net-Square Solutions PVT LTD.
 """
 ##################################################################
@@ -11,11 +11,13 @@ Copyright: Net-Square Solutions PVT LTD.
 # Importing Custom Modules
 ##################################################################
 from modules.global_config_arguments.global_variables import global_variable
+from modules.error_handling.error_handling import log_error
 
 ##################################################################
 # Importing Python Libraries
 ##################################################################
 from seleniumwire.undetected_chromedriver.v2 import ChromeOptions # undetected chrome driver, used to evade anti bot defences
+from traceback import format_exc
 
 ##################################################################
 """
@@ -39,9 +41,15 @@ def get_browser_options():
     options = ChromeOptions() # Algorithm step: 1 create options object
     try:
         # NOTE for contributors, the chrome executable is not present at github repo for the sake of repo size limit, it is included in releases, with each new release, the appropriate chrome will be shipped along with the tool
-        options.binary_location = "res/chrome/chrome" # Algorithm step: 2 set the chrome executable location
-    except FileNotFoundError: # Algorithm step: 3
-        print(f"\n\n{global_variable.RED}[+]--------------------------------------------------------------------------------------------------------------------------[+]\nERROR: {global_variable.RESET}Please download The Browser-Bruter from releases.\n{global_variable.RED}[+]--------------------------------------------------------------------------------------------------------------------------[+]{global_variable.RESET}")
+        if global_variable.args.chrome_binary:
+            options.binary_location = global_variable.args.chrome_binary
+        else:
+            options.binary_location = "res/chrome/chrome" # Algorithm step: 2 set the chrome executable location
+    except Exception as e: # Algorithm step: 3
+        log_error(format_exc())
+        # if chrome driver is still not found, throw proper message to user
+        print(f"\n\n{global_variable.RED}[+]--------------------------------------------------------------------------------------------------------------------------[+]\nERROR:{global_variable.RESET} The Chrome binary is not Found\n\n\n\n If you have cloned the code from github repository, kindly download it from releases instead of cloning it. https://github.com/netsquare/BrowserBruter/releases/latest . \n\n\n If you want to provide your own chrome driver and chrome binary, kindly do so using --chrome-binary and --chrome-driver option.\n\n\n Also if you have downloaded the file from the releases and still facing the issue then check the permission, to solve the permission related issue run following command -> 'sudo chmod 777 -R res/chrome' \n\n\n If the permissions are also correct then kindly check the path from where you are executing the Browser Bruter script, you should run the Browser Bruter from Browser Bruter base directory.{global_variable.RED}[+]--------------------------------------------------------------------------------------------------------------------------[+]{global_variable.RESET}")
+        exit(0)
     if global_variable.args.chrome_options: # Algorithm step: 4 handle --chrome-options
         list_of_options = global_variable.args.chrome_options.split(',') # get the options present in --chrome-options into a list of options
         for option in list_of_options: # iterate over the options

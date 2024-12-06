@@ -2,7 +2,7 @@
 """
 Name  : final_report.py 
 Date  : 13/03/2023
-Author: Jafar Pathan (jafar.pathan2503@outlook.com)
+Author: Jafar Pathan 
 Copyright: Net-Square Solutions PVT LTD.
 """
 ##################################################################
@@ -153,6 +153,9 @@ def generate_final_report():
     except ConnectionRefusedError as e:
         log_error(format_exc())
         print(f"\n\n{global_variable.YELLOW}[+]--------------------------------------------------------------------------------------------------------------------------[+]\nINFO: {global_variable.RESET}Browser's window has been closed, closing the BrowserBruter, check error log if this is unintentional\n{global_variable.YELLOW}[+]--------------------------------------------------------------------------------------------------------------------------[+]{global_variable.RESET}")
+    except PermissionError as e:
+        # Pass this exception because it is already being handled in BrowserBruter.py
+        pass
     except FileNotFoundError:
         log_error(format_exc())
         exit(0)

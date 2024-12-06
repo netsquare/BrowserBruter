@@ -2,7 +2,7 @@
 """
 Name  : clear_filter.py 
 Date  : 21/06/2023
-Author: Jafar Pathan (jafar.pathan2503@outlook.com)
+Author: Jafar Pathan 
 CopyRight: Net-Square Solutions PVT LTD
 """
 ##################################################################

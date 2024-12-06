@@ -2,7 +2,7 @@
 """
 Name  : record_navigation.py 
 Date  : 04/08/2024
-Author: Jafar Pathan (jafar.pathan2503@outlook.com)
+Author: Jafar Pathan 
 Copyright: Net-Square Solutions PVT LTD.
 """
 ##################################################################

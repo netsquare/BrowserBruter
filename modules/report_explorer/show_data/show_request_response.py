@@ -2,7 +2,7 @@
 """
 Name  : show_request_response.py 
 Date  : 21/06/2023
-Author: Jafar Pathan (jafar.pathan2503@outlook.com)
+Author: Jafar Pathan 
 CopyRight: Net-Square Solutions PVT LTD
 """
 ##################################################################
@@ -11,6 +11,12 @@ CopyRight: Net-Square Solutions PVT LTD
 # Importing Custom Modules
 ##################################################################
 from modules.report_explorer.global_variables.global_variables import re_global_variable
+from modules.report_explorer.search_text.search_text import search_text
+
+##################################################################
+# Importing Python Libraries
+##################################################################
+from urllib.parse import urlparse
 
 ##################################################################
 """
@@ -30,11 +36,11 @@ Return        ->
 """
 ##################################################################
 
-def show_request_response(event, tree, tk, request_text, response_text, web_page_before_text, web_page_after_text, request_text_base64, response_text_base64, messagebox):
+def show_request_response(event, tree, tk, list_of_text_widgets, list_of_search_widgets, messagebox): #request_text, response_text, web_page_before_text, web_page_after_text, request_text_base64, response_text_base64, messagebox):
     # Allow time for selection to change
-    tree.after(1, lambda: _process_selection(tree, tk, request_text, response_text, web_page_before_text, web_page_after_text, request_text_base64, response_text_base64, messagebox))
+    tree.after(1, lambda: _process_selection(tree, tk, list_of_text_widgets, list_of_search_widgets, messagebox))#request_text, response_text, web_page_before_text, web_page_after_text, request_text_base64, response_text_base64, messagebox))
 
-def _process_selection(tree, tk, request_text, response_text, web_page_before_text, web_page_after_text, request_text_base64, response_text_base64, messagebox):
+def _process_selection(tree, tk, list_of_text_widgets, list_of_search_widgets, messagebox):#request_text, response_text, web_page_before_text, web_page_after_text, request_text_base64, response_text_base64, messagebox, search_requests):
     # Get the newly selected item from the Treeview
     selected_item = tree.selection()
     if selected_item:
@@ -49,7 +55,7 @@ def _process_selection(tree, tk, request_text, response_text, web_page_before_te
             if index in re_global_variable.df.index:
                 # Extract details from the DataFrame based on the selected index
                 method = re_global_variable.df.at[index, 'Method']
-                url = re_global_variable.df.at[index, 'URL']
+                url = urlparse(re_global_variable.df.at[index, 'URL'])
                 request_headers = re_global_variable.df.at[index, 'Request Headers']
                 request_body = re_global_variable.df.at[index, 'Request Body']
 
@@ -65,8 +71,16 @@ def _process_selection(tree, tk, request_text, response_text, web_page_before_te
                 response_base64 = re_global_variable.df.at[index, 'Base64 Response']
 
                 # Build full request and response strings
-                full_request = f"{method} {url}\n{request_headers}\n{request_body}"
+                full_request = f"{method} {url.path}\n{request_headers}\n{request_body}"
                 full_response = f"HTTP/1.1 {response_status} {response_reason}\n{response_headers}\n{response_body}"
+
+                # Assign text widgets to proper variables
+                request_text = list_of_text_widgets[0]
+                response_text = list_of_text_widgets[1]
+                web_page_before_text = list_of_text_widgets[2]
+                web_page_after_text = list_of_text_widgets[3]
+                request_text_base64 = list_of_text_widgets[4]   
+                response_text_base64 = list_of_text_widgets[5]
 
                 # Display request and response details in the respective Text widgets
                 request_text.delete(1.0, tk.END)
@@ -85,6 +99,13 @@ def _process_selection(tree, tk, request_text, response_text, web_page_before_te
                 web_page_after_text.delete(1.0, tk.END)
                 web_page_before_text.insert(tk.END, web_page_before)
                 web_page_after_text.insert(tk.END, web_page_after)
+
+                #text_widgets = [request_text, response_text, web_page_before_text, web_page_after_text, request_text_base64, response_text_base64]
+
+                # If there is text to be searched, search and highlight it
+                for search_request,text_widget in zip(list_of_search_widgets, list_of_text_widgets):
+                    if not search_request.get() == "Enter text to search":
+                        search_text(search_request, text_widget, tk)
         else:
             # Handle missing columns error
             messagebox.showerror("Error", "Required columns are missing in the DataFrame.")

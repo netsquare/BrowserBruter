@@ -2,7 +2,7 @@
 """
 Name  : get_and_initialize_driver.py 
 Date  : 13/03/2023
-Author: Jafar Pathan (jafar.pathan2503@outlook.com)
+Author: Jafar Pathan 
 Copyright: Net-Square Solutions PVT LTD.
 """
 ##################################################################
@@ -49,10 +49,29 @@ def get_and_initialize_chrome_driver():
     with global_variable.driver_lock: # Algorithm step: 1 acquire driver lock to avoid race conditions and dead lock
         options = get_browser_options() # Algorithm step: 2 get the browser options
         # Algorithm step: 3 getting the webdriver.Chrome object. try to get chrome driver and retry this three times, in case of exceptions, increases the stability in case of multiples threads
+        if global_variable.args.chrome_driver:
+            try:
+                service = Service(executable_path=global_variable.args.chrome_driver, retries=global_variable.max_retry) # if --no-anti-bot is set then use normal chrome driver with normal options
+                driver = webdriver.Chrome(service=service, options=options, seleniumwire_options={'proxy': {'http': global_variable.args.proxy, 'https': global_variable.args.proxy}} if global_variable.args.proxy else {}) # here webdriver.Chrome refers to driver object present in selenium, see imports
+            except:
+                sleep(5)
+                try:
+                    service = Service(executable_path=global_variable.args.chrome_driver, retries=global_variable.max_retry) # if --no-anti-bot is set then use normal chrome driver with normal options
+                    driver = webdriver.Chrome(service=service, options=options, seleniumwire_options={'proxy': {'http': global_variable.args.proxy, 'https': global_variable.args.proxy}} if global_variable.args.proxy else {}) # here webdriver.Chrome refers to driver object present in selenium, see imports
+                except:
+                    sleep(5)
+                    try:
+                        service = Service(executable_path=global_variable.args.chrome_driver, retries=global_variable.max_retry) # if --no-anti-bot is set then use normal chrome driver with normal options
+                        driver = webdriver.Chrome(service=service, options=options, seleniumwire_options={'proxy': {'http': global_variable.args.proxy, 'https': global_variable.args.proxy}} if global_variable.args.proxy else {}) # here webdriver.Chrome refers to driver object present in selenium, see imports
+                    except Exception as e:
+                        log_error(format_exc())
+                        # if chrome driver is still not found, throw proper message to user
+                        print(f"\n\n{global_variable.RED}[+]--------------------------------------------------------------------------------------------------------------------------[+]\nERROR:{global_variable.RESET} Either Chrome Driver or Chrome Binary is not Found\n{global_variable.RED}[+]--------------------------------------------------------------------------------------------------------------------------[+]\n\n{global_variable.RED}[+]--------------------------------------------------------------------------------------------------------------------------[+]\n{global_variable.RESET} If you have cloned the code from github repository, kindly download it from releases instead of cloning it. https://github.com/netsquare/BrowserBruter/releases/latest . \n\n\n If you want to provide your own chrome driver and chrome binary, kindly do so using --chrome-binary and --chrome-driver option.\n\n\n Also if you have downloaded the file from the releases and still facing the issue then check the permission, to solve the permission related issue run following command -> 'sudo chmod 777 -R res/chrome' \n\n\n If the permissions are also correct then kindly check the path from where you are executing the Browser Bruter script, you should run the Browser Bruter from Browser Bruter base directory.{global_variable.RED}[+]--------------------------------------------------------------------------------------------------------------------------[+]{global_variable.RESET}")
+                        exit(0)
         try: 
             if global_variable.args.no_anti_bot: # Checking the --no-anti-bot switch
-                service = Service(executable_path="res/chrome/chromedriver") # if --no-anti-bot is set then use normal chrome driver with normal options
-                driver = webdriver.Chrome(service=service, options=options, retries=global_variable.max_retry, seleniumwire_options={'proxy': {'http': global_variable.args.proxy, 'https': global_variable.args.proxy}} if global_variable.args.proxy else {}) # here webdriver.Chrome refers to driver object present in selenium, see imports
+                service = Service(executable_path="res/chrome/chromedriver", retries=global_variable.max_retry) # if --no-anti-bot is set then use normal chrome driver with normal options
+                driver = webdriver.Chrome(service=service, options=options, seleniumwire_options={'proxy': {'http': global_variable.args.proxy, 'https': global_variable.args.proxy}} if global_variable.args.proxy else {}) # here webdriver.Chrome refers to driver object present in selenium, see imports
             else: # else use undetected_chrome driver to avoid bot detection with max capabilities
                 driver = Chrome(executable_path="res/chrome/chromedriver", version_main=122, options=options, retries=global_variable.max_retry, seleniumwire_options={'proxy': {'http': global_variable.args.proxy, 'https': global_variable.args.proxy}} if global_variable.args.proxy else {}) # here Chrome refers to driver object present in undetected_chrome driver, see imports
         except: # # Algorithm step: 4 retrying
@@ -60,8 +79,8 @@ def get_and_initialize_chrome_driver():
             options = get_browser_options() # retry the step 3
             try:
                 if global_variable.args.no_anti_bot:
-                    service = Service(executable_path="res/chrome/chromedriver")
-                    driver = webdriver.Chrome(service=service, options=options, retries=global_variable.max_retry, seleniumwire_options={'proxy': {'http': global_variable.args.proxy, 'https': global_variable.args.proxy}} if global_variable.args.proxy else {})
+                    service = Service(executable_path="res/chrome/chromedriver", retries=global_variable.max_retry)
+                    driver = webdriver.Chrome(service=service, options=options, seleniumwire_options={'proxy': {'http': global_variable.args.proxy, 'https': global_variable.args.proxy}} if global_variable.args.proxy else {})
                 else:
                     driver = Chrome(executable_path="res/chrome/chromedriver", version_main=122, options=options, retries=global_variable.max_retry, seleniumwire_options={'proxy': {'http': global_variable.args.proxy, 'https': global_variable.args.proxy}} if global_variable.args.proxy else {})
             except: # retry the step 3 third time in case of error
@@ -69,18 +88,23 @@ def get_and_initialize_chrome_driver():
                 options = get_browser_options()
                 try:
                     if global_variable.args.no_anti_bot:
-                        service = Service(executable_path="res/chrome/chromedriver")
-                        driver = webdriver.Chrome(service=service, options=options, retries=global_variable.max_retry, seleniumwire_options={'proxy': {'http': global_variable.args.proxy, 'https': global_variable.args.proxy}} if global_variable.args.proxy else {})
+                        service = Service(executable_path="res/chrome/chromedriver", retries=global_variable.max_retry)
+                        driver = webdriver.Chrome(service=service, options=options, seleniumwire_options={'proxy': {'http': global_variable.args.proxy, 'https': global_variable.args.proxy}} if global_variable.args.proxy else {})
                     else:
                         driver = Chrome(executable_path="res/chrome/chromedriver", version_main=122, options=options, retries=global_variable.max_retry, seleniumwire_options={'proxy': {'http': global_variable.args.proxy, 'https': global_variable.args.proxy}} if global_variable.args.proxy else {})
                 except: # again retry step 3
                     sleep(10)
                     options = get_browser_options()
-                    if global_variable.args.no_anti_bot:
-                        service = Service(executable_path="res/chrome/chromedriver")
-                        driver = webdriver.Chrome(service=service, options=options, seleniumwire_options={'proxy': {'http': global_variable.args.proxy, 'https': global_variable.args.proxy}} if global_variable.args.proxy else {})
-                    else:
-                        driver = Chrome(executable_path="res/chrome/chromedriver", version_main=122, options=options, seleniumwire_options={'proxy': {'http': global_variable.args.proxy, 'https': global_variable.args.proxy}} if global_variable.args.proxy else {})
+                    try:
+                        if global_variable.args.no_anti_bot:
+                            service = Service(executable_path="res/chrome/chromedriver", retries=global_variable.max_retry)
+                            driver = webdriver.Chrome(service=service, options=options, seleniumwire_options={'proxy': {'http': global_variable.args.proxy, 'https': global_variable.args.proxy}} if global_variable.args.proxy else {})
+                        else:
+                            driver = Chrome(executable_path="res/chrome/chromedriver", version_main=122, options=options, seleniumwire_options={'proxy': {'http': global_variable.args.proxy, 'https': global_variable.args.proxy}} if global_variable.args.proxy else {})
+                    except: 
+                        # if chrome driver is still not found, throw proper message to user
+                        print(f"\n\n{global_variable.RED}[+]--------------------------------------------------------------------------------------------------------------------------[+]\nERROR:{global_variable.RESET} Either Chrome Driver or Chrome Binary is not Found\n{global_variable.RED}[+]--------------------------------------------------------------------------------------------------------------------------[+]\n\n{global_variable.RED}[+]--------------------------------------------------------------------------------------------------------------------------[+]\n{global_variable.RESET} If you have cloned the code from github repository, kindly download it from releases instead of cloning it. https://github.com/netsquare/BrowserBruter/releases/latest . \n\n\n If you want to provide your own chrome driver and chrome binary, kindly do so using --chrome-binary and --chrome-driver option.\n\n\n Also if you have downloaded the file from the releases and still facing the issue then check the permission, to solve the permission related issue run following command -> 'sudo chmod 777 -R res/chrome' \n\n\n If the permissions are also correct then kindly check the path from where you are executing the Browser Bruter script, you should run the Browser Bruter from Browser Bruter base directory.{global_variable.RED}[+]--------------------------------------------------------------------------------------------------------------------------[+]{global_variable.RESET}")
+                        exit(0)
         # Algorithm step: 5 Set request interceptor
         if global_variable.args.remove_images or global_variable.args.python_request or global_variable.args.python_request_file:
             driver.request_interceptor = intercept_request
