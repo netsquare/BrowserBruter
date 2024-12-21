@@ -181,3 +181,28 @@ This project is licensed under the Microsoft Public License
 ## Legal Warning
 
 This BrowserBruter (‘Software’)  is protected under the Indian Copyright Act and is the exclusively property  owned by Net Square Solutions Private Limited (‘Net Square’). The use of this Software (including but not limited to) reproduction, distribution, copying, republication, modification, transmission, sale or offer for sale, alteration in any form (including but not limited to electronic or otherwise) is strictly prohibited without the prior written consent from Net Square. Permission to grant license to use the Software shall be at the sole discretion of Net Square.
+
+## Legal Disclaimer and Warning about the javascript and python code related options:
+
+The Browser Bruter Tool includes functionality to execute Python and JavaScript code via its respective options. Please be aware of the following:
+
+  Third-Party Code Execution: The tool allows for the execution of third-party Python and JavaScript code, which may not be part of or endorsed by the Browser Bruter tool or its developers.
+
+  Risk of Damage: Executing code from unknown or untrusted sources can result in intentional or accidental harm, including but not limited to:
+        Data corruption
+        Security breaches
+        System instability
+        Financial loss
+        Technical malfunctions
+
+  No Responsibility Clause: Neither Net-Square nor the developers of the Browser Bruter tool accept any liability for any damage or loss caused by the execution of Python or JavaScript code through the tool.
+
+  User Responsibility: By using these features, you acknowledge that:
+        You are solely responsible for ensuring the safety and trustworthiness of the code being executed.
+        Any consequences resulting from the use of these features are entirely at your own risk.
+
+  Disclaimer of Control: The developers have no control over the content or behavior of the code you choose to execute.
+
+Use with Caution:
+
+Always review and verify any code before execution to minimize risks. If you do not agree with these terms, refrain from using the Python and JavaScript execution options.
