@@ -44,6 +44,7 @@ def remove_attributes_and_get_focus(driver, element):
         driver.execute_script("arguments[0].removeAttribute('disabled');",element) # remove disabled
         driver.execute_script("arguments[0].removeAttribute('hidden');",element) # remove hidden
         driver.execute_script("arguments[0].scrollIntoView(true);", element) # remove true
+        driver.execute_script("arguments[0].setAttribute('willValidate', false);", element) # set willValidate to false
         driver.execute_script("arguments[0].focus();", element) # focus on the element
     except StaleElementReferenceException: # Algorithm step: 2 if there is a StaleElementReferenceException then retry
         sleep(2)
@@ -58,6 +59,7 @@ def remove_attributes_and_get_focus(driver, element):
             driver.execute_script("arguments[0].removeAttribute('disabled');",element)
             driver.execute_script("arguments[0].removeAttribute('hidden');",element)
             driver.execute_script("arguments[0].scrollIntoView(true);", element)
+            driver.execute_script("arguments[0].setAttribute('willValidate', false);", element) # set willValidate to false
             driver.execute_script("arguments[0].focus();", element)
         except StaleElementReferenceException: # Algorithm step: 3 move on if error keeps occurring
             pass

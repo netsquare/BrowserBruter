@@ -100,6 +100,7 @@ def initialize_gui_args(args):
         interactive_variable = tk.BooleanVar()
         pause_after_submit_variable = tk.BooleanVar()
         reload_page_variable = tk.BooleanVar()
+        no_reload_page_variable = tk.BooleanVar()
         force_cookie_variable = tk.BooleanVar()
         remove_session_variable = tk.BooleanVar()
         record_navigation_variable = tk.BooleanVar()
@@ -112,6 +113,8 @@ def initialize_gui_args(args):
         verbose_variable = tk.BooleanVar()
         auto_remove_javascript_validation_variable = tk.BooleanVar()
         debug_variable = tk.BooleanVar()
+        force_storage_variable = tk.BooleanVar()
+        force_session_storage_variable = tk.BooleanVar()
         
         target = tk.Text(frames["Basic Arguments"], font=('Hacker',14), height=2, width=120, wrap="word")
         button = tk.Text(frames["Basic Arguments"], font=('Hacker',14), height=1, width=80, wrap="word")#, textvariable=args_vars["button"])
@@ -131,10 +134,15 @@ def initialize_gui_args(args):
         interactive = ttk.Checkbutton(frames["Fuzzing Control"], text="", variable=interactive_variable)
         pause_after_submit = ttk.Checkbutton(frames["Fuzzing Control"], text="", variable=pause_after_submit_variable)
         reload_page = ttk.Checkbutton(frames["Fuzzing Control"], text="", variable=reload_page_variable)
+        no_reload_page = ttk.Checkbutton(frames["Fuzzing Control"], text="", variable=no_reload_page_variable)
         form = tk.Text(frames["Fuzzing Control"], font=('Hacker',14), height=1, width=50, wrap="word")
         headers = tk.Text(frames["Session and Cookies"], font=('Hacker',14), height=3, width=85, wrap="word")
         cookie = tk.Text(frames["Session and Cookies"], font=('Hacker',14), height=3, width=85, wrap="word")
+        add_session_storage = tk.Text(frames["Session and Cookies"], font=('Hacker',14), height=3, width=85, wrap="word")
+        add_storage = tk.Text(frames["Session and Cookies"], font=('Hacker',14), height=3, width=85, wrap="word")
         force_cookie = ttk.Checkbutton(frames["Session and Cookies"], text="", variable=force_cookie_variable)
+        force_session_storage = ttk.Checkbutton(frames["Session and Cookies"], text="", variable=force_session_storage_variable)
+        force_storage = ttk.Checkbutton(frames["Session and Cookies"], text="", variable=force_storage_variable)
         remove_session = ttk.Checkbutton(frames["Session and Cookies"], text="", variable=remove_session_variable)
         python = tk.Text(frames["Python Scripting Engine"], font=('Hacker',14), height=3, width=110, wrap="word")
         python_after = tk.Text(frames["Python Scripting Engine"], font=('Hacker',14), height=3, width=110, wrap="word")
@@ -154,6 +162,8 @@ def initialize_gui_args(args):
         javascript_file  = tk.Text(frames["JavaScript Code Handler"], font=('Hacker',14), height=1, width=100, wrap="word")
         replace_code = tk.Text(frames["Anti Input Validation"], font=('Hacker',14), height=3, width=100, wrap="word")
         replace_files = tk.Text(frames["Anti Input Validation"], font=('Hacker',14), height=3, width=100, wrap="word")
+        chrome_binary = tk.Text(frames["Browser Control"], font=('Hacker',14), height=3, width=100, wrap="word")
+        chrome_driver = tk.Text(frames["Browser Control"], font=('Hacker',14), height=3, width=100, wrap="word")
         headless = ttk.Checkbutton(frames["Browser Control"], text="", variable=headless_variable)
         no_css = ttk.Checkbutton(frames["Browser Control"], text="", variable=no_css_variable)
         proxy = tk.Text(frames["Browser Control"], font=('Hacker',14), height=1, width=50, wrap="word")
@@ -188,11 +198,16 @@ def initialize_gui_args(args):
             "interactive": [interactive, interactive_variable],
             "pause_after_submit": [pause_after_submit, pause_after_submit_variable],
             "reload_page": [reload_page, reload_page_variable],
+            "no_reload_page": [no_reload_page, no_reload_page_variable],
             "form": [form, tk.StringVar()],
             "headers": [headers, tk.StringVar()],
             "cookie": [cookie, tk.StringVar()],
             "force_cookie": [force_cookie, force_cookie_variable],
             "remove_session": [remove_session, remove_session_variable],
+            "add_storage": [add_storage, tk.StringVar()],
+            "force_storage": [force_storage, force_storage_variable],
+            "add_session_storage": [add_session_storage, tk.StringVar()],
+            "force_session_storage": [force_session_storage, force_session_storage_variable],
             "python": [python, tk.StringVar()],
             "python_after": [python_after, tk.StringVar()],
             "python_file": [python_file, tk.StringVar()],
@@ -211,6 +226,8 @@ def initialize_gui_args(args):
             "javascript_file": [javascript_file, tk.StringVar()],
             "replace_code": [replace_code, tk.StringVar()],
             "replace_files": [replace_files, tk.StringVar()],
+            "chrome_binary": [chrome_binary, tk.StringVar()],
+            "chrome_driver": [chrome_driver, tk.StringVar()],
             "headless": [headless, headless_variable],
             "no_css": [no_css, no_css_variable],
             "proxy": [proxy, tk.StringVar()],
@@ -267,6 +284,7 @@ def initialize_gui_args(args):
             ("Interactive, Run Browser Bruter in Interactive Mode (--interactive):", interactive),
             ("Puase The Browser Bruter After Submitting the Form (--pause-after-submit):", pause_after_submit),
             ("Reload Page Before Fuzzing The Form (--reload-page):", reload_page),
+            ("Prevent reload of page after fuzzing the form (--no-reload-page):", no_reload_page),
             ("Fuzz Following Form (--form):", form)
         ])
     
@@ -274,7 +292,11 @@ def initialize_gui_args(args):
             ("Headers To be added in HTTP Request (--headers):", headers),
             ("Cookie to be added in HTTP Request (--cookie):", cookie),
             ("Force Cookie specified in --cookie option at each HTTP Request (--force-cookie):", force_cookie),
-            ("Remove Session and cookies set by server (useful while fuzzing authentication) (--remove-session):", remove_session)
+            ("Remove Session and cookies set by server (useful while fuzzing authentication) (--remove-session):", remove_session),
+            ("Set data in Browser's local storage with key:value pair (--add-storage):", add_storage),
+            ("Prevent overriding of data set using --add-storage option (--force-storage):", force_storage),
+            ("Set data in Browser's session storage with key:value pair (---session-storage):", add_session_storage),
+            ("Prevent overriding of data set using --add-session-storage option (--force-session-storage):", force_session_storage)
         ])
     
         add_widgets(frames["Python Scripting Engine"], [
@@ -307,6 +329,8 @@ def initialize_gui_args(args):
         ])
     
         add_widgets(frames["Browser Control"], [
+            ("Use this switch to provide your local/custom chrome browser's path (--chrome-binary):", chrome_binary),
+            ("Use this switch to use your local/custom chromedriver's path  (--chrome-driver):", chrome_driver),
             ("Run Browser in Headless Mode (--headless):", headless),
             ("Set Proxy (--proxy):", proxy),
             ("Disable CSS of Web Pages (--no-css):", no_css),

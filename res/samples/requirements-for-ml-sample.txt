@@ -4,11 +4,13 @@ webdriver_manager==4.0.1
 ttkthemes==3.2.2
 pytimedinput==2.0.1
 beautifulsoup4==4.12.3
-undetected-chromedriver
+undetected-chromedriver==3.5.5
 requests==2.31.0
 blinker<1.8.0
 pandas
 tqdm
 brotlipy
 zstandard
-setuptools
+captcha
+opencv-python
+tensorflow

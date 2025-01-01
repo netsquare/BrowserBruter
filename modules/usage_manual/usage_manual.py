@@ -8,14 +8,20 @@ This file is used to print the in-built help usage examples
 """
 ##################################################################
 
-from colorama import Fore
+#from colorama import Fore
 
 # Defining color contants #
-GREEN = Fore.GREEN
-YELLOW = Fore.YELLOW
-RED = Fore.RED
-RESET = Fore.RESET
-BLUE = Fore.BLUE
+#GREEN = Fore.GREEN
+#YELLOW = Fore.YELLOW
+#RED = Fore.RED
+#RESET = Fore.RESET
+#BLUE = Fore.BLUE
+
+GREEN = '\033[92m' # Using Fore library, defining and assigning cls._instance.GREEN variable
+YELLOW = '\033[93m' # cls._instance.YELLOW color
+RED = '\033[91m' # cls._instance.RED color
+RESET = '\033[0m' # cls._instance.RESET color, go back to default color
+BLUE = '\033[94m'
 
 # Defining the user manual
 def print_manual():

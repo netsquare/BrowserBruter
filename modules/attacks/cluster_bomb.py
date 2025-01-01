@@ -115,18 +115,18 @@ def attempt_clusterbomb_fuzz(payloads_combinations, driver, this_threads_files, 
                         driver.execute_script("arguments[0].removeAttribute('class');",element_being_fuzzed) # remove the class attribute using javascript
                     # Algorithm step:2.f.3 Fill the payload in element
                     try:
-                        fill_payload_in_element(driver,element_being_fuzzed,payload)
+                        fill_payload_in_element(driver,element_being_fuzzed,payload,element)
                     except StaleElementReferenceException: # if there is a StaleElementReferenceException then retry
                         sleep(4) # wait for sometime before retry
                         try: # retry
-                            fill_payload_in_element(driver,element_being_fuzzed,payload)
+                            fill_payload_in_element(driver,element_being_fuzzed,payload,element)
                         except StaleElementReferenceException: # if there is a StaleElementReferenceException then retry
                             sleep(10)
                             try:    
-                                fill_payload_in_element(driver,element_being_fuzzed,payload)
+                                fill_payload_in_element(driver,element_being_fuzzed,payload,element)
                             except StaleElementReferenceException: # if there is a StaleElementReferenceException then retry
                                 sleep(20)
-                                fill_payload_in_element(driver,element_being_fuzzed,payload)
+                                fill_payload_in_element(driver,element_being_fuzzed,payload,element)
                 # Algorithm step:2.g Press the button
                 if not global_variable.terminate:
                     button_to_press = get_element(driver,global_variable.args.button,False)

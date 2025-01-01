@@ -134,22 +134,22 @@ def attempt_battering_ram_fuzz(elements, payload, driver, this_threads_file):
             driver.execute_script("arguments[0].removeAttribute('class');",element_being_fuzzed) # remove the class attribute using javascript
         # Algorithm step: 4.c Fill the payload in element
         try:
-            fill_payload_in_element(driver,element_being_fuzzed,payload)
+            fill_payload_in_element(driver,element_being_fuzzed,payload,element)
         except StaleElementReferenceException: # if there is a StaleElementReferenceException then retry
             sleep(6)
             try:
-                fill_payload_in_element(driver,element_being_fuzzed,payload)
+                fill_payload_in_element(driver,element_being_fuzzed,payload,element)
             except StaleElementReferenceException: # if there is a StaleElementReferenceException then retry
                 sleep(6) # wait for sometime before retrying
                 try: # retry
-                    fill_payload_in_element(driver,element_being_fuzzed,payload)
+                    fill_payload_in_element(driver,element_being_fuzzed,payload,element)
                 except StaleElementReferenceException: # if there is a StaleElementReferenceException then retry
                     sleep(10)
                     try:
-                        fill_payload_in_element(driver,element_being_fuzzed,payload)
+                        fill_payload_in_element(driver,element_being_fuzzed,payload,element)
                     except StaleElementReferenceException: # if there is a StaleElementReferenceException then retry
                         sleep(20)
-                        fill_payload_in_element(driver,element_being_fuzzed,payload)
+                        fill_payload_in_element(driver,element_being_fuzzed,payload,element)
     button_to_press = get_element(driver,global_variable.args.button,False) # Algorithm step: 5 get the button element
     if global_variable.args.button in global_variable.remove_class_elements: # Algorithm step: 6 remove class attribute if required
             driver.execute_script("arguments[0].removeAttribute('class');",button_to_press) # remove the class attribute using javascript

@@ -100,6 +100,7 @@ def load_navigation(driver, file_path):
                         
                         # Ensure the element is clickable
                         driver.execute_script("arguments[0].click();", element)
+                        print(element)
                      
                     # Add a small delay between actions to mimic real user interactions
                     #time.sleep(0.1)

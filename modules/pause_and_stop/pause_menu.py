@@ -21,6 +21,7 @@ from traceback import format_exc # used for getting the proper exceptions
 from pytimedinput import timedKey # used for pausing and resuming the browser bruter tool
 import signal # used for handling CTRL+C key
 from sys import exit # used to close the script
+from time import sleep
 
 ##################################################################
 """
@@ -45,8 +46,12 @@ Return        ->
 def pause_resume():
     try:
         while not global_variable.terminate: # Algorithm step: 2. while the global_variable.terminate flag is not set, do following
-            userText, timeout = timedKey(prompt="", timeout=-1, resetOnInput=True) # Constantly look for user input
-            if not (timeout):
+            while not global_variable.pause_keyboard_thread:
+                #sleep(1)
+                #if not global_variable.pause_keyboard_thread:
+                userText, timeout = timedKey(prompt="", timeout=-1, resetOnInput=True) # Constantly look for user input
+                #sleep(1)
+                #if not global_variable.pause_keyboard_thread:
                 global_variable.pause_event.set()  # Algorithm step: 2.b Set the pause event
                 # Algorithm step: 2.c print the pause menu
                 print(f"\n\n{global_variable.RED}[+]--------------------------------------------------------------------------------------------------------------------------[+]\nWARNING: {global_variable.RESET}BROWSERBRUTER IS PAUSED\npress ENTER to resume\nPress y to Enter Interactive Mode\nPress n to Exit Interactive Mode\nPress v to enable verbosity\nPress V to decrease the verbosity\nPress CTRL+C to exit\n{global_variable.RED}[+]--------------------------------------------------------------------------------------------------------------------------[+]{global_variable.RESET}")

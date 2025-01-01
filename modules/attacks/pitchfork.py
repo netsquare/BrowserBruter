@@ -147,22 +147,22 @@ def attempt_pitchfork_fuzz(elements_payloads,index,driver,this_threads_file):
             driver.execute_script("arguments[0].removeAttribute('class');",element_being_fuzzed) # remove the class attribute using javascript
         # Algorithm step: 6.c Fill the payload in element
         try:
-            fill_payload_in_element(driver,element_being_fuzzed,payload_list[index])
+            fill_payload_in_element(driver,element_being_fuzzed,payload_list[index],element)
         except StaleElementReferenceException: # if there is a StaleElementReferenceException then retry 
             sleep(6) # wait for some time before retrying
             try:
-                fill_payload_in_element(driver,element_being_fuzzed,payload_list[index])
+                fill_payload_in_element(driver,element_being_fuzzed,payload_list[index],element)
             except StaleElementReferenceException: # if there is a StaleElementReferenceException then retry
                 sleep(6)
                 try:
-                    fill_payload_in_element(driver,element_being_fuzzed,payload_list[index])
+                    fill_payload_in_element(driver,element_being_fuzzed,payload_list[index],element)
                 except StaleElementReferenceException: # if there is a StaleElementReferenceException then retry
                     sleep(10)
                     try:
-                        fill_payload_in_element(driver,element_being_fuzzed,payload_list[index])
+                        fill_payload_in_element(driver,element_being_fuzzed,payload_list[index],element)
                     except StaleElementReferenceException:# if there is a StaleElementReferenceException then retry
                         sleep(20)
-                        fill_payload_in_element(driver,element_being_fuzzed,payload_list[index])
+                        fill_payload_in_element(driver,element_being_fuzzed,payload_list[index],element)
     # Algorithm step: 7 Press the button
     button_to_press = get_element(driver,global_variable.args.button,False)
     if global_variable.args.button in global_variable.remove_class_elements: # Algorithm step: 8

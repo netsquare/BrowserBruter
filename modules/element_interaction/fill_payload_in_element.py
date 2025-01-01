@@ -19,7 +19,10 @@ from modules.global_config_arguments.global_variables import global_variable
 from selenium.common.exceptions import InvalidElementStateException
 from selenium.common.exceptions import WebDriverException
 from selenium.common.exceptions import ElementNotInteractableException
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.by import By # used to found elements by various methods
+import sys
 
 ##################################################################
 """
@@ -49,7 +52,7 @@ Return        ->
 """
 ##################################################################                                 
 
-def fill_payload_in_element(driver,element_being_fuzzed,payload):
+def fill_payload_in_element(driver,element_being_fuzzed,payload,element):
     try:
         # Algorithm step: 1 Check if the element that is being fuzzed is <select> or not, if it is <select>, then set payload to its first <option> tag and mark it as the selected option
         if element_being_fuzzed.tag_name in ["select","mat-select"]: 
@@ -58,8 +61,34 @@ def fill_payload_in_element(driver,element_being_fuzzed,payload):
             if options:
                 remove_attributes_and_get_focus(driver, options[0]) # Algorithm step: 1.b
                 # Set payload to the first option
-                driver.execute_script("arguments[0].setAttribute('value', arguments[1]);", options[0], payload) # Algorithm step: 1.c
+                driver.execute_script("arguments[0].setAttribute('value', arguments[1]);", options[1], payload) # Algorithm step: 1.c
                 options[0].click() # Select the option with payload by clicking on it
+        elif element_being_fuzzed.tag_name == "ng-select":
+            if "++" in element:
+                element, temp = element.split("++")
+            if element in global_variable.ng_select_elements:
+                ng_select_property = global_variable.ng_select_elements.get(element)
+            else:    
+                #global_variable.pause_keyboard_thread = True
+                #global_variable.pause_event.set()
+                ##sys.stdin = StringIO('\n')
+                #ng_select_property = input(f"\n\n{global_variable.YELLOW}[+]--------------------------------------------------------------------------------------------------------------------------[+]\nINFO:{global_variable.RESET} The <ng-select> element is detected! the {element_being_fuzzed} is <ng-select> element, kindly provide property which will hold the value of <ng-select> when form is submitted (For more information refer to this guide), This property is usually a ngModel attribute, You can also find it by debugging the application.\nProperty: {global_variable.YELLOW}[+]--------------------------------------------------------------------------------------------------------------------------[+]{global_variable.RESET}\n Enter Property: ")
+                #f"\n\n{global_variable.YELLOW}[+]--------------------------------------------------------------------------------------------------------------------------[+]\nINFO:{global_variable.RESET} Do you want to retry one more time? - Y/N\n{global_variable.YELLOW}[+]--------------------------------------------------------------------------------------------------------------------------[+]{global_variable.RESET}")
+                #global_variable.pause_event.clear()
+                #global_variable.puase_keyboard_thread = False
+                #global_variable.ng_select_elements[element] = ng_select_property
+                print(f"\n\n{global_variable.RED}[+]--------------------------------------------------------------------------------------------------------------------------[+]\nERROR:{global_variable.RESET} The <ng-select> element is detected! the {element_being_fuzzed} is <ng-select> element, kindly provide property which will hold the value of <ng-select> when form is submitted (For more information refer to this guide), This property is usually a ngModel attribute, You can also find it by debugging the application.\n Kindly pass the property along with element as follows -> {element}::property \n{global_variable.RED}[+]--------------------------------------------------------------------------------------------------------------------------[+]{global_variable.RESET}")
+                sys.exit(0)
+            # JavaScript to replace the element
+            try:
+                driver.execute_script("""
+                    ngComponent = ng.getContext(arguments[0]);
+                    ngComponent[arguments[1]] = arguments[2];
+                """,element_being_fuzzed,ng_select_property,payload)
+                #print("fuzzed the property")
+                #
+            except Exception as e:
+                print(e)
         else:
             if element_being_fuzzed.tag_name == "textarea": # Algorithm step: 2 fuzz <textarea>
                 element_being_fuzzed.clear() # Algorithm step: 2.a clear the text area
@@ -69,6 +98,8 @@ def fill_payload_in_element(driver,element_being_fuzzed,payload):
                 # Setting the payload
                 driver.execute_script("arguments[0].setAttribute('type','text');", element_being_fuzzed) # Algorithm step: 3
                 driver.execute_script("arguments[0].setAttribute('value',arguments[1]);", element_being_fuzzed, payload) # Algorithm step: 3.a set the payload as its value
+                #driver.execute_script("arguments[0].setAttribute('valueAsNumber',arguments[1]);", element_being_fuzzed, payload) # Algorithm step: 3.a set the payload as its value
+                #driver.execute_script("arguments[0].setAttribute('checked',arguments[1]);", element_being_fuzzed, payload) # Algorithm step: 3.a set the payload as its value
                 try:
                     element_being_fuzzed.clear() # Algorithm step: 3..b clear the element field
                     element_being_fuzzed.send_keys(payload) # Algorithm step: 3.c send keyboard strokes

@@ -17,7 +17,7 @@ from modules.gui.initialize_gui_args import initialize_gui_args # initialize arg
 ##################################################################
 # Importing Python Libraries
 ##################################################################
-from colorama import Fore # used to color code the console output
+#from colorama import Fore # used to color code the console output
 from urllib.parse import urlparse # used to parse the url
 from urllib3.util import Retry # used to set retry count of urllib
 from traceback import print_exc # used for getting the proper exceptions
@@ -104,7 +104,17 @@ class Global_Variable_Class:
                 # if force-cookie argument is present withouth --cookie option then throw error 
                 elif cls._instance.args.force_cookie:
                     if cls._instance.args.cookie is None: # if --cookie is not given when --force-cookie is present then throw error
-                        print(f"\n\n{cls._instance.RED}[+]--------------------------------------------------------------------------------------------------------------------------[+]\nERROR: {cls._instance.RESET}You can not use --forceCookie without --cookie option\n{cls._instance.RED}[+]--------------------------------------------------------------------------------------------------------------------------[+]{cls._instance.RESET}")
+                        print(f"\n\n{cls._instance.RED}[+]--------------------------------------------------------------------------------------------------------------------------[+]\nERROR: {cls._instance.RESET}You can not use --force-cookie without --cookie option\n{cls._instance.RED}[+]--------------------------------------------------------------------------------------------------------------------------[+]{cls._instance.RESET}")
+                        sys.exit(0)
+                # if force-session-storage or force-storage argument is present without respective option then throw error 
+                elif cls._instance.args.force_session_storage:
+                    if cls._instance.args.add_session_storage is None: 
+                        print(f"\n\n{cls._instance.RED}[+]--------------------------------------------------------------------------------------------------------------------------[+]\nERROR: {cls._instance.RESET}You can not use --force-session-storage without --add-session-storage option\n{cls._instance.RED}[+]--------------------------------------------------------------------------------------------------------------------------[+]{cls._instance.RESET}")
+                        sys.exit(0)
+
+                elif cls._instance.args.force_storage:
+                    if cls._instance.args.add_storage is None: 
+                        print(f"\n\n{cls._instance.RED}[+]--------------------------------------------------------------------------------------------------------------------------[+]\nERROR: {cls._instance.RESET}You can not use --force-storage without --add-storage option\n{cls._instance.RED}[+]--------------------------------------------------------------------------------------------------------------------------[+]{cls._instance.RESET}")
                         sys.exit(0)
 
             # First Payload this global variable is used to stop the script immediately if any error is encountecls._instance.RED of first payload
@@ -219,6 +229,8 @@ class Global_Variable_Class:
                     sys.exit(0)
             # Setting flag which indicates threads to run or stop, This global terminate flag works as cls._instance.RED flag for the script, this flag is checked at many places in the script
             cls._instance.terminate = False
+            # Setting a flag which indicates thread to temporary pause the keyboard thread in case when some user input is required
+            cls._instance.pause_keyboard_thread = False
             # Setting flag for --no-reload-page switch
             cls._instance.no_reload = True
             # This global variable Pause event will be used to pause the threads when user presses the ENTER KEY
@@ -249,8 +261,10 @@ class Global_Variable_Class:
             if cls._instance.args.no_css: # if --no-css flag is set the remove .css extension into forbidden_extensions as well
                 cls._instance.forbidden_extensions.append('.css')
 
-            # Get the payloads
+            # A global variable to store key:value pair of <ng-select> elements and their respective properties
+            cls._instance.ng_select_elements = {}
 
+            # Get the payloads
             cls._instance.payloads = [] # this global variable holds the payloads for battering ram and sniper attack
             cls._instance.elements_payloads = {} # This global dictionary holds elements and their payloads for clusterbomb and pitchfork attack
             if cls._instance.args.attack in (1, 2): # If attack mode is sniper or battering ram then 
@@ -265,9 +279,18 @@ class Global_Variable_Class:
                 except FileNotFoundError: # if file is not found then exit the script
                     print(f"\n\n{cls._instance.RED}[+]--------------------------------------------------------------------------------------------------------------------------[+]\nERROR: {cls._instance.RESET}The specified payloads file '{cls._instance.args.payloads}' does not exist.\n{cls._instance.RED}[+]--------------------------------------------------------------------------------------------------------------------------[+]{cls._instance.RESET}")
                     sys.exit(0)
+                            # Process the elements list
+                for i, item in enumerate(cls._instance.elements):
+                    if "::" in item:
+                        elementname, property = item.split("::")  # Split into name and property
+                        cls._instance.elements[i] = elementname  # Update the list with only the element name
+                        if "++" in elementname:
+                            elementname, identifier = elementname.split("++")
+                        cls._instance.ng_select_elements[elementname] = property  # Add to dictionary
+
             elif cls._instance.args.attack in (3, 4): # Attack is clusterbomb or pitchfork then 
                 try:
-                    for element_payload in cls._instance.args.elements_payloads.split(','): # for each element_payload pair given by user
+                    for i, element_payload in enumerate(cls._instance.args.elements_payloads.split(',')): # for each element_payload pair given by user
                         element, payload_file_path = element_payload.split(':') # divide the element and payload file from element:payload pair
                         # Initialize the list if it doesn't exist
                         cls._instance.elements_payloads.setdefault(element, []) # this holds the element and that element's payloads
@@ -275,6 +298,13 @@ class Global_Variable_Class:
                             for line in payload_file: # for each payload
                                 line = line.strip() # strip whitespaces from beginning and ending of the payload
                                 cls._instance.elements_payloads[element].append(line) # add payloads to the elements_payloads list which hold the element and their payloads
+                        if "::" in element:
+                            elementname, property = item.split("::")  # Split into name and property
+                            element = elementname  # Update the list with only the element name
+                            if "++" in elementname:
+                                elementname, identifier = elementname.split("++")
+                            cls._instance.ng_select_elements[elementname] = property  # Add to dictionary
+
                     if cls._instance.args.attack == 3: # if attack mode is pitchfork
                         # Check if all lists have the same length
                         if len(set(len(payloads) for payloads in cls._instance.elements_payloads.values())) > 1:
@@ -314,7 +344,6 @@ class Global_Variable_Class:
                 except FileNotFoundError: # if file is not found the print generic message and close
                     print(f"\n\n{cls._instance.RED}[+]--------------------------------------------------------------------------------------------------------------------------[+]\nERROR: {cls._instance.RESET}The specified replacement file '{file_name}' does not exist.\n{cls._instance.RED}[+]--------------------------------------------------------------------------------------------------------------------------[+]{cls._instance.RESET}")
                     sys.exit(0)
-
 
             # Non targeted input field value, will update this to allow user specify them, please contribute to add more types and let us know https://github.com/netsquare/BrowserBruter/issues
             # The global attribute_values holds the default values to enter in the fields of html form while --fill option is given
@@ -366,6 +395,21 @@ class Global_Variable_Class:
                         print_exc() # print the exception
                         print(f"\n\n{cls._instance.RED}[+]--------------------------------------------------------------------------------------------------------------------------[+]\nERROR: {cls._instance.RESET}Refer Above Stack Trace\n{cls._instance.RED}[+]--------------------------------------------------------------------------------------------------------------------------[+]{cls._instance.RESET}")
                     sys.exit(0) # Exit the script
+
+        # Print the legal disclaimer about the use of javascript and python code options
+        if any([
+            cls._instance.args.javascript,
+            cls._instance.args.javascript_after,
+            cls._instance.args.javascript_file,
+            cls._instance.args.python,
+            cls._instance.args.python_file,
+            cls._instance.args.python_after,
+            cls._instance.args.python_request,
+            cls._instance.args.python_request_file,
+            cls._instance.args.python_response,
+            cls._instance.args.python_response_file,
+        ]):
+            print(f"\n\n{cls._instance.YELLOW}[+]--------------------------------------------------------------------------------------------------------------------------[+]\nWarning: {cls._instance.RESET}Use of external javascript or python code is detected, You are solely responsible for ensuring the safety and trustworthiness of the code being executed.\nAny consequences resulting from the use of these features are entirely at your own risk.\nThe developers have no control over the content or behavior of the code you choose to execute.\nAlways review and verify any code before execution to minimize risks. If you do not agree with these terms, refrain from using the Python and JavaScript execution options.\n{cls._instance.YELLOW}[+]--------------------------------------------------------------------------------------------------------------------------[+]{cls._instance.RESET}")
 
         return cls._instance
 

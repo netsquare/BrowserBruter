@@ -21,6 +21,8 @@ from modules.pse1.pse1 import python_scripting_engine
 from modules.error_handling.error_handling import handle_unknown_exception
 from modules.misc_functions.sleep_while_pause import sleep_while_pause
 from modules.automatic_navigation_handler.load_navigation import load_navigation
+from modules.run_browser.add_local_storage import add_local_storage
+from modules.run_browser.add_session_storage import add_session_storage
 
 ##################################################################
 # Importing Python Libraries
@@ -60,9 +62,13 @@ Return        ->
 ################################################################## 
 
 def initial_operations_before_filling_the_form(driver):
-    # Algorithm step: 1 If --force-cookie is set then set the initial cookies
+    # Algorithm step: 1 If --force-cookie or related switches are set then set the initial cookies
     if global_variable.args.force_cookie:
         add_cookies(driver)
+    if global_variable.args.force_session_storage:
+        add_session_storage(driver)
+    if global_variable.args.force_storage:
+        add_local_storage(driver)
     # Algorithm step: 2 Wait for body to be loaded in case of slow response
     wait_and_handle_popup(driver)
     # Algorithm step: 3 Clear previous requests
@@ -144,6 +150,8 @@ def initial_operations_before_filling_the_form(driver):
     # Algorithm step: 12 Remove javascript events if there are any to be removed
     if global_variable.args.disable_events:
         disable_js_events(driver)
+    # # JavaScript to add 'novalidate' to all forms
+    driver.execute_script("document.querySelectorAll('form').forEach(form => form.setAttribute('novalidate', ''));")
     # Algorithm step: 13 Handle alert if it is present
     try:
         alert = driver.switch_to.alert

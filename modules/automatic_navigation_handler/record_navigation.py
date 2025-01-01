@@ -13,6 +13,8 @@ Copyright: Net-Square Solutions PVT LTD.
 from modules.global_config_arguments.global_variables import global_variable
 from modules.run_browser.add_cookies import add_cookies
 from modules.run_browser.get_and_initialize_driver import get_and_initialize_chrome_driver
+from modules.run_browser.add_local_storage import add_local_storage
+from modules.run_browser.add_session_storage import add_session_storage
 
 ##################################################################
 # Importing Python Libraries
@@ -44,6 +46,11 @@ def record_navigation():
     try:
         driver = get_and_initialize_chrome_driver()
         driver.get(global_variable.args.target)
+        if global_variable.args.add_storage:
+            #driver.get(global_variable.args.target)
+            add_local_storage(driver)
+        if global_variable.args.add_session_storage:
+            add_session_storage(driver)
         if global_variable.args.cookie:
             add_cookies(driver)
             driver.get(global_variable.args.target)

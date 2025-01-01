@@ -19,6 +19,8 @@ from modules.attacks.cluster_bomb import attempt_clusterbomb_fuzz
 from modules.misc_functions.sleep_while_pause import sleep_while_pause
 from modules.run_browser.add_cookies import add_cookies
 from modules.run_browser.get_and_initialize_driver import get_and_initialize_chrome_driver
+from modules.run_browser.add_local_storage import add_local_storage
+from modules.run_browser.add_session_storage import add_session_storage
 
 ##################################################################
 # Importing Python Libraries
@@ -83,6 +85,30 @@ def run_browser_instance(payloads, instance_number):
     if not global_variable.terminate: # Algorithm step: 1 Check the global_variable.terminate flag
         try:
             driver = get_and_initialize_chrome_driver() # Algorithm step: 2 Spawning an instance of browser, Assigning browser options
+            if global_variable.args.add_storage:
+                try:
+                    driver.get(global_variable.args.target)
+                    add_local_storage(driver)
+                except TimeoutException as e: # For any reason if there is a timeout, ask user whether they want to continue or not
+                    print(f"\n\n{global_variable.RED}[+]--------------------------------------------------------------------------------------------------------------------------[+]\nERROR: {global_variable.RESET}HTTP Response Timeout has been reached. Do you want to wait for server to response? Press ENTER to continue to wait, press CTRL+C to stop the process and generate the report.\n{global_variable.RED}[+]--------------------------------------------------------------------------------------------------------------------------[+]{global_variable.RESET}")
+                    global_variable.pause_event.set()
+                    sleep_while_pause()
+                except Exception as e:
+                    handle_unknown_exception(e)
+                    driver.quit()
+                    exit(0)
+            if global_variable.args.add_session_storage:
+                try:
+                    driver.get(global_variable.args.target)
+                    add_session_storage(driver)
+                except TimeoutException as e: # For any reason if there is a timeout, ask user whether they want to continue or not
+                    print(f"\n\n{global_variable.RED}[+]--------------------------------------------------------------------------------------------------------------------------[+]\nERROR: {global_variable.RESET}HTTP Response Timeout has been reached. Do you want to wait for server to response? Press ENTER to continue to wait, press CTRL+C to stop the process and generate the report.\n{global_variable.RED}[+]--------------------------------------------------------------------------------------------------------------------------[+]{global_variable.RESET}")
+                    global_variable.pause_event.set()
+                    sleep_while_pause()
+                except Exception as e:
+                    handle_unknown_exception(e)
+                    driver.quit()
+                    exit(0)
             if global_variable.args.cookie: # Algorithm step: 3 If cookies are provided assign them to session, Get the initial cookie
                 try:
                     driver.get(global_variable.args.target) # first visit the domain so Chrome does not trow InvalidCookieDomainException
