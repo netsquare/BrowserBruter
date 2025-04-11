@@ -1,5 +1,12 @@
 # The Browser-Bruter
 
+![GitHub contributors](https://img.shields.io/github/contributors/netsquare/BrowserBruter)
+![GitHub all releases](https://img.shields.io/github/downloads/netsquare/BrowserBruter/total)
+![GitHub release (latest by SemVer)](https://img.shields.io/github/downloads/netsquare/BrowserBruter/latest/total)
+![Latest release](https://img.shields.io/github/release/netsquare/BrowserBruter.svg)
+![Python 3.10+](https://img.shields.io/badge/python-3%2E10%2B-blue)
+[![License](https://img.shields.io/badge/License-MS--PL-blue.svg)](https://opensource.org/licenses/MS-PL)
+
 ![banner](https://raw.githubusercontent.com/netsquare/BrowserBruter/main/res/img/banner.png)
 
 **The Browser-Bruter** is first ever browser based automated web pentesting tool for fuzzing **web forms** by controlling the browser it self. It automates the process of sending **payloads** to input fields of browser and sends them too server. It completely **bypasses** the need of breaking the **encryption** in order to fuzz and insert payloads in BurpSuite scanner and intruder. After fuzzing it generates a **comprehensive report** including all the data and result of the pentest along with HTTP traffic, this report can be viewed by **The Report-Explorer** tool which comes with The Browser-Bruter.
