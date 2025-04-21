@@ -136,12 +136,12 @@ if __name__ == "__main__": # Check that the script is started directly and not i
         keyboard_thread.start()
         # NOTE: Algorithm step:3 Abandoned, not required now.
         # Algorithm step:3 If only verbose or debug flag is set then track logs else do not track STDOUT console output on logs/BrowserBruterSTDOUT.txt file
-        #if global_variable.args.verbose or global_variable.args.debug:
-        #    # Redirect stdout to the Tee class, the tee class redirects STDOUT to STDOUT and the log file only if --verbose flag or --debug flag is set
+        #if global_variable.args.verbose or global_variable.args.print_error:
+        #    # Redirect stdout to the Tee class, the tee class redirects STDOUT to STDOUT and the log file only if --verbose flag or --print-error flag is set
         #    log_file = 'logs/BrowserBruterSTDOUT.txt'  # This file stores console output
         #    tee_instance = Tee(log_file) # Tee -> this will print the output on console as well as redirect the STDOUT to logs/BrowserBruterSTDOUT.txt file, This functionality is written in res/tee.py
         #    stdout = tee_instance # Setting Operating System's STDOUT to tee_instance, look -> res/tee.py for more info.
-        #    print(f"\n\n{global_variable.YELLOW}[+]--------------------------------------------------------------------------------------------------------------------------[+]\nINFO: {global_variable.RESET}Either --verbose or --debug flag detected creating logs in -> {log_file}\n{global_variable.YELLOW}[+]--------------------------------------------------------------------------------------------------------------------------[+]{global_variable.RESET}")
+        #    print(f"\n\n{global_variable.YELLOW}[+]--------------------------------------------------------------------------------------------------------------------------[+]\nINFO: {global_variable.RESET}Either --verbose or --print-error flag detected creating logs in -> {log_file}\n{global_variable.YELLOW}[+]--------------------------------------------------------------------------------------------------------------------------[+]{global_variable.RESET}")
         # Algorithm step:4 Print legal disclaimer and general info about target and payloads
         print(f"\n\n{global_variable.YELLOW}[+]--------------------------------------------------------------------------------------------------------------------------[+]\nLegal Warning:{global_variable.RESET} This Browser-Bruter open-source penetration testing tool is Copyrighted Property of Net-Square Solutions PVT LTD. provided for educational and ethical purposes only. Users are solely responsible for ensuring compliance with all applicable laws and regulations, and the developer(s) disclaim any liability for misuse or damage caused by the tool.\n{global_variable.YELLOW}[+]--------------------------------------------------------------------------------------------------------------------------[+]\n{global_variable.RESET}")
         print(f"{global_variable.YELLOW}[+]--------------------------------------------------------------------------------------------------------------------------[+]")
@@ -251,7 +251,7 @@ if __name__ == "__main__": # Check that the script is started directly and not i
     # Algorithm step:11
     except PermissionError as e:
         log_error(format_exc())
-        if global_variable.args.debug:
+        if global_variable.args.print_error:
             print_exc()
         print(f"\n\n{global_variable.RED}[+]--------------------------------------------------------------------------------------------------------------------------[+]\nERROR: {global_variable.RESET}BrowserBruter does not have WRITE PERMISSION to 'BrowserBruter_Reports/' or 'logs/' folder. This is not an issue with Browser Bruter.\nKindly run the following command to solve the issue {global_variable.BLUE}'sudo chmod 777 -R ./BrowserBruter_Reports && sudo chmod 777 -R ./logs'{global_variable.RESET} and the issue will be resolved. If issue still persists then Contact the dev at https://github.com/netsquare/BrowserBruter\n{global_variable.RED}[+]--------------------------------------------------------------------------------------------------------------------------[+]{global_variable.RESET}")
         sys.exit(0)
@@ -272,14 +272,14 @@ if __name__ == "__main__": # Check that the script is started directly and not i
         if not global_variable.args.record_navigation:
             generate_final_report()
         # Reset sys.stdout to the console at the end
-        #if global_variable.args.verbose or global_variable.args.debug:
+        #if global_variable.args.verbose or global_variable.args.print_error:
             #sys.stdout = sys.__stdout__
         # Ensure terminal is in 'echo' mode
         os.system('stty echo')
         sys.exit(0)      
 else: # Algorithm step:13
     print(f"\n\n{global_variable.RED}[+]--------------------------------------------------------------------------------------------------------------------------[+]\nError:{global_variable.RESET} Please run the script again using python3 BrowserBruter.py, closing the BrowserBruter\n{global_variable.RED}[+]--------------------------------------------------------------------------------------------------------------------------[+]{global_variable.RESET}")
-    if global_variable.args.debug:
+    if global_variable.args.print_error:
         print_exc()
         print(f"\n\n{global_variable.RED}[+]--------------------------------------------------------------------------------------------------------------------------[+]\nERROR: {global_variable.RESET}Refer Above Stack Trace\n{global_variable.RED}[+]--------------------------------------------------------------------------------------------------------------------------[+]{global_variable.RESET}")
 

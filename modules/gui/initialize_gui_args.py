@@ -350,7 +350,7 @@ def initialize_gui_args(args):
     
         add_widgets(frames["Debugging"], [
             ("Enable Verbosity(Print HTTP Traffic on Console) (--verbosity):", verbose),
-            ("Enable Debugging(Print Stack Traces) (--debug):", debug)
+            ("Enable Debugging(Print Stack Traces) (--print-error):", debug)
         ])    
         # Add buttons for saving and loading configurations
         def save_config():

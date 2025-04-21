@@ -23,7 +23,7 @@ from traceback import format_exc, print_exc # used for getting the proper except
 Name          -> handle_unknown_exception
 Functionality -> Handle Unknown Exception  
 Algorithm     ->
-    1. Check --debug flag
+    1. Check --print-error flag
         a. if this flag is set then print the exception by calling print_exc() method
         b. Print the generic console message
     2. Else just print the generic console message
@@ -34,11 +34,11 @@ Return        ->
 ##################################################################
 
 def handle_unknown_exception(exception):
-    if global_variable.args.debug: # Algorithm step: 1 Check --debug flag
+    if global_variable.args.print_error: # Algorithm step: 1 Check --print-error flag
         print_exc() # Print the exception
         print(f"\n\n{global_variable.RED}[+]--------------------------------------------------------------------------------------------------------------------------[+]\nERROR: {global_variable.RESET}An unknown error has been occured, Please open issue request at https://github.com/netsquare/BrowserBruter/issues and paste above message there, we are glad to help\n{global_variable.RED}[+]--------------------------------------------------------------------------------------------------------------------------[+]{global_variable.RESET}")
     else: # Algorithm step: 2 print generic error message
-        print(f"\n\n{global_variable.RED}[+]--------------------------------------------------------------------------------------------------------------------------[+]\nERROR: {global_variable.RESET}An unknown error has been occured, Please refer logs/Error.txt or use --debug flag.\n{global_variable.RED}[+]--------------------------------------------------------------------------------------------------------------------------[+]{global_variable.RESET}")
+        print(f"\n\n{global_variable.RED}[+]--------------------------------------------------------------------------------------------------------------------------[+]\nERROR: {global_variable.RESET}An unknown error has been occured, Please refer logs/Error.txt or use --print-error flag.\n{global_variable.RED}[+]--------------------------------------------------------------------------------------------------------------------------[+]{global_variable.RESET}")
     log_error(format_exc()) # Algorithm step: 3 Log the exception
 
 ##################################################################

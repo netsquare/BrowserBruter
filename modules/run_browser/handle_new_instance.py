@@ -16,7 +16,7 @@ from modules.run_browser.get_and_initialize_driver import get_and_initialize_chr
 ##################################################################
 # Importing Python Libraries
 ##################################################################
-from seleniumwire.undetected_chromedriver.v2 import ChromeOptions # undetected chrome driver, used to evade anti bot defences
+from lib.seleniumwire.undetected_chromedriver.v2 import ChromeOptions # undetected chrome driver, used to evade anti bot defences
 
 ##################################################################
 """

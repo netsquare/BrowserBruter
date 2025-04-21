@@ -59,7 +59,7 @@ def load_navigation(driver, file_path):
         
         # Perform actions based on the events
         for event in events:
-            if global_variable.args.debug:
+            if global_variable.args.print_error:
                 print(event)
             try:
                 element = None

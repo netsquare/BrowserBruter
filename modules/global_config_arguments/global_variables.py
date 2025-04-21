@@ -122,6 +122,24 @@ class Global_Variable_Class:
             # Getting hostname from target for filtering the output this will work as one kind scope for filtering output to be stocls._instance.RED in report
             cls._instance.target_url = urlparse(cls._instance.args.target)
 
+            # debug module's related variables
+            if cls._instance.args.debug:
+                if not cls._instance.args.debug_code:
+                    print(f"\n\n{cls._instance.RED}[+]--------------------------------------------------------------------------------------------------------------------------[+]\nERROR: {cls._instance.RESET}--debug option requires --debug-code option\n{cls._instance.RED}[+]--------------------------------------------------------------------------------------------------------------------------[+]{cls._instance.RESET}")
+                    sys.exit(0)
+                cls._instance.available_debug_ports = [9222, 9223, 9224, 9225, 9226, 9227, 9228, 9229, 9230, 9231, 9232, 9234, 9235, 9236, 9237, 9238, 9239, 9240, 9241]
+                try:
+                    with open(cls._instance.args.debug_code, 'rb') as file: # open the file containing python code in binary read mode
+                            print(f"\n\n{cls._instance.YELLOW}[+]--------------------------------------------------------------------------------------------------------------------------[+]\nINFO: {cls._instance.RESET}Trying to read the Python file.\n{cls._instance.YELLOW}[+]--------------------------------------------------------------------------------------------------------------------------[+]{cls._instance.RESET}")
+                            cls._instance.args.debug_code = file.read() # read the contents of python file
+                            cls._instance.args.debug_code = cls._instance.args.debug_code.decode('utf-8') # encode the code in 'utf-8' format
+                except FileNotFoundError: # if file is not found then throw error and exit the script
+                        pass
+                    #print(f"\n\n{cls._instance.RED}[+]--------------------------------------------------------------------------------------------------------------------------[+]\nERROR: {cls._instance.RESET}The specified file '{cls._instance.args.python_file}' does not exist.\n{cls._instance.RED}[+]--------------------------------------------------------------------------------------------------------------------------[+]{cls._instance.RESET}")
+                    #sys.exit(0)
+            # Following global variable holds current payload for the iteration, used in --debug switch
+            cls._instance.current_payload = ""
+            cls._instance.current_element = ""
             cls._instance.hostname = cls._instance.target_url.hostname
             # Get the scope hostnames from the command-line arguments
             cls._instance.scope_hostnames = cls._instance.args.scope.split(',') if cls._instance.args.scope else []
@@ -137,7 +155,7 @@ class Global_Variable_Class:
                    cls._instance.list_of_urls_to_be_excluded_from_final_report = cls._instance.args.outofscope_urls.split(',')
                 except Exception as e: # if there is any error then handle it
                     print(f"\n\n{cls._instance.RED}[+]--------------------------------------------------------------------------------------------------------------------------[+]\nERROR: {cls._instance.RESET}There is a problem with -> {cls._instance.args.outofscope_urls}\n{cls._instance.RED}[+]--------------------------------------------------------------------------------------------------------------------------[+]{cls._instance.RESET}")
-                    if cls._instance.args.debug:
+                    if cls._instance.args.print_error:
                         print(f"\n\n{cls._instance.RED}[+]--------------------------------------------------------------------------------------------------------------------------[+]\nERROR: {cls._instance.RESET}{print_exc()}\n{cls._instance.RED}[+]--------------------------------------------------------------------------------------------------------------------------[+]{cls._instance.RESET}")
                     sys.exit(0)
             # Get the urls in scope
@@ -152,7 +170,7 @@ class Global_Variable_Class:
                     cls._instance.list_of_urls_to_be_included_in_final_report = cls._instance.args.inscope_urls.split(',')
                 except Exception as e: # if there is any error then handle it
                     print(f"\n\n{cls._instance.RED}[+]--------------------------------------------------------------------------------------------------------------------------[+]\nERROR: {cls._instance.RESET}There is a problem with -> {cls._instance.args.outofscope_urls}\n{cls._instance.RED}[+]--------------------------------------------------------------------------------------------------------------------------[+]{cls._instance.RESET}")
-                    if cls._instance.args.debug:
+                    if cls._instance.args.print_error:
                         print(f"\n\n{cls._instance.RED}[+]--------------------------------------------------------------------------------------------------------------------------[+]\nERROR: {cls._instance.RESET}{print_exc()}\n{cls._instance.RED}[+]--------------------------------------------------------------------------------------------------------------------------[+]{cls._instance.RESET}")
                     sys.exit(0)
             # Set the urllib max retry count to 30 to make this script stable as f
@@ -262,7 +280,7 @@ class Global_Variable_Class:
                 cls._instance.forbidden_extensions.append('.css')
 
             # A global variable to store key:value pair of <ng-select> elements and their respective properties
-            cls._instance.ng_select_elements = {}
+            #cls._instance.elements_properties = {}
 
             # Get the payloads
             cls._instance.payloads = [] # this global variable holds the payloads for battering ram and sniper attack
@@ -280,13 +298,13 @@ class Global_Variable_Class:
                     print(f"\n\n{cls._instance.RED}[+]--------------------------------------------------------------------------------------------------------------------------[+]\nERROR: {cls._instance.RESET}The specified payloads file '{cls._instance.args.payloads}' does not exist.\n{cls._instance.RED}[+]--------------------------------------------------------------------------------------------------------------------------[+]{cls._instance.RESET}")
                     sys.exit(0)
                             # Process the elements list
-                for i, item in enumerate(cls._instance.elements):
-                    if "::" in item:
-                        elementname, property = item.split("::")  # Split into name and property
-                        cls._instance.elements[i] = elementname  # Update the list with only the element name
-                        if "++" in elementname:
-                            elementname, identifier = elementname.split("++")
-                        cls._instance.ng_select_elements[elementname] = property  # Add to dictionary
+                #for i, item in enumerate(cls._instance.elements):
+                    #if "::" in item:
+                        #elementname, property = item.split("::")  # Split into name and property
+                        #cls._instance.elements[i] = elementname  # Update the list with only the element name
+                    #if "++" in elementname:
+                        #elementname, identifier = elementname.split("++")
+                    #cls._instance.elements_properties[elementname] = property  # Add to dictionary
 
             elif cls._instance.args.attack in (3, 4): # Attack is clusterbomb or pitchfork then 
                 try:
@@ -303,7 +321,7 @@ class Global_Variable_Class:
                             element = elementname  # Update the list with only the element name
                             if "++" in elementname:
                                 elementname, identifier = elementname.split("++")
-                            cls._instance.ng_select_elements[elementname] = property  # Add to dictionary
+                            cls._instance.elements_properties[elementname] = property  # Add to dictionary
 
                     if cls._instance.args.attack == 3: # if attack mode is pitchfork
                         # Check if all lists have the same length
@@ -391,7 +409,7 @@ class Global_Variable_Class:
                     sys.exit(0) # exit the script
                 except json.JSONDecodeError: # handle if there is any JSON syntax error in user provided file
                     print(f"\n\n{cls._instance.RED}[+]--------------------------------------------------------------------------------------------------------------------------[+]\nERROR: {cls._instance.RESET}Invalid JSON format in the specified values file '{cls._instance.args.values}'.\n{cls._instance.RED}[+]--------------------------------------------------------------------------------------------------------------------------[+]{cls._instance.RESET}")
-                    if cls._instance.args.debug: # If --debug flag is set then print the exception
+                    if cls._instance.args.print_error: # If --print-error flag is set then print the exception
                         print_exc() # print the exception
                         print(f"\n\n{cls._instance.RED}[+]--------------------------------------------------------------------------------------------------------------------------[+]\nERROR: {cls._instance.RESET}Refer Above Stack Trace\n{cls._instance.RED}[+]--------------------------------------------------------------------------------------------------------------------------[+]{cls._instance.RESET}")
                     sys.exit(0) # Exit the script

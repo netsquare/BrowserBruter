@@ -58,7 +58,7 @@ def press_button(driver,button,from_buttons_to_press):
                     button.click()
             except ElementClickInterceptedException as e: # Algorithm step: 4 if error again then do following 
                 print(f"\n\n{global_variable.RED}[+]--------------------------------------------------------------------------------------------------------------------------[+]\nERROR: {global_variable.RESET}The button -> {button} is not clickable or click has been intercepted by some other element, there might be some javascript being executed on web page which is preventing the click. Please remove the code intercepting the click.\n{global_variable.RED}[+]--------------------------------------------------------------------------------------------------------------------------[+]{global_variable.RESET}")
-                if global_variable.args.debug: # if --debug is set then print the exception on console
+                if global_variable.args.print_error: # if --print-error is set then print the exception on console
                     print_exc()
                     print(f"\n\n{global_variable.RED}[+]--------------------------------------------------------------------------------------------------------------------------[+]\nERROR: {global_variable.RESET}Refer Above Stack Trace\n{global_variable.RED}[+]--------------------------------------------------------------------------------------------------------------------------[+]{global_variable.RESET}")
                 log_error(format_exc()) # log the error

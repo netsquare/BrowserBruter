@@ -16,7 +16,7 @@ from modules.error_handling.error_handling import log_error
 ##################################################################
 # Importing Python Libraries
 ##################################################################
-from seleniumwire.undetected_chromedriver.v2 import ChromeOptions # undetected chrome driver, used to evade anti bot defences
+from lib.seleniumwire.undetected_chromedriver.v2 import ChromeOptions # undetected chrome driver, used to evade anti bot defences
 from traceback import format_exc
 
 ##################################################################
@@ -96,6 +96,17 @@ def get_browser_options():
         options.add_argument('--disable-blink-features=AutomationControlled')
     if global_variable.args.record_navigation:
         options.add_argument('--load-extension=./res/Automatic_navigation_handler')
-    if global_variable.args.headless: # Algorithm step: 7 check --headless option 
+    #if global_variable.args.debug:
+        #options.add_argument('--load-extension=./res/debug_listener')
+    if global_variable.args.headless: # Algorithm step: 7 check --headless option
         options.add_argument('--headless') # add --headless option to run the chrome without any GUI
+    if global_variable.args.debug:
+        options.add_argument("--remote-allow-origins=*")
+        options.debugger_address = f"127.0.0.1:{global_variable.available_debug_ports[0]}"
+        options.port = global_variable.available_debug_ports[0]
+        global_variable.available_debug_ports.pop(0)
+    #options.add_argument("--remote-debugging-port=9222")
+    
+    #options.debugger_address = "127.0.0.1:9222" 
+    #options.add_experimental_option('debuggerAddress', 'localhost:9922')
     return options # Algorithm step: 8 return options object

@@ -21,6 +21,8 @@ from modules.run_browser.add_cookies import add_cookies
 from modules.run_browser.get_and_initialize_driver import get_and_initialize_chrome_driver
 from modules.run_browser.add_local_storage import add_local_storage
 from modules.run_browser.add_session_storage import add_session_storage
+from modules.run_browser.set_debug_point import set_debug_breakpoint
+from modules.run_browser.monitor_breakpoint_hit import monitor_breakpoint_hit
 
 ##################################################################
 # Importing Python Libraries
@@ -29,6 +31,7 @@ from time import sleep # Used to pause the script
 from traceback import format_exc# used for getting the proper exceptions
 import datetime # used for getting current time and working with time
 from sys import exit # used to close the script
+import threading
 
 ##################################################################
 # Importing Exception
@@ -39,6 +42,7 @@ from selenium.common.exceptions import TimeoutException
 from urllib3.exceptions import ProtocolError
 from urllib3.exceptions import MaxRetryError
 from http.client import RemoteDisconnected
+
 
 ##################################################################
 """
@@ -121,6 +125,16 @@ def run_browser_instance(payloads, instance_number):
                     handle_unknown_exception(e)
                     driver.quit()
                     exit(0)
+#            if global_variable.args.debug: # Setting the debug breakpoint
+#                for debug_point in global_variable.args.debug.split('++'):
+#                    file_url, loc = debug_point.split(',',1)
+#                    if ',' in loc:
+#                        loc, column = loc.split(',')
+#                        set_debug_breakpoint(driver, file_url, loc, column)
+#                    else:
+#                        set_debug_breakpoint(driver, file_url, loc)
+#                debug_thread = threading.Thread(target=monitor_breakpoint_hit, args=(driver,global_variable.args.debug_code),  daemon=True)
+#                debug_thread.start()
             this_threads_files = get_filename() # Algorithm step: 4 Initialize report file and processed payload file 
             if global_variable.args.pause: # Algorithm step: 5 If pause flag is set then go to target page and pause until user continues
                 driver.get(global_variable.args.target)

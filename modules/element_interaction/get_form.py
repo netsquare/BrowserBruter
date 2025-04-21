@@ -52,12 +52,12 @@ def get_form(driver,form):
                     except NoSuchElementException as e: # Algorithm step 2: if not found then do as per below
                         #if not found: # Algorithm step: 5 if element is not found then do below
                         global_variable.pause_event.clear()
-                        print(f"\n\n{global_variable.RED}[+]--------------------------------------------------------------------------------------------------------------------------[+]\nError:{global_variable.RESET} Specified form {form} is not found. Please verify the id, name, xpath or class of the form. For more information, check Error.txt or use --debug flag.\n{global_variable.RED}[+]--------------------------------------------------------------------------------------------------------------------------[+]{global_variable.RESET}")
+                        print(f"\n\n{global_variable.RED}[+]--------------------------------------------------------------------------------------------------------------------------[+]\nError:{global_variable.RESET} Specified form {form} is not found. Please verify the id, name, xpath or class of the form. For more information, check Error.txt or use --print-error flag.\n{global_variable.RED}[+]--------------------------------------------------------------------------------------------------------------------------[+]{global_variable.RESET}")
                         k = input(f"\n\n{global_variable.YELLOW}[+]--------------------------------------------------------------------------------------------------------------------------[+]\nINFO:{global_variable.RESET} Do you want to retry one more time? - Y/N\n{global_variable.YELLOW}[+]--------------------------------------------------------------------------------------------------------------------------[+]{global_variable.RESET}")
                         global_variable.pause_event.clear()
                         if not (k in ('Y','y')):
                             global_variable.pause_event.clear()
-                            if global_variable.args.debug: # if --debug flag is set then print the error on console
+                            if global_variable.args.print_error: # if --print-error flag is set then print the error on console
                                 print_exc()
                             print(f"\n\n{global_variable.RED}[+]--------------------------------------------------------------------------------------------------------------------------[+]\nERROR: {global_variable.RESET}Refer Above Stack Trace\n{global_variable.RED}[+]--------------------------------------------------------------------------------------------------------------------------[+]{global_variable.RESET}")
                             driver.quit() # close the browser
@@ -79,17 +79,17 @@ def get_form(driver,form):
                                         try:
                                             return driver.find_element(By.CSS_SELECTOR, form) # by css selector
                                         except NoSuchElementException as e:
-                                            if global_variable.args.debug: # if --debug flag is set then print the error on console
+                                            if global_variable.args.print_error: # if --print-error flag is set then print the error on console
                                                 print_exc(e)
                                                 print(f"\n\n{global_variable.RED}[+]--------------------------------------------------------------------------------------------------------------------------[+]\nERROR: {global_variable.RESET}Refer Above Stack Trace\n{global_variable.RED}[+]--------------------------------------------------------------------------------------------------------------------------[+]{global_variable.RESET}")
                                             driver.quit() # close the browser
                                             log_error(format_exc()) # log the error in log file
-                                            print(f"\n\n{global_variable.RED}[+]--------------------------------------------------------------------------------------------------------------------------[+]\nError:{global_variable.RESET} Specified element {form} is not found. Please verify the id, name, xpath or class of the form. For more information, check Error.txt or use --debug flag.\n{global_variable.RED}[+]--------------------------------------------------------------------------------------------------------------------------[+]{global_variable.RESET}")
+                                            print(f"\n\n{global_variable.RED}[+]--------------------------------------------------------------------------------------------------------------------------[+]\nError:{global_variable.RESET} Specified element {form} is not found. Please verify the id, name, xpath or class of the form. For more information, check Error.txt or use --print-error flag.\n{global_variable.RED}[+]--------------------------------------------------------------------------------------------------------------------------[+]{global_variable.RESET}")
                                             sys.exit(0) # Exit from the script
                     #if found:
                         #break
-                    #print(f"\n\n{global_variable.RED}[+]--------------------------------------------------------------------------------------------------------------------------[+]\nError:{global_variable.RESET} Specified element {global_variable.element} is not found. Please verify the name of the element. For more information, check Error.txt or use --debug flag.\n{global_variable.RED}[+]--------------------------------------------------------------------------------------------------------------------------[+]{global_variable.RESET}")
-                    #if global_variable.args.debug: # If --debug flag is set then print the exception
+                    #print(f"\n\n{global_variable.RED}[+]--------------------------------------------------------------------------------------------------------------------------[+]\nError:{global_variable.RESET} Specified element {global_variable.element} is not found. Please verify the name of the element. For more information, check Error.txt or use --print-error flag.\n{global_variable.RED}[+]--------------------------------------------------------------------------------------------------------------------------[+]{global_variable.RESET}")
+                    #if global_variable.args.print_error: # If --print-error flag is set then print the exception
                         #print_exc()
                         #print(f"\n\n{global_variable.RED}[+]--------------------------------------------------------------------------------------------------------------------------[+]\nERROR: {global_variable.RESET}Refer Above Stack Trace\n{global_variable.RED}[+]--------------------------------------------------------------------------------------------------------------------------[+]{global_variable.RESET}")
                     #driver.quit() # Close the script

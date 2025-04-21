@@ -165,7 +165,7 @@ Usage Examples:
         {YELLOW}python3 BrowserBruter.py{GREEN} --target{RESET} http://localhost/webgoat/start.mvc#attack/160587164/200 {GREEN}--elements{RESET} employee_id,password {GREEN}--button{RESET} submit {GREEN}--attack{RESET} 1 {GREEN}--cookie{RESET} ASP.NET_SessionId:fawx1oxcfm0fd4gvzmej5oco,JSESSIONID:1F0E3B20ECEDDF29235853F55C60FC17 {GREEN}--inscope-urls{RESET} "http://localhost/webgoat/attack?Screen=160587164&menu=200" {GREEN}--payloads{RESET} fuzz.txt {GREEN}--delay-before{RESET} 0.3 {GREEN}--delay-after{RESET} 0.3 {GREEN}--fill{RESET} employee_id,password {GREEN}--reload-page
 
     44. Print the stack trace for debugging purpose:
-        {YELLOW}python3 BrowserBruter.py{GREEN} --target{RESET} http://localhost/ {GREEN}--elements-payloads{RESET} username:usernames.txt,password:passwords.txt {GREEN}--button{RESET} btn-default {GREEN}--attack{RESET} 4 {GREEN}--debug{RESET}
+        {YELLOW}python3 BrowserBruter.py{GREEN} --target{RESET} http://localhost/ {GREEN}--elements-payloads{RESET} username:usernames.txt,password:passwords.txt {GREEN}--button{RESET} btn-default {GREEN}--attack{RESET} 4 {GREEN}--print-error{RESET}
 
     45. Execute specific javascript after submitting the form:
         {YELLOW}python3 BrowserBruter.py{GREEN} --target{RESET} http://localhost:8080/webgoat/start.mvc#attack/1778575388/500 {GREEN}--elements{RESET} pass1,pass2,pass3,pass4,pass5,pass6 {GREEN}--fill{RESET} pass1,pass2,pass3,pass4,pass5,pass6 {GREEN}--button{RESET} SUBMIT {GREEN}--attack{RESET} 1 {GREEN}--payloads{RESET} fuzz.txt {GREEN}--include-url{RESET} "http://10.13.37.3:8080/webgoat/attack?Screen=1778575388&menu=500" {GREEN}--cookie{RESET} ASP.NET_SessionId:fawx1oxcfm0fd4gvzmej5oco,JSESSIONID:1F0E3B20ECEDDF29235853F55C60FC17 {GREEN}--reload-page --javascript-after{RESET} "alert(123);"
@@ -215,6 +215,9 @@ Usage Examples:
     59. Play the navigation after fuzzing the form:
         {YELLOW}python3 BrowserBruter.py {GREEN}--elements{RESET} editBrandStatus,editBrandName,brandId {GREEN}--payloads{RESET} sqli.txt {GREEN}--button{RESET} editBrandBtn {GREEN}--target{RESET} http://localhost/brand.php {GREEN}--cookie{RESET} PHPSESSID:gpe4qjanmp01ldltdgdnb9nep0 {GREEN}--attack{RESET} 1 {GREEN}--fill{RESET} editBrandName {GREEN}--load-navigation-after{RESET} path/to/navigation.json
         
+    60. You can also specify the element via custom identifier using '++' operator. For example for most angular based application, there is a attribute in element called formcontrolname, now suppose there is a element which don't have id and name, but have formcontrolname attribute with projectId value like following -> <input _ngcontent-ng-c1723137943="" formcontrolname="projectId" placeholder="Enter project Id" required="" class="form-control ng-untouched ng-pristine ng-invalid"> we can identify this as follows:
+        {YELLOW}python3 BrowserBruter.py {GREEN}--elements{RESET} projectId++formcontrolname 
+
     {RED}Damn Vulnerable Web Application Lab Usage Examples:{RESET}   
 
     1. Fuzz the Command Injection page of DVWA, Pause BrowserBruter on startup to manually login and manually set cookies, press ENTER two times to continue:

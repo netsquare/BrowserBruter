@@ -127,6 +127,11 @@ def attempt_battering_ram_fuzz(elements, payload, driver, this_threads_file):
                 fill_the_form(driver)
     # Algorithm step: 4
     # Fill the target field being fuzzed with the current payload
+    # Fill all of the properties
+    #for property in global_variable.properties:
+    #    driver.
+    # Store the current payload in global variable
+    global_variable.current_payload = payload
     # Finding the element either by id, name, or class
     for element in elements:
         element_being_fuzzed = get_element(driver,element,False) # Algorithm step: 4.a get the element
@@ -134,22 +139,22 @@ def attempt_battering_ram_fuzz(elements, payload, driver, this_threads_file):
             driver.execute_script("arguments[0].removeAttribute('class');",element_being_fuzzed) # remove the class attribute using javascript
         # Algorithm step: 4.c Fill the payload in element
         try:
-            fill_payload_in_element(driver,element_being_fuzzed,payload,element)
+            fill_payload_in_element(driver,element_being_fuzzed,payload)
         except StaleElementReferenceException: # if there is a StaleElementReferenceException then retry
             sleep(6)
             try:
-                fill_payload_in_element(driver,element_being_fuzzed,payload,element)
+                fill_payload_in_element(driver,element_being_fuzzed,payload)
             except StaleElementReferenceException: # if there is a StaleElementReferenceException then retry
                 sleep(6) # wait for sometime before retrying
                 try: # retry
-                    fill_payload_in_element(driver,element_being_fuzzed,payload,element)
+                    fill_payload_in_element(driver,element_being_fuzzed,payload)
                 except StaleElementReferenceException: # if there is a StaleElementReferenceException then retry
                     sleep(10)
                     try:
-                        fill_payload_in_element(driver,element_being_fuzzed,payload,element)
+                        fill_payload_in_element(driver,element_being_fuzzed,payload)
                     except StaleElementReferenceException: # if there is a StaleElementReferenceException then retry
                         sleep(20)
-                        fill_payload_in_element(driver,element_being_fuzzed,payload,element)
+                        fill_payload_in_element(driver,element_being_fuzzed,payload)
     button_to_press = get_element(driver,global_variable.args.button,False) # Algorithm step: 5 get the button element
     if global_variable.args.button in global_variable.remove_class_elements: # Algorithm step: 6 remove class attribute if required
             driver.execute_script("arguments[0].removeAttribute('class');",button_to_press) # remove the class attribute using javascript

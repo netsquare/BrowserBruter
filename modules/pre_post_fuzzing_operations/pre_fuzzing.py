@@ -23,12 +23,16 @@ from modules.misc_functions.sleep_while_pause import sleep_while_pause
 from modules.automatic_navigation_handler.load_navigation import load_navigation
 from modules.run_browser.add_local_storage import add_local_storage
 from modules.run_browser.add_session_storage import add_session_storage
+from modules.run_browser.set_debug_point import set_debug_breakpoint
+from modules.run_browser.monitor_breakpoint_hit import monitor_breakpoint_hit
+
 
 ##################################################################
 # Importing Python Libraries
 ##################################################################
 from time import sleep # Used to pause the script
 from sys import exit # used to close the script
+import threading
 
 ##################################################################
 # Importing Exception
@@ -144,6 +148,19 @@ def initial_operations_before_filling_the_form(driver):
         for button_to_press in global_variable.buttons_to_press_before_fuzz: # get single button which is to press
             press_button(driver,get_element(driver,button_to_press,True),True) # press that button
             sleep(0.3)
+
+    # Set debug point 
+    if global_variable.args.debug: # Setting the debug breakpoint
+        for debug_point in global_variable.args.debug.split('++'):
+            file_url, loc = debug_point.split(',',1)
+            if ',' in loc:
+                loc, column = loc.split(',')
+                set_debug_breakpoint(driver, file_url, loc, column)
+            else:
+                set_debug_breakpoint(driver, file_url, loc)
+        debug_thread = threading.Thread(target=monitor_breakpoint_hit, args=(driver,global_variable.args.debug_code),  daemon=True)
+        debug_thread.start()
+
     # Algorithm step: 11 Remove common javascript validation
     if global_variable.args.auto_remove_javascript_validation:
         remove_javascript_validation(driver) # call the remove_javascript_validation() 

@@ -25,6 +25,7 @@ def get_arguments():
     args_attack1n2 = argParser.add_argument_group("Sniper and Battering Ram") # argument group to hold elements and payloads related options for sniper and battering ram
     args_attack3n4 = argParser.add_argument_group("PitchFork and Cluster Bomb") # argument group to hold elements and payloads related options for pitchfork and cluster bomb
     args_fuzz = argParser.add_argument_group("Fuzzing Options") # argument group to hold options related to fuzzing 
+    args_debug = argParser.add_argument_group("Fuzzing via Debugging Options") # argument group to hold options related to debugging module
     args_session = argParser.add_argument_group("Session") # argument group to hold options related to options
     args_python = argParser.add_argument_group("Python Scripting Engine") # argument group to hold options related to python scripting engine
     args_javascript = argParser.add_argument_group("JavaScript Code Handler") # argument group to hold options related to javascript and navigation and handling
@@ -32,7 +33,7 @@ def get_arguments():
     args_automatic_navigation = argParser.add_argument_group("Automatic Navigation Handler")
     args_input_validation = argParser.add_argument_group("Anti Input Validation")
     args_browser = argParser.add_argument_group("Browser Options") # argument group to hold options related to browser options
-    args_debug = argParser.add_argument_group("Debug Option") # argument group to hold options related to debug options
+    args_verbose = argParser.add_argument_group("Verbose Option") # argument group to hold options related to debug options
     args_report = argParser.add_argument_group("Report Generation") # argument group to hold options related to report generations
     args_gui = argParser.add_argument_group("GUI") # argument group to hold the options for gui related things.
     args_help = argParser.add_argument_group("Help") # argument group to hold options related to help
@@ -43,7 +44,7 @@ def get_arguments():
     args_basic.add_argument("-t", "--target",help="Target's url: https://zinja-coder.github.io/", metavar="TARGET_URL", type=str)
     args_basic.add_argument("-b", "--button",help="Button element which will submit form data.", metavar="submit", type=str)
     args_basic.add_argument("-a","--attack",help="The attack mode:\n 1. SNIPER\n 2. BATTERING RAM\n 3. PITCH FORK\n 4. CLUSTER BOMB",type=int,metavar="2")
-    args_attack1n2.add_argument("-e", "--elements", help="Input fields(target elements of form) in comma separated values.", metavar="username,password,phone,address", type=str)
+    args_attack1n2.add_argument("-e", "--elements", help="Input fields(target elements of form) in comma separated values.", metavar="username,password,phone,address,projectId++formcontrolname", type=str)
     args_attack3n4.add_argument("-ep", "--elements-payloads",help="Input fields(target elements of form) and their respective payloads files.", metavar="FIELD:/PATH/TO/FILE,textarea:payloads.txt,data:pay.txt", type=str)
     args_attack1n2.add_argument("-p", "--payloads",help="/path/to/payload/file.", metavar="/home/payloads.txt", type=str)
     args_fuzz.add_argument("--fill",help="Auto fill the specified elements, usefull when web page is complex when you want to target specific fields only.",metavar="e1,elemn3,user,npass,id", type=str)
@@ -59,6 +60,9 @@ def get_arguments():
     args_fuzz.add_argument("--reload-page",help="This switch tells The Browser Bruter to reload the page before fuzzing the form on each iteration, usefull when result of previous iteration causes the web elements to disappear or which leads to elements not found error, in such case this switch helps to keep browser bruter running.", action="store_true")
     args_fuzz.add_argument("--no-reload-page",help="This switch will force the Browser Bruter to not go back to --target URL, instead stay on the same page after submitting the form.", action="store_true", default=False)
     args_fuzz.add_argument("--form",help="Specy id,name,class of form to fuzz in case of muliple forms",metavar="changePasswordForm", type=str)
+    args_debug.add_argument("--debug",help="use this to set debug point on the browser", type=str)
+    args_debug.add_argument("--debug-code",help="when debug hits, execute this code", type=str)
+    args_debug.add_argument("--property",help="COMING SOON....", type=str)
     args_fuzz.add_argument("--pause-on-popup",help="Pauses the Browser Bruter in case of pop up occurs, help full when finding Cross Site Scripting and need to perform manual actions",action="store_true",default=False)
     args_session.add_argument("--headers", help="Comma-separated list of custom headers.",metavar="\"Auth: 123\",\"CUSTOM_HEADER: VALUE\"", type=str)
     args_session.add_argument("--cookie",help="Use it to define cookies to be used while sending initial request, cookies should be in name:value:domain comma separated format.", metavar="name:value,name2:value2", type=str)
@@ -100,8 +104,8 @@ def get_arguments():
     args_report.add_argument("--scope",help="Comma separated list of hostnames in scope",metavar="api1.example.com,bak.example.com", type=str)
     args_report.add_argument("--inscope-urls",help="Comma-separated list of urls or file containing urls in-scope", metavar="/path/to/file OR \"https://api1.example.com/v2/getData\",\"https://bak.example.com/v2/signin\"", type=str)
     args_report.add_argument("--outofscope-urls",help="Comma separated list of urls or file containing urls which are to be excluded from final report", metavar="/path/to/file OR \"http://10.13.37.3:8080/webgoat/service/hint.mvc\",\"http://10.13.37.3:8080/webgoat/service/solution.mvc\"", type=str)
-    args_debug.add_argument("--verbose",help="Use this switch to enable HTTP request/response output being printed on console and STDLOG file.", action="store_true",default=False)
-    args_debug.add_argument("--debug",help="Use this switch to print the Stack Trace messages in case of the error! and keep the logs in log file.",action="store_true")
+    args_verbose.add_argument("--verbose",help="Use this switch to enable HTTP request/response output being printed on console and STDLOG file.", action="store_true",default=False)
+    args_verbose.add_argument("--print-error",help="Use this switch to print the Stack Trace messages in case of the error! and keep the logs in log file.",action="store_true")
     args_gui.add_argument("--gui",help="Use this switch to run Browser Bruter in GUI",action="store_true",default=False)
     args_help.add_argument("--help-manual",help="Print the Usage Examples",action="store_true")
 

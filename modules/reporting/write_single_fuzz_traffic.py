@@ -102,7 +102,7 @@ def write_http_request_response(element, this_threads_file, driver, payload, web
                 base64_response = base64.b64encode(raw_data_response).decode('utf-8')
             except Exception as e:
                 log_error(format_exc())
-                if global_variable.args.debug:
+                if global_variable.args.print_error:
                     print(e)
                     pass
                 else:

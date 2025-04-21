@@ -68,7 +68,7 @@ def get_element(driver,element,coming_from_initial_operations_method):
                 sleep(5)
     if not found: # Algorithm step: 5 if element is not found then do below
         global_variable.pause_event.clear()
-        print(f"\n\n{global_variable.RED}[+]--------------------------------------------------------------------------------------------------------------------------[+]\nError:{global_variable.RESET} Specified element {element} is not found. Please verify the id, name, xpath or class of the element. For more information, check Error.txt or use --debug flag.\n{global_variable.RED}[+]--------------------------------------------------------------------------------------------------------------------------[+]{global_variable.RESET}")
+        print(f"\n\n{global_variable.RED}[+]--------------------------------------------------------------------------------------------------------------------------[+]\nError:{global_variable.RESET} Specified element {element} is not found. Please verify the id, name, xpath or class of the element. For more information, check Error.txt or use --print-error flag.\n{global_variable.RED}[+]--------------------------------------------------------------------------------------------------------------------------[+]{global_variable.RESET}")
         k = input(f"\n\n{global_variable.YELLOW}[+]--------------------------------------------------------------------------------------------------------------------------[+]\nINFO:{global_variable.RESET} Do you want to retry one more time? - Y/N\n{global_variable.YELLOW}[+]--------------------------------------------------------------------------------------------------------------------------[+]{global_variable.RESET}")
         global_variable.pause_event.clear()
         if k in ('Y', 'y'):
@@ -84,7 +84,7 @@ def get_element(driver,element,coming_from_initial_operations_method):
                     found = False
                     sleep(1.5)
             if not found:
-                if global_variable.args.debug: # if --debug flag is set then print the error on console
+                if global_variable.args.print_error: # if --print-error flag is set then print the error on console
                     print_exc()
                     print(f"\n\n{global_variable.RED}[+]--------------------------------------------------------------------------------------------------------------------------[+]\nERROR: {global_variable.RESET}Refer Above Stack Trace\n{global_variable.RED}[+]--------------------------------------------------------------------------------------------------------------------------[+]{global_variable.RESET}")
                 driver.quit() # close the browser
@@ -92,8 +92,8 @@ def get_element(driver,element,coming_from_initial_operations_method):
                 sys.exit(0) # Exit from the script
         else:
             global_variable.pause_event.clear()
-            print(f"\n\n{global_variable.RED}[+]--------------------------------------------------------------------------------------------------------------------------[+]\nError:{global_variable.RESET} Specified element {element} is not found. Please verify the id, name, xpath or class of the element. For more information, check Error.txt or use --debug flag.\n{global_variable.RED}[+]--------------------------------------------------------------------------------------------------------------------------[+]{global_variable.RESET}")
-            if global_variable.args.debug: # if --debug flag is set then print the error on console
+            print(f"\n\n{global_variable.RED}[+]--------------------------------------------------------------------------------------------------------------------------[+]\nError:{global_variable.RESET} Specified element {element} is not found. Please verify the id, name, xpath or class of the element. For more information, check Error.txt or use --print-error flag.\n{global_variable.RED}[+]--------------------------------------------------------------------------------------------------------------------------[+]{global_variable.RESET}")
+            if global_variable.args.print_error: # if --print-error flag is set then print the error on console
                 print_exc()
                 print(f"\n\n{global_variable.RED}[+]--------------------------------------------------------------------------------------------------------------------------[+]\nERROR: {global_variable.RESET}Refer Above Stack Trace\n{global_variable.RED}[+]--------------------------------------------------------------------------------------------------------------------------[+]{global_variable.RESET}")
             driver.quit() # close the browser
