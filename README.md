@@ -50,6 +50,22 @@ BruteForcing Login page using **The Browser Bruter**
 - [Jump to How to use](https://net-square.com/browserbruter/UsageManual/)
 - [Click here to know Why we created The BrowserBruter](https://net-square.com/browserbruter/WhyWeNeedBrowserBruter/)
 
+## Sample Demos:
+
+Cracking The Captchas by Integrating ML into Browser Bruter:
+
+https://github.com/user-attachments/assets/c30cda8b-29f3-442e-817d-5939325b01e2
+
+Automatice Navigation Handler Module in action:
+
+https://github.com/user-attachments/assets/a3be207c-a744-490b-865e-01974814fffc
+
+Bypassing rate limit via custom Pyton Script:
+
+https://github.com/user-attachments/assets/cc91636a-a792-41a5-aa0c-cf9f65a6800c
+
+
+
 ## Table of Contents
 
 - [The Browser-Bruter](#the-browser-bruter)
