@@ -47,6 +47,9 @@ from traceback import format_exc, print_exc # used for getting the proper except
 from time import sleep # used for pausing the script
 import warnings
 import sys
+from concurrent.futures import ThreadPoolExecutor, as_completed
+from queue import Queue
+import threading
 
 ##################################################################
 # Importing Custom Modules
@@ -63,6 +66,7 @@ from modules.error_handling.error_handling import handle_unknown_exception
 from modules.global_config_arguments.global_variables import global_variable
 # from modules.tee.tee import Tee # res.tee contains code which prints the output of the Browser Bruter on console as well as log file
 from modules.automatic_navigation_handler.record_navigation import record_navigation
+from modules.mcp.mcp_data_handler import start_mcp_data_handler_server
 
 ##################################################################
 # Importing various Exceptions
@@ -107,6 +111,70 @@ Algorithm ->
 """
 ##################################################################
 
+def process_chunk(chunk_data, instance_number):
+    """Process a chunk of payloads using a browser from the pool"""
+    if not global_variable.terminate:
+        try:
+            driver = get_and_initialize_chrome_driver()
+            
+            # Setup browser with cookies/storage if needed
+            if global_variable.args.add_storage:
+                driver.get(global_variable.args.target)
+                add_local_storage(driver)
+                
+            if global_variable.args.add_session_storage:
+                driver.get(global_variable.args.target)
+                add_session_storage(driver)
+                
+            if global_variable.args.cookie:
+                driver.get(global_variable.args.target)
+                add_cookies(driver)
+
+            this_threads_files = get_filename()
+            
+            if global_variable.args.pause:
+                driver.get(global_variable.args.target)
+                global_variable.pause_event.set()
+                
+            try:
+                if global_variable.args.attack == 1:
+                    sniper_loop(chunk_data, global_variable.elements, instance_number, this_threads_files, driver)
+                elif global_variable.args.attack == 2:
+                    battering_ram_loop(chunk_data, global_variable.elements, instance_number, this_threads_files, driver)
+                elif global_variable.args.attack == 3:
+                    pitchfork_loop(chunk_data, instance_number, this_threads_files, driver)
+                elif global_variable.args.attack == 4:
+                    attempt_clusterbomb_fuzz(chunk_data, driver, this_threads_files, instance_number)
+            finally:
+                try:
+                    BrowserPool().return_driver(driver)
+                except:
+                    pass
+                    
+        except Exception as e:
+            log_error(format_exc())
+            if isinstance(e, (NoSuchWindowException, ConnectionRefusedError, RemoteDisconnected, ProtocolError, MaxRetryError)):
+                print(f"\n\n{global_variable.YELLOW}[+]--------------------------------------------------------------------------------------------------------------------------[+]\nINFO: {global_variable.RESET}Browser connection lost or window closed, check error log if unintentional\n{global_variable.YELLOW}[+]--------------------------------------------------------------------------------------------------------------------------[+]{global_variable.RESET}")
+            else:
+                handle_unknown_exception(e)
+
+def chunk_data(data, num_chunks):
+    """Split data into roughly equal chunks"""
+    avg = len(data) // num_chunks
+    remainder = len(data) % num_chunks
+    
+    chunks = []
+    start = 0
+    for i in range(num_chunks):
+        end = start + avg + (1 if i < remainder else 0)
+        if isinstance(data, dict):
+            chunk = {k: data[k] for k in list(data.keys())[start:end]}
+        else:
+            chunk = data[start:end]
+        chunks.append(chunk)
+        start = end
+    return chunks
+
 # Algorithm step:1 Checking if script is running directly
 if __name__ == "__main__": # Check that the script is started directly and not imported
     try:
@@ -125,6 +193,11 @@ if __name__ == "__main__": # Check that the script is started directly and not i
         # If --record-navigation is set then start the browser to start recording the navigation
         if global_variable.args.record_navigation:
             record_navigation()
+            sys.exit(0)
+
+        # If --mcp is set then start the browser for mcp server
+        if global_variable.args.mcp:
+            start_mcp_data_handler_server()
             sys.exit(0)
 
         # Supress the http encoding and bs prettify warnings
@@ -169,7 +242,7 @@ if __name__ == "__main__": # Check that the script is started directly and not i
         print(f"{global_variable.YELLOW}[+]--------------------------------------------------------------------------------------------------------------------------[+]")
         print(f"\n\n{global_variable.YELLOW}[+]--------------------------------------------------------------------------------------------------------------------------[+]\nINFO:{global_variable.RESET} Press ENTER to pause the attack.\n{global_variable.YELLOW}[+]--------------------------------------------------------------------------------------------------------------------------[+]\n{global_variable.RESET}")
         # Algorithm step:5 Get the number of threads or in other words number of browsers instances to use supplied by user using --threads argument
-        num_threads = global_variable.args.threads
+        num_threads = min(global_variable.args.threads, 10)  # Cap max threads at 10
         # Algorithm step:6 Create and start the threads
         threads = [] # Creating empty list variable to store the threads variables
         start = 0 # This variable is used for indicating the start of payloads for all threads, look below examples for better understanding

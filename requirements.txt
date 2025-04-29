@@ -12,3 +12,8 @@ tqdm
 brotlipy
 zstandard
 setuptools
+fastmcp
+fastapi
+websockets
+httpx
+logging

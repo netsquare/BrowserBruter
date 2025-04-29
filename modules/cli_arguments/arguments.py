@@ -24,6 +24,7 @@ def get_arguments():
     args_basic = argParser.add_argument_group("Basic") # argument group to hold basic options 
     args_attack1n2 = argParser.add_argument_group("Sniper and Battering Ram") # argument group to hold elements and payloads related options for sniper and battering ram
     args_attack3n4 = argParser.add_argument_group("PitchFork and Cluster Bomb") # argument group to hold elements and payloads related options for pitchfork and cluster bomb
+    args_ai = argParser.add_argument_group("AI and MCP Options") # argument group to hold various ai and mcp related options
     args_fuzz = argParser.add_argument_group("Fuzzing Options") # argument group to hold options related to fuzzing 
     args_debug = argParser.add_argument_group("Fuzzing via Debugging Options") # argument group to hold options related to debugging module
     args_session = argParser.add_argument_group("Session") # argument group to hold options related to options
@@ -47,9 +48,10 @@ def get_arguments():
     args_attack1n2.add_argument("-e", "--elements", help="Input fields(target elements of form) in comma separated values.", metavar="username,password,phone,address,projectId++formcontrolname", type=str)
     args_attack3n4.add_argument("-ep", "--elements-payloads",help="Input fields(target elements of form) and their respective payloads files.", metavar="FIELD:/PATH/TO/FILE,textarea:payloads.txt,data:pay.txt", type=str)
     args_attack1n2.add_argument("-p", "--payloads",help="/path/to/payload/file.", metavar="/home/payloads.txt", type=str)
-    args_fuzz.add_argument("--fill",help="Auto fill the specified elements, usefull when web page is complex when you want to target specific fields only.",metavar="e1,elemn3,user,npass,id", type=str)
+    args_ai.add_argument("--mcp", help="Spawn Browser and analyze the target using AI via MCP Server.",action="store_true",default=False)
+    args_fuzz.add_argument("--fill",help="Auto fill the specified elements, useful when web page is complex when you want to target specific fields only.",metavar="e1,elemn3,user,npass,id", type=str)
     args_fuzz.add_argument("--fill-values", help="[Optional] Path to User provided elements values file. See sample-file-for-giving-form-values.json", metavar="/path/to/file.json", type=str)
-    args_fuzz.add_argument("--buttons-to-press-before-fuzz",help="Supply list of buttons to be pressed in sequence before filling the form, useful if form submission requires some action or form is invisible until some button is pressed.[Note if the button is not pressable elment, then use --javascript and suppy javascript to click the element.]",metavar="visibleform,ok,confirm,pressthis", type=str)
+    args_fuzz.add_argument("--buttons-to-press-before-fuzz",help="Supply list of buttons to be pressed in sequence before filling the form, useful if form submission requires some action or form is invisible until some button is pressed.[Note if the button is not pressable element, then use --javascript and supply javascript to click the element.]",metavar="visibleform,ok,confirm,pressthis", type=str)
     args_fuzz.add_argument("--press-enter-no-click",help="This switch will force the Browser Bruter to send ENTER key instead of clicking the button, useful when form is submitted when pressing entering on text field and there are no buttons to click.", action="store_true")
     args_fuzz.add_argument("--delay-before",help="Delay before fuzz attempt.",metavar="0.2", type=float, default=0.2)
     args_fuzz.add_argument("--delay-after",help="Delay after fuzz attempt.",metavar="0.2", type=float, default=0.2)
@@ -57,9 +59,9 @@ def get_arguments():
     args_fuzz.add_argument("--pause", help="Pause the BrowserBruter instances on startup, press ENTER to resume.",action="store_true",default=False)
     args_fuzz.add_argument("--interactive",help="Pause the BrowserBruter before fuzzing any element at each payload and wait for user to continue.",action="store_true",default=False)
     args_fuzz.add_argument("--pause-after-submit",help="Pause the script after pressing the submit button to allow pentester to interact with the web application.",action="store_true")
-    args_fuzz.add_argument("--reload-page",help="This switch tells The Browser Bruter to reload the page before fuzzing the form on each iteration, usefull when result of previous iteration causes the web elements to disappear or which leads to elements not found error, in such case this switch helps to keep browser bruter running.", action="store_true")
+    args_fuzz.add_argument("--reload-page",help="This switch tells The Browser Bruter to reload the page before fuzzing the form on each iteration, useful when result of previous iteration causes the web elements to disappear or which leads to elements not found error, in such case this switch helps to keep browser bruter running.", action="store_true")
     args_fuzz.add_argument("--no-reload-page",help="This switch will force the Browser Bruter to not go back to --target URL, instead stay on the same page after submitting the form.", action="store_true", default=False)
-    args_fuzz.add_argument("--form",help="Specy id,name,class of form to fuzz in case of muliple forms",metavar="changePasswordForm", type=str)
+    args_fuzz.add_argument("--form",help="Specify id,name,class of form to fuzz in case of multiple forms",metavar="changePasswordForm", type=str)
     args_debug.add_argument("--debug",help="use this to set debug point on the browser", type=str)
     args_debug.add_argument("--debug-code",help="when debug hits, execute this code", type=str)
     args_debug.add_argument("--property",help="COMING SOON....", type=str)

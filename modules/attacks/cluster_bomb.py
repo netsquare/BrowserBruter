@@ -123,10 +123,10 @@ def attempt_clusterbomb_fuzz(payloads_combinations, driver, this_threads_files, 
                         except StaleElementReferenceException: # if there is a StaleElementReferenceException then retry
                             sleep(10)
                             try:    
-                                fill_payload_in_element(driver,element_being_fuzzed,payload,element)
+                                fill_payload_in_element(driver,element_being_fuzzed,payload)
                             except StaleElementReferenceException: # if there is a StaleElementReferenceException then retry
                                 sleep(20)
-                                fill_payload_in_element(driver,element_being_fuzzed,payload,element)
+                                fill_payload_in_element(driver,element_being_fuzzed,payload)
                 # Algorithm step:2.g Press the button
                 if not global_variable.terminate:
                     button_to_press = get_element(driver,global_variable.args.button,False)

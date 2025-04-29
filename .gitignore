@@ -1,0 +1,28 @@
+BrowserBruter_Reports
+
+modules/**/__pychache__
+
+**__pychache__**
+
+.venv
+
+venv
+ven
+
+res/chrome
+
+logs
+
+
+# Python-generated files
+__pycache__/
+*.py[oc]
+build/
+dist/
+wheels/
+*.egg-info
+.python-version
+
+# Virtual environments
+.venv
+

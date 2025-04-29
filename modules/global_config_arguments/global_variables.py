@@ -71,8 +71,8 @@ class Global_Variable_Class:
                 sys.exit(0) # exit the script
 
             # Check if all required arguments are given and threads are not more than 5
-            if cls._instance.args.record_navigation:
-                # When --record-navigation is present, only --target is compulsory
+            if cls._instance.args.record_navigation or cls._instance.args.mcp:
+                # When --record-navigation or --mcp is present, only --target is compulsory
                 if cls._instance.args.target is None:
                     print(f"\n\n{cls._instance.RED}[+]--------------------------------------------------------------------------------------------------------------------------[+]\nERROR: {cls._instance.RESET}Please Enter --target option.\n{cls._instance.RED}[+]--------------------------------------------------------------------------------------------------------------------------[+]{cls._instance.RESET}")
                     sys.exit(0)
