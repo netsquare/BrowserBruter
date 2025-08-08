@@ -13,7 +13,8 @@
 
 **Handcrafted in India 🇮🇳**
 
-![pse2](https://github.com/netsquare/BrowserBruter/assets/65374935/380dbfa0-ffc3-4327-8e60-ac00a8a6f914)
+<img width="1024" height="1536" alt="ChatGPT Image Aug 8, 2025, 09_22_40 PM" src="https://github.com/user-attachments/assets/c2635583-f2d0-4081-bce3-cc48617f0d89" />
+
 
 ### Please refer to this for Proof of Concept of our claims - https://net-square.com/browserbruter/WhyWeNeedBrowserBruter/
 
