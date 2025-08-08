@@ -56,7 +56,7 @@ Cracking The Captchas by Integrating ML into Browser Bruter:
 
 https://github.com/user-attachments/assets/c30cda8b-29f3-442e-817d-5939325b01e2
 
-Automatice Navigation Handler Module in action:
+Automatic Navigation Handler Module in action:
 
 https://github.com/user-attachments/assets/a3be207c-a744-490b-865e-01974814fffc
 
@@ -64,22 +64,9 @@ Bypassing rate limit via custom Pyton Script:
 
 https://github.com/user-attachments/assets/cc91636a-a792-41a5-aa0c-cf9f65a6800c
 
+Integration with AI using MCP and crack encryption like never before:
 
 
-## Table of Contents
-
-- [The Browser-Bruter](#the-browser-bruter)
-  - [Table of Contents](#table-of-contents)
-  - [What It Does?](#what-it-does?)
-  - [Prerequisites](#prerequisites)
-  - [Quick Installation](#installation)
-  - [Test Lab for BrowserBruter](#test-lab-for-browserbruter)
-  - [Working Flow Overview](#working-flow-overview)
-  - [Features](#features) 
-  - [Contributing](#contributing)
-  - [Contact](#contact)
-  - [License](#license)
- 
 ## What it does?
 
 The biggest advantage of using browser bruter for fuzzing the web application is that all of the fuzzing will take place at browser level, so all of the attack will be as they have been manually done by the user by typing payloads in the input fields of the web application on browser.
@@ -104,20 +91,20 @@ This approach -
 
 ## Quick Installation
 
-Requires following python packages:
--  selenium
--  selenium-wire
--  webdriver_manager
--  ttkthemes
--  pytimedinput
--  colorama
--  beautifulsoup4
--  undetected-chromedriver
--  requests
--  pandas
--  tqdm
+#### Download and Run Using `UV` - 0 manual installation
 
-Tested on latest version (as of March 2024) of each package.
+0. Download from latest release
+
+1. Install the `uv` utility
+ 
+```bash
+curl -LsSf https://astral.sh/uv/install.sh | sh
+
+### Then directly run
+uv run BrowserBruter.py --help
+```
+
+OR manual way (not recommended)
 
 1. Download and install Python3
 2. Download the [latest release from releases](https://github.com/netsquare/BrowserBruter/releases/).
@@ -126,6 +113,75 @@ Tested on latest version (as of March 2024) of each package.
 5. Done
 
 **Refer documentation for detailed installation guide.** - https://net-square.com/browserbruter/SetupInstallation/
+
+## Setting up the MCP Server
+ 
+🤖 Using Claude Desktop 
+
+> Here we are demonstrating for claude desktop, but the server should work with every AI Agent/Client capable of MCP. For example, for LM Studio you have to configure the mcp.json file of LMStudio to add MCP Servers.
+
+Make sure Claude Desktop is running with MCP enabled. Make sure you have [uv](https://docs.astral.sh/uv/) utility installed.
+
+For instance, I have used following for Kali Linux: https://github.com/aaddrick/claude-desktop-debian
+
+Configure and add MCP server to LLM file:
+
+nano ~/.config/Claude/claude_desktop_config.json
+
+And following content in it:
+
+```
+{
+    "mcpServers": {
+        "Browser-Bruter-MCP-Server": {
+            "command": "/<path>/<to>/uv", 
+            "args": [
+                "--directory",
+                "</PATH/TO/>/BrowserBruter/modules/mcp/",
+                "run",
+                "browser_bruter_mcp_server.py"
+            ]
+        }
+    }
+}
+
+# For Example
+{
+    "mcpServers": {
+        "Browser-Bruter-MCP-Server": {
+            "command": "/home/zinjacoder/.local/bin/uv", 
+            "args": [
+                "--directory",
+                "/home/zinjacoder/softwares/tools/built/BrowserBruter/modules/mcp/",
+                "run",
+                "browser_bruter_mcp_server.py"
+            ]
+        }
+    }
+}
+
+# To run as HTTP Stream based server 
+{
+    "mcpServers": {
+        "Browser-Bruter-MCP-Server": {
+            "command": "/path/to/uv", 
+            "args": [
+                "--directory",
+                "path/to/BrowserBruter/modules/mcp/",
+                "run",
+                "browser_bruter_mcp_server.py --http --port <port(default is 8652)>"
+            ]
+        }
+    }
+}
+```
+
+Replace:
+
+  - `path/to/uv` with the actual path to your uv executable
+  - `path/to/BrowserBruter/modules/mcp/` with the absolute path to where you downloaded the BrowserBruter
+
+Then, navigate code and interact via real-time code review prompts using the built-in integration.
 
 ## Test Lab for BrowserBruter
 
@@ -170,6 +226,7 @@ Navigate to `http://localhost/` to test site.
 - [Continue The Previously Crashed Attack](https://net-square.com/browserbruter/UsageManual/output.html#resuming-previous-attack)
 - [Can Fuzz various types of input elements](https://net-square.com/browserbruter/UsageManual/elements.html)
 - [Modify web pages on fly](https://net-square.com/browserbruter/UsageManual/javascript.html#altering-removing--replacing-input-validation-code-using---replace-code---replace-file---auto-remove-javascript)
+- [Seamless Integration with AI using MCP Server]()
 
 ## Contributing
 
