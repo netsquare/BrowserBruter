@@ -1,3 +1,28 @@
+# /// script
+# requires-python = ">=3.10"
+# dependencies = [
+#    "selenium==4.17.2",
+#    "selenium-wire==5.1.0",
+#    "webdriver_manager==4.0.1",
+#    "ttkthemes==3.2.2",
+#    "pytimedinput==2.0.1",
+#    "beautifulsoup4==4.12.3",
+#    "undetected-chromedriver",
+#    "requests==2.31.0",
+#    "blinker<1.8.0",
+#    "pandas",
+#    "tqdm",
+#    "brotlipy",
+#    "zstandard",
+#    "setuptools",
+#    "fastmcp",
+#    "fastapi",
+#    "websocket",
+#    "httpx",
+#    "logging"
+# ]
+# ///
+
 ##################################################################
 """
 Name  : BrowserBruter.py 
