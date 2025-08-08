@@ -193,6 +193,21 @@ After this, start you AI Agent (Claude Desktop/ LMStudio) and send prompts to cr
 
 <img width="512" height="316" alt="image" src="https://github.com/user-attachments/assets/892a68ac-57fa-4a03-81d8-94ff4dd9d93b" />
 
+#### Current MCP Tools:
+ - get_current_url - Fetch the current browser URL and page title.
+ - get_dom_snapshot - Get the current DOM snapshot. In other words, get the current web page's source code.
+ - get_browser_bruter_switches_and_arguments - Fetch the available switches and arguments in BrowserBruter to know it's functionality and build a cli command.
+ - get_screenshot - Fetch the screenshot of the currently opened web page in browser.
+ - analyze_page_forms - Analyze all forms on the current page and extract detailed information about inputs, buttons, and validation mechanisms.
+ - fetch_encryption_logic - Detect and fetch the client-side encryption logic of HTTP traffic.
+ - analyze_specific_function - Fetch and analyze specific function.
+ - detect_validation_mechanisms - Detect client-side validation mechanisms that might interfere with fuzzing attempts.
+ - suggest_payloads_for_inputs - Analyze input fields and suggest appropriate payloads based on field types and names.
+  
+#### Current MCP Prompts:
+ - Build Browser Bruter Command 
+ - Build Browser Bruter Command using dom snapshot
+
 ## Test Lab for BrowserBruter
 
 The Lab shown in documentation can be setup using docker as follows- 
