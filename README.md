@@ -181,7 +181,15 @@ Replace:
   - `path/to/uv` with the actual path to your uv executable
   - `path/to/BrowserBruter/modules/mcp/` with the absolute path to where you downloaded the BrowserBruter
 
-Then, navigate code and interact via real-time code review prompts using the built-in integration.
+Then run below command to start BrowserBruter in MCP mode:
+```
+python3 BrowserBruter.py --mcp --target https://example.com
+
+### You will see 
+INFO: MCP data handler running at http://localhost:9011 
+```
+
+After this, start you AI Agent (Claude Desktop/ LMStudio) and send prompts to crack the encryption. 
 
 ## Test Lab for BrowserBruter
 
