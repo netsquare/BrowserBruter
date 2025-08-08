@@ -191,6 +191,8 @@ INFO: MCP data handler running at http://localhost:9011
 
 After this, start you AI Agent (Claude Desktop/ LMStudio) and send prompts to crack the encryption. 
 
+<img width="512" height="316" alt="image" src="https://github.com/user-attachments/assets/892a68ac-57fa-4a03-81d8-94ff4dd9d93b" />
+
 ## Test Lab for BrowserBruter
 
 The Lab shown in documentation can be setup using docker as follows- 
