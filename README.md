@@ -193,6 +193,10 @@ After this, start you AI Agent (Claude Desktop/ LMStudio) and send prompts to cr
 
 <img width="512" height="316" alt="image" src="https://github.com/user-attachments/assets/892a68ac-57fa-4a03-81d8-94ff4dd9d93b" />
 
+And you can also build the command to run Browser Bruter using AI as shown in video below:
+
+https://github.com/user-attachments/assets/8f96ab59-8ab2-4d5a-8b4c-d25c5120615f
+
 #### Current MCP Tools:
  - get_current_url - Fetch the current browser URL and page title.
  - get_dom_snapshot - Get the current DOM snapshot. In other words, get the current web page's source code.
