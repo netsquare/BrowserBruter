@@ -1,3 +1,5 @@
+[![MSeeP.ai Security Assessment Badge](https://mseep.net/pr/netsquare-browserbruter-badge.png)](https://mseep.ai/app/netsquare-browserbruter)
+
 # The Browser-Bruter
 
 ![GitHub contributors](https://img.shields.io/github/contributors/netsquare/BrowserBruter)
