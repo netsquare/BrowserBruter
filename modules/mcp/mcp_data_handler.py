@@ -670,6 +670,13 @@ async def detect_validation_mechanisms():
         return JSONResponse(content=validation_info)
     except Exception as e:
         return JSONResponse(content={"error": str(e)})
+    
+##################################################################
+# Hashing Logic Detection Endpoint
+##################################################################
+# @app.get("/fetch_hashing_logic")
+# async def fetch_hashing_logic():
+
 
 ##################################################################
 # Encryption Logic Detection Endpoint
@@ -682,7 +689,6 @@ async def fetch_encryption_logic():
         encryption_info = {
             "encryption_functions": [],
             "crypto_libraries": [],
-            "hash_functions": [],
             "encoding_functions": [],
             "suspicious_patterns": [],
             "javascript_sources": []
@@ -693,7 +699,6 @@ async def fetch_encryption_logic():
         const encryptionInfo = {
             encryption_functions: [],
             crypto_libraries: [],
-            hash_functions: [],
             encoding_functions: [],
             suspicious_patterns: [],
             javascript_sources: []
@@ -701,10 +706,9 @@ async def fetch_encryption_logic():
         
         // Common encryption/crypto keywords to search for
         const encryptKeywords = [
-            'encrypt', 'decrypt', 'cipher', 'aes', 'rsa', 'des', 'blowfish',
-            'crypto', 'cryptojs', 'sjcl', 'forge', 'webcrypto', 'subtle',
-            'hash', 'sha', 'md5', 'pbkdf2', 'scrypt', 'bcrypt',
-            'base64', 'hex', 'encode', 'decode', 'btoa', 'atob'
+            'encrypt', 'decrypt', 'cipher', 'aes', 'rsa', 'blowfish',
+            'crypto', 'cryptojs', 'sjcl', 'forge', 'webcrypto', 'subtle', 'scrypt', 'bcrypt',
+            'encr', 'decr'
         ];
         
         // Function to extract function source code
@@ -815,16 +819,16 @@ async def fetch_encryption_logic():
         });
         
         // Check for common hash/encoding functions
-        const hashFunctions = ['btoa', 'atob', 'encodeURIComponent', 'decodeURIComponent'];
-        hashFunctions.forEach(funcName => {
-            if (window[funcName]) {
-                encryptionInfo.encoding_functions.push({
-                    name: funcName,
-                    available: true,
-                    source: getFunctionSource(window[funcName])
-                });
-            }
-        });
+       // const hashFunctions = ['btoa', 'atob', 'encodeURIComponent', 'decodeURIComponent'];
+       // hashFunctions.forEach(funcName => {
+         //   if (window[funcName]) {
+           //     encryptionInfo.encoding_functions.push({
+       //             name: funcName,
+         //           available: true,
+           //         source: getFunctionSource(window[funcName])
+             //   });
+     //       }
+       // });
         
         return encryptionInfo;
         """
@@ -861,7 +865,6 @@ async def fetch_encryption_logic():
             r'var\s+(\w*secret\w*)\s*=',
             r'var\s+(\w*salt\w*)\s*=',
             r'var\s+(\w*iv\w*)\s*=',
-            r'var\s+(\w*hash\w*)\s*=',
             r'var\s+(\w*cipher\w*)\s*='
         ]
         
@@ -874,7 +877,7 @@ async def fetch_encryption_logic():
         if hasattr(driver, 'requests'):
             for request in driver.requests[-50:]:  # Check last 50 requests
                 url_lower = request.url.lower()
-                if any(keyword in url_lower for keyword in ['encrypt', 'decrypt', 'hash', 'crypto', 'auth', 'token']):
+                if any(keyword in url_lower for keyword in ['encrypt', 'decrypt', 'crypto', 'auth', 'token']):
                     network_crypto_endpoints.append({
                         'url': request.url,
                         'method': request.method,
@@ -988,7 +991,7 @@ async def analyze_specific_function(function_name: str):
             }
             
             # Check for encryption keywords
-            keywords = ['encrypt', 'decrypt', 'hash', 'cipher', 'key', 'salt', 'iv', 'aes', 'rsa', 'md5', 'sha']
+            keywords = ['encrypt', 'decrypt', 'cipher', 'key', 'salt', 'iv', 'aes', 'rsa']
             for keyword in keywords:
                 if keyword in source:
                     crypto_indicators['encryption_keywords'].append(keyword)
