@@ -51,8 +51,28 @@ app = FastAPI(lifespan=lifespan)
 
 # DOM Snapshot
 @app.get("/dom_snapshot")
-async def dom_snapshot():
-    return JSONResponse(content={"url": driver.page_source})
+async def dom_snapshot(offset: int = 0, limit: int = 0):
+    content = driver.page_source or ""
+    total = len(content)
+    # Pagination: if limit specified, slice content accordingly
+    if limit:
+        items = [content[offset:offset+limit]]
+        count = len(items[0])
+    else:
+        items = [content]
+        count = len(content)
+    # MCP pagination structure
+    return JSONResponse(content={
+        "type": "dom-snapshot",
+        "items": items,
+        "pagination": {
+            "total": total,
+            "offset": offset,
+            "limit": limit or total,
+            "count": count,
+            "has_more": bool(limit and (offset + limit < total))
+        }
+    })
 
 # Get ScreenShot
 @app.get("/screenshot")
@@ -933,7 +953,7 @@ async def fetch_encryption_logic():
 # Additional Helper Endpoint for Deep Encryption Analysis
 ##################################################################
 
-@app.post("/analyze_specific_function")
+@app.get("/analyze_specific_function")
 async def analyze_specific_function(function_name: str):
     """Analyze a specific JavaScript function for encryption patterns"""
     try:
@@ -980,6 +1000,7 @@ async def analyze_specific_function(function_name: str):
         
         return analysis;
         """
+        
         function_analysis = driver.execute_script(analysis_script)
         # Additional static analysis
         if function_analysis.get('source'):
